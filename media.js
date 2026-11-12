@@ -1,4 +1,4 @@
-/* media.js v2.1 — modul media QuickChat */
+/* media.js v2.2 — modul media QuickChat (emoji kategori bersih, gambar, suara, video call) */
 (function(){
 'use strict';
 if(!window.QC)return;
@@ -27,23 +27,24 @@ css.textContent='.emoji-pop{display:flex;flex-direction:column;max-height:340px;
 document.head.appendChild(css);
 document.addEventListener('error',function(e){var t=e.target;if(t&&t.tagName==='AUDIO'){toast('Audio ini tidak didukung browser ini','🔇');}},true);
 
+/* Daftar emoji bersih: setiap item satu glyph utuh (bendera pasangan utuh, tanpa karakter rusak) */
 var CATS=[
-{k:'Smileys',i:'😀',l:'😀 😃 😄 😁 😆 😅 🤣 😂 🙂 🙃 😉 😊 😇 🥰 😍 😘 😜 🤪 😎 🥳 🤩 🥹 😭  😴 🤔 🤫 🤯 😱 😨 😰 😥 😢 😣 😩 😫 🥱 😤 😡 😠 🤬 😈  💀 💩  👹 👺 👻 👽 👾 🤖'.split(' ')},
-{k:'Gestur',i:'👋',l:'👋 🤚 🖐 ✋ 🖖 👌 🤌 🤏 ✌️ 🤞 🫰 🤟 🤘 🤙 👈 👉 👆 🖕 👇 ️ 🫵  👎 ✊ 👊 🤛 🤜 👏 🙌  👐 🤲 🤝 🙏 ️ 💅  💪 🦾 🦵 🦶 👂 🦻 👃 🧠 🫀 🫁 🦷 🦴 👀 👁 👅 👄'.split(' ')},
-{k:'Hewan',i:'🐶',l:'🐶  🐭 🐹 🐰 🦊 🐻 🐼 🐨 🐯  🐮  🐽  🐵 🙈 🙉 🙊 🐒 🐔 🐧 🐦 🐤 🐣 🐥 🦆 🦅 🦉 🦇 🐺 🐗 🐴 🦄 🐝 🐛 🦋 🐌 🐞 🐜 🐢 🐍 🦎 🦖 🦕 🐙 🦑 🦐 🦞 🦀 🐡 🐠 🐟 🐬 🐳 🐋 🦈 🐊 🐅 🐆 🦓 🦍  🐘  🦏  🐫  🦘 🐃 🐂 🐄 🐎 🐖 🐏 🐑 🦙 🐐 🦌 🐕 🐩 🐈 🐇 🦝 🦨 🦡 🦫 🦦 🦥 🐁 🐀 🐿 🦔'.split(' ')},
-{k:'Makanan',i:'🍎',l:'🍏 🍎 🍐 🍊 🍋 🍌 🍉 🍇 🍓  🍈 🍒 🍑 🥭 🍍 🥥  🍅  🥑 🥦 🥬 🥒 🌶  🌽  🫒  🧅  🍠 🥐  🍞  🥨  🥚  🧈  🧇  🥩  🍖  🍔 🍟 🍕 🫓 🥪 🥙 🧆 🌮 🌯  🥗  🫕  🍝  🍲  🍣  🥟  🍤  🍚  🍥  🥮  🍡  🍨 🍦 🥧 🧁 🍰 🎂 🍮 🍭 🍬 🍫 🍿 🍩 🍪 🌰 🥜 🍯 🥛 🍼 🫖 ☕  🧃  🧋  🍺  🥂  🥃  🍹  🍾  🥄  🍽  🥡  🧂'.split(' ')},
-{k:'Aktivitas',i:'⚽',l:'⚽ 🏀 🏈 ⚾ 🥎 🎾 🏐 🏉 🥏 🎱 🪀 🏓 🏸 🏒 🏑 🥍 🏏 🪃 🥅 ⛳ 🪁 🏹 🎣 🤿 🥊 🥋 🎽 🛹 🛼 🛷 ⛸ 🥌 🎿 ⛷ 🏂 🪂 🏋️  🤸  🏇  🏄  🤽 🚣 🧗 🚵 🚴 🏆 🥇 🥈 🥉 🏅 🎖 🏵 🎗 🎫 🎟 🎪 🤹 🎭 🩰 🎨 🎬 🎤 🎧 🎼 🎹 🥁 🪘 🎷 🎺 🪗 🎸 🪕 🎻 🎲 ♟ 🎯 🎳 🎮 🎰 🧩'.split(' ')},
-{k:'Travel',i:'🚗',l:'🚗 🚕 🚙 🚌 🚎  🚓  🚒  🛻  🚛 🚜 🏍  🚲  🛺  🚍  🚖 ️ 🛫  🛩  🛰 🚀 🛸 🚁 🛶 ⛵ 🚤 🛥 🛳 ⛴ 🚢 ⚓ 🪝 ⛽ 🚧 🚥 🚦 🗺 🗿 🗽 🗼 🏰 🏯 🏟  🎢 🎠 ⛲ ⛱ 🏖 🏝 🏜 🌋 ⛰ 🏔 🗻 🏕 ⛺ 🛖 🏠 🏡 🏘 🏚 🏗 🏭 🏢 🏬 🏣 🏤 🏥 🏦 🏨 🏪  🏩  🏛  🕌 🕍 🛕 🕋 ⛩ 🛤 🛣 🗾 🎑 🏞 🌅 🌄 🌠 🎇 🎆 🌇 🌆 🏙 🌃 🌌 🌉 🌁'.split(' ')},
-{k:'Objek',i:'⌚',l:'⌚ 📱 💻 ️ 🖥 🖨 🖱 🖲 🕹 🗜 💽  💿  📼  📸  🎥  🎞  ☎️  📠  📻  🎚  🧭  ⏲  🕰  ⏳  🔋 🔌 💡 🔦 🕯 🪔 🧯  💸 💵  💶 💷  💰 💳 💎 ⚖️  🧰 🪛 🔧 🔨 ⚒ 🛠 ⛏ 🪚 🔩 ⚙️  🧱 ⛓ 🧲 🔫 💣 🧨 🪓 🔪 🗡 ⚔️ 🛡 🚬 ⚰️ 🪦 ⚱️  🔮  🧿 💈 ⚗️ 🔭 🔬 🕳 🩹 🩺 💊 💉 🩸 🧬 🦠 🧫 🧪  🧹  🧺  🚽  🚿  🛀  🪥  🧽  🧴  🔑 🗝 🚪 🪑 🛋 🛏 🛌 🧸 🪆 🖼 🪞 🪟 🛍 🛒 🎁 🎈 🎏 🎀 🪄 🪅 🎊 🎉 🎎 🏮 🎐 🧧 ️ 📩 📨 📧 💌  📤 📦 🏷 🪧 📪 📫 📬 📭 📮 📯 📜 📃 📄 📑 🧾 📊 📈 📉 🗒  📆  🗑  🗃  🗄  📁  🗂  📰  📔 📒  📗 📘 📙 📚 📖 🔖  🔗  🖇  📏  📌  ✂️  🖋 ✒️ 🖌 🖍 📝 ✏️ 🔍 🔎 🔏 🔐 🔒 🔓'.split(' ')},
-{k:'Simbol',i:'❤️',l:'❤️ 🧡 💛 💚 💙 💜 🖤 🤍 🤎 💔 ❣️ 💕 💞 💓 💗 💖 💘 💝 💟 ✨ ⭐ 🌟 💫  🔥 💢 💥 💦 🎵 🎶 ✅ ❌ ⭕ ⛔ 🚫 ❗ ❕ ❓ ❔ ‼️ ⁉️ 🔔 🔕 📣  💬 💭 💤 🌐 ♻️ 🆗 🆒 🆕 🆙 🆓 🆖 🔢 #️⃣ *️ 0️ 1️ 2️ 3️ 4️⃣ 5️⃣ 6️⃣ 7️⃣ 8️⃣ 9️⃣ 🔟 ▶️ ⏸ ⏹ ⏺ ⏭ ⏮ ⏩ ⏪ 🔼 🔽 ➡️ ⬅️ ⬆️ ⬇️ ↗️ ↘️ ↙️ ↖️ ↕️ ↔️ 🔄  🔂 🔀 ➕ ➖ ➗ ✖️ ♾ 💲 💱 ™️ ©️ ®️ 〰️ ➰ ➿ 🔚 🔙 🔛 🔝 🔜 ✔️ ☑️ 🔘 🔴 🟠 🟡 🟢 🔵  ⚫  🟤  🔻 🔸 🔹 🔶 🔷 🔳 🔲 ▪️ ▫️ ◾ ◽ ◼️ ◻️  🟧 🟨 🟩 🟦 🟪 ⬛ ⬜ 🟫'.split(' ')},
-{k:'Bendera',i:'🏁',l:'🏁 🚩 🎌 🏴 🏳 🏳️🌈 ️‍️ 🏴☠️ 🇩 🇾 🇬 🇳 🇱 🇵 🇰🇷 🇨🇳 🇹🇼 🇭🇰 🇮🇳 🇹🇭 🇻🇳 🇵🇭 🇦🇺 🇳🇿 🇸 🇦 🇽 🇷 🇦🇷 🇨🇱 🇨🇴 🇵🇪 🇧 🇷 🇩🇪 🇮🇹 🇪🇸 🇹 🇱 🇪 🇭 🇹 🇸🇪 🇳🇴 🇩🇰 🇮 🇮🇪 🇵🇱 🇷🇺 🇹🇷 🇬🇷 🇪🇬 🇿🇦 🇳🇬 🇰🇪 🇲🇦 🇸🇦 🇦🇪 🇮 🇮 🇵 🇧'.split(' ')}
+{k:'Smileys',i:'😀',l:['😀','😃','😄','😁','😆','😅','🤣','😂','🙂','🙃','😉','😊','😇','🥰','😍','😘','😜','🤪','😎','🥳','🤩','🥺','','😅','','😴','','🤫','🤯','😱','😨','😰','😥','😢','😣','😩','😫','🥱','😤','😡','😠','🤬','😈','👿','💀','💩','🤡','👹','👺','👻','👽','👾','🤖']},
+{k:'Gestur',i:'👋',l:['👋','','🖐','✋','🖖','','','🤏','️','🤞','','','🤘','','👈','','👆','','👇','☝️','🫵','','👎','','👊','🤛','🤜','','🙌','','👐','','🤝','','✍️','','🤳','💪','🦾','🦵','🦶','👂','','👃','','🫀','','🦷','','👀','','👅','']},
+{k:'Hewan',i:'🐶',l:['🐶','','🐭','','🐰','','🐻','','🐨','','🦁','','🐷','','🐸','','🙈','','🙊','','🐔','','🐦','🐤','🐣','🐥','🦆','','🦉','','🐺','','🐴','','🐝','','🦋','','🐞','🐜','🐢','🐍','🦎','','🦕','','🦑','','🦞','🦀','🐡','🐠','🐟','🐬','🐳','🐋','🦈','','🐅','','🦓','','🦧','','🦛','','🐪','','🦒','','🐃','','🐄','','🐖','','🐑','🦙','','🦌','','🐩','','🐇','','🦨','','🦫','','🦥','','🐀','','🦔']},
+{k:'Makanan',i:'🍎',l:['🍏','🍎','🍐','🍊','🍋','🍌','🍉','🍇','🍓','','🍈','','🍑','','🍍','','🥝','','🍆','','🥦','','🥒','🌶','','🌽','','🫒','🧄','🧅','','🍠','🥐','🥯','','🥖','','🧀','🥚','','🧈','','🧇','','🥩','','🍖','','🍔','','🍕','','🥪','','🧆','','🌯','','🥗','','🫕','','🍝','','🍲','','🍣','🍱','🥟','','🍤','','🍚','','🍥','','🥮','','🍡','','🍨','','🥧','','🍰','','🍮','','🍬','','🍿','🍩','🍪','🌰','🥜','','🥛','🍼','🫖','','🍵','🧃','🥤','','🍶','','🍻','','🍷','','🍸','','🧉','','🧊','','🍴','','🥣','','🥢','']},
+{k:'Aktivitas',i:'⚽',l:['⚽','🏀','','⚾','🥎','','🏐','','🥏','','🪀','','🏸','','🏑','','🏏','','🥅','','','🏹','','🤿','','🥋','','🛹','','🛷','','','🎿','','🏂','🪂','️','🤼','🤸','','🏇','','🏄','','🤽','','🧗','','🚴','','🥇','','🥉','','🎖','','🎗','','🎟','','🤹','','🩰','','🎬','','🎧','','🎹','','🪘','','🎺','','🎸','','🎻','','♟','','🎳','🎮','','🧩']},
+{k:'Travel',i:'🚗',l:['🚗','🚕','🚙','🚌','🚎','','🚓','','🚒','','🛻','','🚛','🚜','🏍','','🚲','','🛺','','🚍','','🚖','✈️','🛫','','🛩','','🛰','','🛸','','🛶','','','🛥','','⛴','🚢','','','⛽','🚧','','🚦','','🗿','','🗼','🏰','','🏟','','🎢','','⛲','⛱','🏖','🏝','🏜','🌋','⛰','','','🏕','','🛖','🏠','🏡','🏘','🏚','🏗','🏭','🏢','🏬','🏣','🏤','🏥','🏦','🏨','🏪','🏫','🏩','💒','🏛','⛪','🕌','🕍','','🕋','','🛤','🛣','🗾','','🏞','','🌄','','🎇','','🌇','','🏙','','🌌','','🌁']},
+{k:'Objek',i:'⌚',l:['⌚','📱','💻','⌨️','🖥','','🖱','🖲','','🗜','💽','💾','💿','📀','📼','','📸','','🎥','','🎞','','☎️','','','📺','','🎙','','🎛','','⏱','','⏰','','⌛','⏳','📡','','🔌','💡','🔦','🕯','','🧯','','💸','💵','💴','💶','💷','🪙','💰','💳','💎','⚖️','','🧰','🪛','','🔨','⚒','','','🪚','','⚙️','','','⛓','🧲','🔫','💣','🧨','🪓','🔪','','⚔️','','🚬','⚰️','','️','🏺','🔮','📿','','💈','️','','🔬','','🩹','','💊','💉','🩸','','🦠','','🧪','','🧹','','🧺','','🚽','','🚿','','🛀','','🪥','','🧽','','🧴','','🔑','🗝','🚪','','🛋','','🛌','🧸','','🖼','','🪟','','🛒','','🎈','','🎀','','🪅','','🎉','','🏮','','🧧','️','📩','📨','📧','💌','📥','','📦','','🪧','','📫','','📭','','📯','','📃','','📑','','📊','','📉','','🗓','','📅','','📇','🗃','🗳','🗄','📋','📁','📂','🗂','🗞','📰','📓','📔','📒','📕','','📘','','📚','','🔖','','🔗','','🖇','','📏','','📌','','✂️','🖊','🖋','✒️','🖌','🖍','📝','️','🔍','🔎','🔏','🔐','🔒','🔓']},
+{k:'Simbol',i:'❤️',l:['❤️','🧡','💛','💚','💙','💜','🖤','🤍','🤎','💔','❣️','💕','💞','💓','💗','💖','💘','💝','💟','✨','⭐','🌟','💫','⚡','','💢','💥','💦','🎵','🎶','✅','❌','','','🚫','','❕','❓','❔','‼️','⁉️','🔔','','📣','','💬','💭','💤','🌐','♻️','🆗','','🆕','','🆓','','🔢','0️⃣','1️⃣','2️⃣','3️⃣','4️⃣','5️⃣','6️⃣','7️⃣','8️⃣','9️⃣','','▶️','⏸','⏹','⏺','','⏮','','⏪','','🔽','➡️','⬅️','️','️','↗️','↘️','↙️','↖️','↕️','↔️','🔄','🔁','🔂','🔀','➕','➖','➗','✖️','♾','💲','💱','™️','©️','®️','〰️','➰','➿','🔚','🔙','🔛','','🔜','✔️','☑️','🔘','🔴','🟠','','🟢','🔵','','⚫','⚪','','','🔻','','🔹','','🔷','','🔲','▪️','▫️','◾','◽','◼️','◻️','🟥','','🟨','','🟦','','⬛','⬜','']},
+{k:'Bendera',i:'🏁',l:['🏁','🚩','','🏴','','🏳️🌈','‍☠️','🇩','🇾','🇬','🇧🇳','🇱','🇵','🇰🇷','🇳','🇹🇼','🇰','🇮🇳','🇭','🇳','🇵🇭','🇺','🇿','🇸','🇨🇦','🇽','🇧🇷','🇷','🇨🇱','🇴','🇪','🇬🇧','🇷','🇩🇪','🇹','🇪🇸','🇹','🇳🇱','🇪','🇭','🇪','🇳🇴','🇩🇰','🇫','🇮🇪','🇱','🇹🇷','🇷','🇪🇬','🇦','🇳🇬','🇪','🇲🇦','🇦','🇦🇪','🇱','🇵🇰','🇩','🇺','🇦','🇶🇦','🇼']}
 ];
 var cat=0;
 var pop=document.getElementById('emojiPop');
 if(pop){
   pop.innerHTML='<input id="emojiSearch" class="emoji-search" placeholder="Cari emoji…" autocomplete="off"><div id="emojiCats" class="emoji-cats"></div><div id="emojiGrid" class="emoji-grid"></div>';
   var buildCats=function(){var c=document.getElementById('emojiCats');c.innerHTML='';CATS.forEach(function(k,i){var b=document.createElement('button');b.type='button';b.textContent=k.i;b.title=k.k;if(i===cat)b.classList.add('on');b.onclick=function(){cat=i;buildCats();grid('');};c.appendChild(b);});};
-  var grid=function(f){var g=document.getElementById('emojiGrid');g.innerHTML='';var add=function(em){if(!em)return;var b=document.createElement('button');b.type='button';b.textContent=em;b.onclick=function(){QC.insertEmoji(em);};g.appendChild(b);};if(f){CATS.forEach(function(k){k.l.forEach(add);});}else{CATS[cat].l.forEach(add);}};
+  var grid=function(f){var g=document.getElementById('emojiGrid');g.innerHTML='';var add=function(em){if(!em)return;var b=document.createElement('button');b.type='button';b.textContent=em;b.onclick=function(){QC.insertEmoji(em);};g.appendChild(b);};if(f){var q=f.toLowerCase();CATS.forEach(function(k){k.l.forEach(function(em){if(em.indexOf(q)>=0)add(em);});});}else{CATS[cat].l.forEach(add);}};
   buildCats();grid('');
   document.getElementById('emojiSearch').addEventListener('input',function(e){grid(e.target.value.trim());});
 }
@@ -94,34 +95,3 @@ function startRec(){
       var rd=new FileReader();
       rd.onload=function(){
         QC.writeMsg({id:QC.uid+'-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,6),uid:QC.uid,user:S.name,text:'',time:Date.now(),type:'audio',audio:rd.result,dur:dur,mime:usedMime,editedAt:0,deleted:false,avatar:S.avatar,avatarColor:S.avatarColor,avatarImg:S.avatarImg||''});
-        QC.Sound.play('send');
-      };
-      rd.readAsDataURL(new Blob(chunks,{type:mr.mimeType||'audio/mp4'}));
-    };
-    mr.start(250);
-    composer.classList.add('recording');
-    document.getElementById('btnMic').classList.add('recording');
-    document.getElementById('recIndicator').classList.add('on');
-    document.getElementById('input').style.display='none';
-    tmr=setInterval(function(){var s=Math.floor((Date.now()-t0)/1000);document.getElementById('recTime').textContent=Math.floor(s/60)+':'+('0'+(s%60)).slice(-2);},250);
-  }).catch(function(){toast('Izinkan akses mikrofon','🎙');});
-}
-function stopRec(){
-  if(!mr||mr.state!=='recording')return;
-  clearInterval(tmr);mr.stop();
-  composer.classList.remove('recording');
-  document.getElementById('btnMic').classList.remove('recording');
-  document.getElementById('recIndicator').classList.remove('on');
-  document.getElementById('input').style.display='';
-}
-document.getElementById('btnMic').onclick=function(){if(mr&&mr.state==='recording')stopRec();else startRec();};
-
-var mm=document.createElement('div');mm.className='media-modal hidden';mm.id='mediaModal';
-mm.innerHTML='<button class="mm-close" type="button">'+icon('x')+'</button><img id="mmImg" alt="">';
-document.body.appendChild(mm);
-mm.querySelector('.mm-close').onclick=function(){mm.classList.add('hidden');};
-mm.addEventListener('click',function(e){if(e.target===mm)mm.classList.add('hidden');});
-window.QC_MEDIA={viewImage:function(src){document.getElementById('mmImg').src=src;mm.classList.remove('hidden');}};
-
-document.body.insertAdjacentHTML('beforeend',
-'<div id="callModal" class="call-modal hidden"><div class="call-remote"><video id="remoteVideo" autoplay playsinline></video><div id="callPlaceholder" class="call-placeholder"><div id="callBigAv" class="big-av">🦊</div><div id="callBigName">—</div></div><div id="callStatus" class="call-status" style="display:none"><span id="callStatusText">Memanggil…</span><small id="callStatusSub"></small></div><div class="call-inf
