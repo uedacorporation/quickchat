@@ -525,7 +525,7 @@ const Sound={
     else if(kind==='react')blip(950,1150,.06,.035,'triangle');
     else if(kind==='call')blip(880,880,.12,.04,'triangle');
   },
-  toggle(){this.on=!this.on;localStorage.setItem('qc-sound',this.on?'1':'0');updateSoundButtons();if(this.on)this.play('react');toast(this.on?'Suara aktif':'Suara dimatikan',this.on?'🔊':'');}
+  toggle(){this.on=!this.on;localStorage.setItem('qc-sound',this.on?'1':'0');updateSoundButtons();if(this.on)this.play('react');toast(this.on?'Suara aktif':'Suara dimatikan',this.on?'🔊':'🔇');}
 };
 function updateSoundButtons(){$$('.sound-btn').forEach(b=>{b.innerHTML=icon(Sound.on?'vol':'volx');b.setAttribute('aria-pressed',Sound.on);});}
 function toast(msg,emoji='✨',action){
@@ -590,7 +590,7 @@ function handleRemote(d){
 
 const S={room:null,name:'',token:0,joined:false,msgs:new Map(),order:[],presence:new Map(),reactRaw:{},unread:0,initialUntil:0,editId:null,typingSent:false,pendingCode:null,avatar:AVATARS[0].e,avatarColor:0,avatarImg:null,pendingImage:null};
 const T={hb:null,prune:null,typing:null,rebuild:null,search:null};
-const EMOJIS=['😀','😁','😂','🤣','😊','😍','😘','😜','😎','🥳','','🥳','😅','🙃','','🤔','','😱','😡','👍','','👏','','💪','️','👀','🫶','❤️','🧡','💛','💚','💙','💜','🖤','💔','✨','🔥','⚡','🎉','','🚀','🍕','☕','⭐','🫡'];
+const EMOJIS=['😀','😁','😂','🤣','😊','😍','😘','😜','😎','🥳','🤩','🥺','','😅','','😴','🤔','🤫','🤯','😱','😡','👍','','👏','','💪','✌️','👀','🫶','❤️','🧡','💛','💚','💙','💜','🖤','💔','✨','🔥','','🎉','💯','🚀','','☕','⭐','🫡',''];
 const QUICK=['❤️','😂','🔥',''];
 const URLRE=/(https?:\/\/[^\s<]+[^\s<.,:;"')\]])/g;
 const searchState={q:'',hits:[],idx:-1};
@@ -848,7 +848,7 @@ function generateCode(){
 }
 function autoGrow(){const ta=$('#input');ta.style.height='auto';ta.style.height=Math.min(ta.scrollHeight,140)+'px';}
 function updateSendBtn(){const ta=$('#input');const has=ta?(ta.value.trim().length>0||!!S.pendingImage):false;const b=$('#btnSend');if(b){b.disabled=!has;b.innerHTML=icon(S.editId?'check':'send',19);}const len=ta?ta.value.length:0;const cc=$('#charCount');if(cc){cc.classList.toggle('hidden',len<1800);cc.textContent=len+'/2000';}}
-function buildEmoji(){const pop=$('#emojiPop');if(!pop)return;pop.innerHTML='';EMOJIS.filter(Boolean).forEach(em=>{const b=document.createElement('button');b.type='button';b.textContent=em;b.onclick=()=>insertEmoji(em);pop.appendChild(b);});}
+function buildEmoji(){const pop=$('#emojiPop');if(!pop)return;pop.innerHTML='';EMOJIS.forEach(em=>{const b=document.createElement('button');b.type='button';b.textContent=em;b.onclick=()=>insertEmoji(em);pop.appendChild(b);});}
 function closeEmoji(){const ep=$('#emojiPop');if(ep)ep.classList.add('hidden');}
 function openModal(id){const m=$('#'+id);if(m)m.classList.remove('hidden');}
 function closeModal(id){const m=$('#'+id);if(m)m.classList.add('hidden');}
@@ -968,7 +968,7 @@ window.QC={S:S,uid:uid,icon:icon,toast:toast,esc:esc,COLORS:COLORS,avatarMarkup:
 init();
 })();
 </script>
-<script src="media.js?v=3"></script>
+<script src="media.js?v=4"></script>
 <script>
 window.addEventListener('load',function(){setTimeout(function(){
   if(!window.QC){var f=document.getElementById('fatal');if(f){f.classList.remove('hidden');var m=document.getElementById('fatalMsg');if(m)m.textContent='Skrip inti tidak berjalan — index.html kemungkinan terpotong saat upload. Pastikan baris terakhir file adalah </html> lalu upload ulang.';}}
