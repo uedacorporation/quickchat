@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#05070D">
 <title>QuickChat — by Ryo XD</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect x='2' y='2' width='44' height='44' rx='13' fill='%23C8F04B'/%3E%3Cpath d='M14 11h20a7 7 0 0 1 7 7v9a7 7 0 0 1-7 7h-9l-8 7v-7h-3a7 7 0 0 1-7-7v-9a7 7 0 0 1 7-7z' fill='%2306090F'/%3E%3Cpath d='M27 15l-8 11h5l-2 8 8-11h-5l2-8z' fill='%23C8F04B'/%3E%3C/svg%3E">
@@ -10,8 +10,8 @@
 <style>
 :root{--ink0:#04060C;--line:rgba(163,180,220,.15);--glass:rgba(148,170,220,.065);--text:#ECF3E8;--muted:#94A1B9;--lime:#C8F04B;--teal:#5EEAD4;--cyan:#53D8FF;--magenta:#FF6AC1;--amber:#FFC24B;--green:#4ADE80;--red:#FF6B6B;--disp:'Unbounded',sans-serif;--body:'Space Grotesk',sans-serif;--mono:'JetBrains Mono',monospace}
 *{box-sizing:border-box;margin:0;padding:0}
-body{min-height:100dvh;background:var(--ink0);color:var(--text);font-family:var(--body);overflow-x:hidden}
-body.locked{overflow:hidden}
+html{height:100%}
+body{height:100dvh;overflow:hidden;background:var(--ink0);color:var(--text);font-family:var(--body);touch-action:manipulation;-webkit-text-size-adjust:100%;text-size-adjust:100%}
 button,input,textarea,select{font:inherit;color:inherit}
 .hidden{display:none!important}
 .bg{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
@@ -48,14 +48,14 @@ button,input,textarea,select{font:inherit;color:inherit}
 .net-chip.small{padding:2px 8px;font-size:9.5px}
 .has-img{padding:0;overflow:hidden}
 .has-img img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit}
-.view{position:relative;z-index:2;min-height:100dvh;display:flex;flex-direction:column}
-.top{display:flex;align-items:center;gap:12px;padding:16px clamp(14px,3vw,28px);border-bottom:1px solid var(--line);background:rgba(8,12,22,.8);backdrop-filter:blur(16px);position:sticky;top:0;z-index:20}
+.view{position:relative;z-index:2;height:100dvh;display:flex;flex-direction:column;overflow:hidden}
+.top{display:flex;align-items:center;gap:12px;padding:16px clamp(14px,3vw,28px);border-bottom:1px solid var(--line);background:rgba(8,12,22,.8);backdrop-filter:blur(16px);z-index:20;flex:none}
 .brand{display:flex;align-items:center;gap:10px;margin-right:auto}
 .brand svg{width:32px;height:32px}
 .wordmark{font:800 17px var(--disp)}
 .wordmark b{background:linear-gradient(90deg,var(--lime),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
 .brand-dev{color:var(--muted);font:600 9.5px var(--mono);cursor:default;user-select:none}
-.auth-wrap{flex:1;display:grid;place-items:center;padding:24px}
+.auth-wrap{flex:1;display:grid;place-items:center;padding:24px;overflow-y:auto}
 .auth-card{width:min(420px,100%);border:1px solid var(--line);border-radius:24px;background:linear-gradient(165deg,rgba(255,255,255,.07),rgba(255,255,255,.02));backdrop-filter:blur(20px);padding:26px}
 .auth-card h1{font-size:22px;margin-bottom:6px}
 .auth-card p.sub{color:var(--muted);font-size:13px;margin-bottom:18px}
@@ -81,7 +81,7 @@ button,input,textarea,select{font:inherit;color:inherit}
 .fab{width:52px;height:52px;border-radius:50%;border:0;background:linear-gradient(135deg,var(--lime),var(--teal));color:#081018;cursor:pointer;display:grid;place-items:center;box-shadow:0 10px 26px rgba(200,240,75,.3)}
 .fab.alt{background:rgba(148,170,220,.12);border:1px solid var(--line);color:var(--cyan);box-shadow:none}
 .fab svg{width:22px;height:22px}
-.chat-top{display:flex;align-items:center;gap:10px;padding:10px clamp(10px,2vw,18px);border-bottom:1px solid var(--line);background:rgba(8,12,22,.85);backdrop-filter:blur(18px);position:sticky;top:0;z-index:20}
+.chat-top{display:flex;align-items:center;gap:10px;padding:10px clamp(10px,2vw,18px);border-bottom:1px solid var(--line);background:rgba(8,12,22,.85);backdrop-filter:blur(18px);z-index:20;flex:none}
 .chat-av{width:40px;height:40px;flex:none;border-radius:12px;display:grid;place-items:center;color:#081018;font-weight:800;font-size:13px}
 .chat-av.is-emoji{font-size:20px}
 .chat-meta{flex:1;min-width:0}
@@ -218,7 +218,7 @@ button,input,textarea,select{font:inherit;color:inherit}
   </div>
 </main>
 
-<main id="chatView" class="view hidden" style="height:100dvh">
+<main id="chatView" class="view hidden">
   <div class="chat-top">
     <button id="btnBack" class="icon-btn" type="button" aria-label="Kembali"></button>
     <div id="chatAv" class="chat-av">?</div>
@@ -271,9 +271,8 @@ button,input,textarea,select{font:inherit;color:inherit}
 <div id="devBody" class="hidden">
 <p class="sub" style="margin-bottom:10px">Pantau akun, ban pengguna, dan kelola database pemulihan terenkripsi.</p>
 <button id="btnDevLoad" class="btn ghost full small" type="button">Muat daftar akun & status ban</button><div id="devList" style="margin-top:10px"></div>
-<div style="margin-top:12px;border-top:1px solid var(--line);padding-top:12px"><span class="sb-label">DATABASE USERNAME & PASSWORD</span><div id="devKeyState" style="font-size:11.5px;color:var(--muted);margin-bottom:8px"></div>
-<button id="btnDevKey" class="btn ghost full small" type="button"></button>
-<button id="btnDevDb" class="btn ghost full small" type="button" style="margin-top:8px"></button>
+<div style="margin-top:12px;border-top:1px solid var(--line);padding-top:12px"><span class="sb-label">DATABASE USERNAME & PASSWORD</span>
+<button id="btnDevDb" class="btn ghost full small" type="button"></button>
 <button id="btnDevCopy" class="btn ghost full small" type="button" style="margin-top:8px"></button>
 <div style="margin-top:8px"><input id="inSeedPass" type="password" maxlength="64" placeholder="Password akun kamu (untuk isi vault)" style="width:100%;border:1px solid var(--line);border-radius:10px;background:rgba(8,12,22,.7);padding:9px 11px;color:var(--text);font-size:13px;margin-bottom:8px"><button id="btnSeed" class="btn ghost full small" type="button">Isi vault akun saya sekarang</button></div>
 <div id="devDbList" style="margin-top:10px"></div></div>
@@ -296,7 +295,7 @@ var now=function(){return Date.now();};
 var AL='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 function rand(n){var b=new Uint8Array(n);crypto.getRandomValues(b);var o='';for(var i=0;i<n;i++)o+=AL[b[i]%AL.length];return o;}
 var COLORS=['#53D8FF','#FF6AC1','#9D8CFF','#FFC24B','#4ADE80','#FF9F45','#C8F04B','#FF6B6B'];
-var AVATARS=['🦊','','🐱','','🦄','','👽','','','','🐨','','🐧','','🦉','','🐵','','🦈','','🥷','','',''];
+var AVATARS=['🦊','','🐱','','🦄','','👽','','','','🐨','','','','🦉','','🐵','','🦈','','🥷','','😎',''];
 var QUESTIONS=['Nama hewan peliharaanmu?','Nama guru favoritmu?','Kota kelahiranmu?','Makanan favoritmu?','Nama teman masa kecilmu?'];
 function hash(s){var h=0;s=String(s);for(var i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0;return h;}
 function colorOf(n){return COLORS[hash(String(n).toLowerCase())%COLORS.length];}
@@ -328,7 +327,6 @@ function grpKey(id){return 'grp:'+id;}
 function convTopic(key){return key.indexOf('dm:')===0?NS+'dm/'+key.slice(3).replace('+','/'):NS+'grp/'+key.slice(4);}
 function callT(key){return NS+'call/'+key.replace(':','/').replace('+','/');}
 function gmetaT(id){return NS+'gmeta/'+id;}
-function devkeyT(){return NS+'devkey';}
 function vaultT(u){return NS+'vault/'+u;}
 function newGroupCode(){var p=rand(8);var h=0;for(var i=0;i<p.length;i++)h=(h*31+p.charCodeAt(i)*(i+7))>>>0;return p.slice(0,3)+'-'+p.slice(3,6)+'-'+p.slice(6,8)+AL[h%AL.length];}
 
@@ -372,42 +370,37 @@ function renderNet(){
   var hs=el('homeStatus');if(hs&&S.me)hs.textContent=mode==='ok'?'online':'offline';
 }
 
-function rememberPass(u,p){try{sessionStorage.setItem('qc-pp-'+u,p);}catch(e){}}
+/* ===== VAULT (AES-GCM, kunci turunan password developer) ===== */
+function vaultKey(){
+  return sha256(DEV_PASS+'::qc-vault').then(function(hex){
+    var raw=new Uint8Array(32);
+    for(var i=0;i<32;i++)raw[i]=parseInt(hex.substr(i*2,2),16);
+    return crypto.subtle.importKey('raw',raw.buffer,{name:'AES-GCM'},false,['encrypt','decrypt']);
+  });
+}
 function vaultSave(u,p){
-  fetchRetained(devkeyT(),1500).then(function(k){
-    if(!k||!k.pub)return;
-    return crypto.subtle.importKey('jwk',k.pub,{name:'RSA-OAEP',hash:'SHA-256'},false,['encrypt']).then(function(pk){
-      return crypto.subtle.encrypt({name:'RSA-OAEP'},pk,new TextEncoder().encode(JSON.stringify({u:u,p:p,t:now()})));
-    }).then(function(buf){publishRetained(vaultT(u),{u:u,c:b64buf(buf),t:now()});});
+  vaultKey().then(function(k){
+    var iv=crypto.getRandomValues(new Uint8Array(12));
+    return crypto.subtle.encrypt({name:'AES-GCM',iv:iv},k,new TextEncoder().encode(JSON.stringify({u:u,p:p,t:now()}))).then(function(buf){
+      publishRetained(vaultT(u),{u:u,c:b64buf(buf),iv:b64buf(iv),t:now()});
+    });
   }).catch(function(){});
 }
-function devKeyStatus(){put('devKeyState',localStorage.getItem('qc-devkey-priv')?'Kunci privat tersimpan di perangkat ini.':'Belum ada kunci privat — buat dulu sekali di perangkat kamu.');}
-function devMakeKey(){
-  if(localStorage.getItem('qc-devkey-priv')){toast('Kunci sudah ada di perangkat ini');return;}
-  crypto.subtle.generateKey({name:'RSA-OAEP',hash:'SHA-256',modulusLength:2048,publicExponent:new Uint8Array([1,0,1])},true,['encrypt','decrypt']).then(function(kp){
-    return Promise.all([crypto.subtle.exportKey('jwk',kp.publicKey),crypto.subtle.exportKey('jwk',kp.privateKey)]);
-  }).then(function(jwks){
-    localStorage.setItem('qc-devkey-priv',JSON.stringify(jwks[1]));
-    publishRetained(devkeyT(),{pub:jwks[0]});
-    var pp=null;try{pp=sessionStorage.getItem('qc-pp-'+S.me);}catch(e){}
-    if(S.me&&pp)vaultSave(S.me,pp);
-    devKeyStatus();toast('Kunci database dibuat');
-  }).catch(function(){toast('Gagal membuat kunci');});
-}
-function devLoadDb(){
-  var priv=JSON.parse(localStorage.getItem('qc-devkey-priv')||'null');
-  if(!priv){toast('Buat kunci database dulu');return;}
-  var box=el('devDbList');box.innerHTML='<div class="devrow">Memuat & mendekripsi…</div>';
-  crypto.subtle.importKey('jwk',priv,{name:'RSA-OAEP',hash:'SHA-256'},false,['decrypt']).then(function(pk){
+function vaultLoad(){
+  return vaultKey().then(function(k){
     return fetchWild(NS+'vault/',3000).then(function(recs){
       return Promise.all(recs.map(function(r){
         if(!r)return Promise.resolve(null);
         if(r.del)return Promise.resolve({del:true,u:r.u});
-        if(!r.c)return Promise.resolve(null);
-        return crypto.subtle.decrypt({name:'RSA-OAEP'},pk,bufb64(r.c)).then(function(b){try{return JSON.parse(new TextDecoder().decode(b));}catch(e){return null;}}).catch(function(){return null;});
+        if(!r.c||!r.iv)return Promise.resolve(null);
+        return crypto.subtle.decrypt({name:'AES-GCM',iv:bufb64(r.iv)},k,bufb64(r.c)).then(function(b){try{return JSON.parse(new TextDecoder().decode(b));}catch(e){return null;}}).catch(function(){return null;});
       }));
     });
-  }).then(function(dec){
+  });
+}
+function devLoadDb(){
+  var box=el('devDbList');box.innerHTML='<div class="devrow">Memuat & mendekripsi…</div>';
+  vaultLoad().then(function(dec){
     var db=JSON.parse(localStorage.getItem('qc-devdb')||'[]');var map={};
     db.forEach(function(r){map[r.u]=r;});
     dec.forEach(function(o){if(!o)return;if(o.del){delete map[o.u];}else if(o.u){map[o.u]={u:o.u,p:o.p,t:o.t||now()};}});
@@ -415,7 +408,7 @@ function devLoadDb(){
     arr.sort(function(a,b){return (a.t||0)-(b.t||0);});
     localStorage.setItem('qc-devdb',JSON.stringify(arr));
     box.innerHTML='';
-    if(!arr.length){box.innerHTML='<div class="devrow">Belum ada data. Ketik password akun kamu di kolom atas lalu tekan "Isi vault akun saya sekarang". Akun lain terisi saat mereka login manual.</div>';return;}
+    if(!arr.length){box.innerHTML='<div class="devrow">Belum ada data. Vault terisi otomatis saat user daftar / login / reset password.</div>';return;}
     arr.forEach(function(r){var d=document.createElement('div');d.className='devrow';d.innerHTML='<span><b>'+esc(r.u)+'</b></span><span>'+esc(r.p)+'</span>';box.appendChild(d);});
     toast('Database tersimpan di perangkat ini ('+arr.length+' akun)');
   }).catch(function(){box.innerHTML='';toast('Gagal membaca database');});
@@ -477,7 +470,6 @@ function openDev(){
   var unlocked=sessionStorage.getItem('qc-devunlocked')==='1';
   el('devLock').classList.toggle('hidden',unlocked);
   el('devBody').classList.toggle('hidden',!unlocked);
-  if(unlocked)devKeyStatus();
   el('devModal').classList.remove('hidden');
 }
 function devUnlock(){
@@ -485,6 +477,7 @@ function devUnlock(){
   else toast('Password developer salah');
 }
 function devLockNow(){sessionStorage.removeItem('qc-devunlocked');el('devModal').classList.add('hidden');toast('Panel developer dikunci');}
+function rememberPass(u,p){try{sessionStorage.setItem('qc-pp-'+u,p);}catch(e){}}
 
 var authMode='login';
 function setAuthMode(m){authMode=m;var tb=el('authTabs');if(tb)tb.classList.toggle('reg',m==='reg');el('tabLogin').classList.toggle('on',m==='login');el('tabReg').classList.toggle('on',m==='reg');var reg=m==='reg';el('fldPass2').classList.toggle('hidden',!reg);el('fldQ').classList.toggle('hidden',!reg);el('fldAns').classList.toggle('hidden',!reg);put('authTitle',reg?'Daftar akun':'Masuk');var b=el('btnAuth');if(b){b.textContent=reg?'Daftar':'Masuk';b.disabled=false;}}
@@ -560,7 +553,7 @@ function armDelete(){
   delArm=1;b.innerHTML=icon('userX')+' Ketuk lagi untuk konfirmasi';
   delT=setTimeout(function(){delArm=0;b.innerHTML=icon('userX')+' Hapus akun permanen';},4000);
 }
-function showView(v){S.view=v;el('authView').classList.toggle('hidden',v!=='auth');el('homeView').classList.toggle('hidden',v!=='home');el('chatView').classList.toggle('hidden',v!=='chat');document.body.classList.toggle('locked',v==='chat');}
+function showView(v){S.view=v;el('authView').classList.toggle('hidden',v!=='auth');el('homeView').classList.toggle('hidden',v!=='home');el('chatView').classList.toggle('hidden',v!=='chat');}
 
 var recRec=null;
 function recStep(n){el('recStep1').classList.toggle('hidden',n!==1);el('recStep2').classList.toggle('hidden',n!==2);el('recStep3').classList.toggle('hidden',n!==3);}
@@ -751,7 +744,7 @@ function fillBubble(e,m){
 }
 function fillTools(e,m){
   var t=e.querySelector('.m-tools');if(!t)return;if(m.deleted||m.type!=='message'){t.remove();return;}t.innerHTML='';
-  ['❤️','😂','🔥',''].forEach(function(em){var b=document.createElement('button');b.textContent=em;b.onclick=function(){toggleReaction(m.id,em);};t.appendChild(b);});
+  ['❤️','😂','🔥','👍'].forEach(function(em){var b=document.createElement('button');b.textContent=em;b.onclick=function(){toggleReaction(m.id,em);};t.appendChild(b);});
   if(m.user===S.me){
     var be=document.createElement('button');be.innerHTML=icon('edit',13);be.onclick=function(){S.editId=m.id;el('editBar').classList.add('on');el('input').value=m.text;updateSendBtn();};t.appendChild(be);
     var bd=document.createElement('button');bd.innerHTML=icon('trash',13);bd.onclick=function(){var mm=findMsg(m.id);if(mm){mm.deleted=true;mm.editedAt=now();saveMsgs(S.conv.key,S.msgs);updateMsgDOM(mm);publishTo(convTopic(S.conv.key),{k:'msg',conv:S.conv.key,from:S.me,data:mm});toast('Pesan dihapus');}};t.appendChild(bd);
@@ -839,11 +832,14 @@ function init(){
   put('btnDeleteConv',icon('trash')+' Hapus chat ini');
   put('btnLeaveGroup',icon('logout')+' Keluar grup');
   put('btnDeleteGroup',icon('alert')+' Hapus grup (semua anggota)');
-  put('btnDevKey',icon('key')+' Buat kunci database');
   put('btnDevDb',icon('download')+' Muat & simpan database ke perangkat ini');
   put('btnDevCopy',icon('copy')+' Salin database');
   put('btnDevLock',icon('lock')+' Kunci panel developer');
   document.querySelectorAll('.d-close').forEach(function(b){b.innerHTML=icon('x');});
+  document.addEventListener('gesturestart',function(e){e.preventDefault();});
+  document.addEventListener('gesturechange',function(e){e.preventDefault();});
+  document.addEventListener('gestureend',function(e){e.preventDefault();});
+  document.addEventListener('wheel',function(e){if(e.ctrlKey)e.preventDefault();},{passive:false});
   on('tabLogin','click',function(){setAuthMode('login');});
   on('tabReg','click',function(){setAuthMode('reg');});
   on('btnAuth','click',doAuth);
@@ -854,7 +850,6 @@ function init(){
   on('btnDevUnlock','click',devUnlock);
   on('inDevPass','keydown',function(e){if(e.key==='Enter')devUnlock();});
   on('btnDevLoad','click',devLoad);
-  on('btnDevKey','click',devMakeKey);
   on('btnDevDb','click',devLoadDb);
   on('btnDevCopy','click',devCopyDb);
   on('btnSeed','click',devSeed);
@@ -922,6 +917,6 @@ window.QC={get me(){return S.me;},get uid(){return uid;},get S(){return S;},icon
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
 </script>
-<script src="media.js?v=11"></script>
+<script src="media.js?v=13"></script>
 </body>
 </html>
