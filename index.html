@@ -258,10 +258,10 @@ button,input,textarea,select{font:inherit;color:inherit}
 </aside>
 <div id="sbScrim" class="scrim hidden"></div>
 
-<div id="dmModal" class="modal hidden"><div class="m-scrim" data-close="dmModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="dmModal" type="button"></button><h3>Chat pribadi baru</h3><p class="sub">Masukkan nama pengguna tujuan.</p><label class="fld"><span>Username</span><input id="inDM" maxlength="16" placeholder="username teman"></label><button id="btnDM" class="btn primary full" type="button">Mulai chat</button></div></div>
+<div id="dmModal" class="modal hidden"><div class="m-scrim" data-close="dmModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="dmModal" type="button"></button><h3>Chat pribadi baru</h3><p class="sub">Masukkan nama pengguna tujuan yang sudah terdaftar.</p><label class="fld"><span>Username</span><input id="inDM" maxlength="16" placeholder="username teman"></label><button id="btnDM" class="btn primary full" type="button">Mulai chat</button></div></div>
 <div id="grpModal" class="modal hidden"><div class="m-scrim" data-close="grpModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="grpModal" type="button"></button><h3>Buat / gabung grup</h3><p class="sub">Buat grup baru atau masuk pakai kode undangan.</p><label class="fld"><span>Nama grup baru</span><input id="inGrp" maxlength="24" placeholder="contoh: Tim Kelas"></label><button id="btnGrp" class="btn primary full" type="button">Buat grup</button><div style="margin:12px 0;text-align:center;color:var(--muted);font-size:12px">— atau —</div><label class="fld"><span>Kode undangan grup</span><input id="inGrpCode" maxlength="32" placeholder="XXX-XXX-XXX"></label><button id="btnGrpJoin" class="btn ghost full" type="button">Gabung grup</button></div></div>
 <div id="profModal" class="modal hidden"><div class="m-scrim" data-close="profModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="profModal" type="button"></button><h3>Profil & pengaturan akun</h3><p class="sub">Foto dari galeri atau kamera. Tanpa foto = ikon orang standar.</p><div class="profile-top"><div class="avatar-preview" id="avatarPreview"></div><div style="flex:1"><div id="profName" style="font-weight:700">—</div><div style="color:var(--muted);font-size:12px;margin-top:2px">Avatar tampil di chat & kontak</div></div><div style="display:flex;flex-direction:column;gap:6px"><button id="btnUploadAvatar" class="mini-btn" type="button"></button><button id="btnCamAvatar" class="mini-btn" type="button"></button><button id="btnRandomAvatar" class="mini-btn" type="button"></button></div><input id="avatarInput" type="file" accept="image/*" hidden><input id="avatarCam" type="file" accept="image/*" capture="environment" hidden></div>
-<label class="fld"><span>Nama tampilan</span><input id="inpDisplayName" maxlength="24" placeholder="contoh: Ryo Ueda"></label>
+<label class="fld"><span>Nama tampilan</span><input id="inpDisplayName" maxlength="24"></label>
 <div class="color-row" id="colorRow"></div><button id="btnSaveProf" class="btn primary full" type="button">Simpan profil</button>
 <div style="margin-top:14px;border-top:1px solid var(--line);padding-top:14px"><span class="sb-label">PENGATURAN AKUN</span><button id="btnDelAcc" class="btn danger full small" type="button"></button><p class="sub" style="margin:8px 0 0;font-size:11px">Akun, profil, dan salinan di database developer ikut terhapus. Username bisa dipakai daftar lagi nanti.</p></div>
 </div></div>
@@ -324,10 +324,15 @@ function presT(u){return NS+'pres/'+u;}
 function banT(u){return NS+'ban/'+u;}
 function inT(u,conv){return NS+'in/'+u+'/'+conv;}
 function inWild(u){return NS+'in/'+u+'/+';}
-function dmKey(a,b){return 'dm:'+([a,b].sort().join('+'));}
+function dmKey(a,b){return 'dm:'+([a,b].sort().join('~'));}
 function grpKey(id){return 'grp:'+id;}
-function convTopic(key){return key.indexOf('dm:')===0?NS+'dm/'+key.slice(3).replace('+','/'):NS+'grp/'+key.slice(4);}
-function callT(key){return NS+'call/'+key.replace(':','/').replace('+','/');}
+function convTopic(key){return key.indexOf('dm:')===0?NS+'dm/'+key.slice(3).replace('~','/'):NS+'grp/'+key.slice(4);}
+function topicToKey(t){
+  if(t.indexOf(NS+'dm/')===0)return 'dm:'+t.slice((NS+'dm/').length).replace('/','~');
+  if(t.indexOf(NS+'grp/')===0)return 'grp:'+t.slice((NS+'grp/').length);
+  return null;
+}
+function callT(key){return NS+'call/'+key.replace(':','/').replace('~','/');}
 function gmetaT(id){return NS+'gmeta/'+id;}
 function vaultT(u){return NS+'vault/'+u;}
 function newGroupCode(){var p=rand(8);var h=0;for(var i=0;i<p.length;i++)h=(h*31+p.charCodeAt(i)*(i+7))>>>0;return p.slice(0,3)+'-'+p.slice(3,6)+'-'+p.slice(6,8)+AL[h%AL.length];}
@@ -368,7 +373,30 @@ function route(t,d){
   if(t.indexOf(NS+'call/')===0){if(window.QC&&QC.onCallSignal&&d.to===S.me)QC.onCallSignal(d);return;}
   if(t.indexOf(NS+'in/'+S.me+'/')===0){onPointer(d);return;}
   if(t.indexOf(NS+'pres/')===0){onPresence(d);return;}
-  if(S.conv&&t===convTopic(S.conv.key)){onConvMsg(d);}
+  var key=topicToKey(t);
+  if(!key)return;
+  if(S.conv&&S.conv.key===key)onConvMsg(d);
+  else onBackground(key,d);
+}
+function onBackground(key,d){
+  if(d.k==='msg'&&d.data){
+    var m=d.data,arr=loadMsgs(key),ex=false;
+    for(var i=0;i<arr.length;i++)if(arr[i].id===m.id){ex=true;break;}
+    if(!ex){arr.push(m);saveMsgs(key,arr);}
+    var c=getConv(key);
+    if(c){
+      c.last={text:m.type==='image'?'Gambar':m.type==='audio'?'Suara':m.text,time:m.time,from:m.from};
+      if(m.from!==S.me)S.unread[key]=(S.unread[key]||0)+1;
+      saveConvs();
+      if(S.view==='home')renderHome();
+    }
+  }else if(d.k==='hist-req'&&d.from!==S.me){
+    publishTo(convTopic(key),{k:'hist-res',to:d.from,conv:key,msgs:loadMsgs(key).slice(-200)});
+  }else if(d.k==='hist-res'&&d.to===S.me){
+    var arr2=loadMsgs(key),ch=false;
+    (d.msgs||[]).forEach(function(m){var ex2=false;for(var j=0;j<arr2.length;j++)if(arr2[j].id===m.id){ex2=true;break;}if(!ex2){arr2.push(m);ch=true;}});
+    if(ch){arr2.sort(function(a,b){return a.time-b.time;});saveMsgs(key,arr2);}
+  }
 }
 function renderNet(){
   var mode=!navigator.onLine?'off':(typeof mqtt==='undefined'?'wait':(anyConnected()?'ok':'wait'));
@@ -378,9 +406,8 @@ function renderNet(){
   var hs=el('homeStatus');if(hs&&S.me)hs.textContent=mode==='ok'?'online':'offline';
 }
 
-/* ===== overlay + tombol back android ===== */
 var ovStack=[];
-function openOv(id){var e=el(id);if(!e)return;e.classList.remove('hidden');if(id==='sidebar')e.classList.add('open');try{history.pushState({qcov:id},'');ovStack.push(id);}catch(err){ovStack.push(id);}}
+function openOv(id){var e=el(id);if(!e)return;e.classList.remove('hidden');if(id==='sidebar')e.classList.add('open');try{history.pushState({qcov:id},'');}catch(err){}ovStack.push(id);}
 function hideOv(id){var e=el(id);if(!e)return;e.classList.add('hidden');if(id==='sidebar')e.classList.remove('open');}
 function closeOv(id){var top=ovStack[ovStack.length-1];if(top===id){history.back();}else{hideOv(id);var i=ovStack.lastIndexOf(id);if(i>=0)ovStack.splice(i,1);}}
 window.addEventListener('popstate',function(){var id=ovStack.pop();if(id)hideOv(id);});
@@ -520,11 +547,26 @@ function doAuth(){
   }).then(resetBtn).catch(function(e){resetBtn();toast(e.message||'Gagal');});
 }
 function saveViewState(){if(!S.me)return;try{localStorage.setItem('qc-view-'+S.me,JSON.stringify({v:S.view,key:S.conv?S.conv.key:null}));}catch(e){}}
+function migrateConvs(){
+  try{
+    var cs=JSON.parse(localStorage.getItem('qc-convs-'+S.me)||'[]');var ch=false;
+    cs.forEach(function(c){
+      if(c.key&&c.key.indexOf('+')>=0){
+        var nk=c.key.replace(/\+/g,'~');
+        var om=localStorage.getItem('qc-msgs-'+S.me+'-'+c.key);if(om)localStorage.setItem('qc-msgs-'+S.me+'-'+nk,om);
+        var orr=localStorage.getItem('qc-react-'+S.me+'-'+c.key);if(orr)localStorage.setItem('qc-react-'+S.me+'-'+nk,orr);
+        c.key=nk;ch=true;
+      }
+    });
+    if(ch)localStorage.setItem('qc-convs-'+S.me,JSON.stringify(cs));
+  }catch(e){}
+}
 function enterSession(u,h){
   S.me=u;S.hash=h;
   localStorage.setItem('qc-session',JSON.stringify({u:u,h:h}));
   var pp=null;try{pp=sessionStorage.getItem('qc-pp-'+u);}catch(e){}
   if(pp)vaultSave(u,pp);
+  migrateConvs();
   loadConvs();setupHomeSubs();publishProfile();startPresence();
   var vs=null;try{vs=JSON.parse(localStorage.getItem('qc-view-'+u)||'null');}catch(e){}
   if(vs&&vs.v==='chat'&&vs.key&&getConv(vs.key)){showView('chat');openConv(vs.key);}
@@ -608,7 +650,10 @@ function saveMsgs(key,arr){localStorage.setItem(msgsKey(key),JSON.stringify(arr.
 function removeConv(key){unsub(convTopic(key));if(key.indexOf('dm:')===0)unsub(callT(key));S.convs=S.convs.filter(function(c){return c.key!==key;});delete S.unread[key];delete S.lastRead[key];saveConvs();localStorage.removeItem(msgsKey(key));localStorage.removeItem('qc-react-'+S.me+'-'+key);}
 
 function setupHomeSubs(){sub(inWild(S.me));sub(NS+'call/#');sub(presT(S.me));S.convs.forEach(subscribeConvPassive);}
-function subscribeConvPassive(c){if(c.type==='dm'){sub(presT(c.peer));ensureProfile(c.peer);}else{sub(convTopic(c.key));}}
+function subscribeConvPassive(c){
+  if(c.type==='dm'){sub(presT(c.peer));sub(convTopic(c.key));ensureProfile(c.peer);}
+  else{sub(convTopic(c.key));}
+}
 function touchPresence(u){if(!u||u===S.me)return;S.presence[u]={seen:now(),online:true};renderPresenceUI();}
 function renderPresenceUI(){if(S.view==='home')renderHome();if(S.conv){renderChatHeader();renderSidebar();}}
 function onPointer(d){
@@ -617,7 +662,7 @@ function onPointer(d){
   if(!c.peer&&c.type==='dm')c.peer=d.from===S.me?d.peer:d.from;
   c.last={text:d.preview||'',time:d.time||now(),from:d.from||''};
   if(d.from&&d.from!==S.me&&!(S.conv&&S.conv.key===c.key&&S.view==='chat')){S.unread[c.key]=(S.unread[c.key]||0)+1;}
-  if(d.from&&d.from!==S.me&&d.type==='dm'){sub(presT(d.from));ensureProfile(d.from);}
+  if(d.from&&d.from!==S.me&&d.type==='dm'){sub(presT(d.from));sub(convTopic(c.key));ensureProfile(d.from);}
   saveConvs();
   if(S.view==='home')renderHome();
   if(S.conv&&S.conv.key===c.key&&S.view==='chat')renderChatHeader();
@@ -785,11 +830,15 @@ function startDM(u){
   u=(u||'').trim().toLowerCase();
   if(!validUser(u)){toast('Username tidak valid');return;}
   if(u===S.me){toast('Tidak bisa chat dengan diri sendiri');return;}
-  var key=dmKey(S.me,u);
-  var c=getConv(key)||upsertConv({key:key,type:'dm',peer:u,name:u,members:null,owner:null,last:null});
-  subscribeConvPassive(c);ensureProfile(u);
-  closeOv('dmModal');
-  openConv(key);
+  if(!anyConnected()){toast('Harus online untuk memeriksa username');return;}
+  fetchRetained(userT(u),2500).then(function(rec){
+    if(!rec||!rec.u||rec.deleted){toast('Username tidak terdaftar');return;}
+    var key=dmKey(S.me,u);
+    var c=getConv(key)||upsertConv({key:key,type:'dm',peer:u,name:u,members:null,owner:null,last:null});
+    subscribeConvPassive(c);ensureProfile(u);
+    closeOv('dmModal');
+    openConv(key);
+  });
 }
 function createGroup(name){
   name=(name||'').trim();if(name.length<3){toast('Nama grup minimal 3 karakter');return;}
@@ -934,7 +983,7 @@ window.QC={get me(){return S.me;},get uid(){return uid;},get S(){return S;},icon
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
 </script>
-<script src="media.js?v=17"></script>
+<script src="media.js?v=18"></script>
 </body>
 </html>
-<!-- END index.html v17 -->
+<!-- END index.html v18 -->
