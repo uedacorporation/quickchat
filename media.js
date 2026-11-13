@@ -1,4 +1,4 @@
-/* media.js v12 — modul media QuickChat */
+/* media.js v13 — emoji, gambar, suara, call video+suara (STUN+TURN) */
 (function(){
 'use strict';
 if(!window.QC)return;
@@ -9,8 +9,7 @@ try{
 var C='';
 C+='.emoji-pop{display:flex;flex-direction:column;';
 C+='max-height:320px;overflow:hidden}';
-C+='.emoji-head{display:flex;gap:6px;';
-C+='margin-bottom:7px}';
+C+='.emoji-head{display:flex;gap:6px;margin-bottom:7px}';
 C+='.emoji-head .emoji-search{flex:1;margin-bottom:0;';
 C+='border:1px solid var(--line);border-radius:10px;';
 C+='background:rgba(148,170,220,.06);padding:7px 11px;';
@@ -20,11 +19,12 @@ C+='border:1px solid var(--line);border-radius:10px;';
 C+='background:var(--glass);color:var(--muted);';
 C+='cursor:pointer;display:grid;place-items:center}';
 C+='.emoji-cats{display:flex;gap:2px;margin-bottom:5px;';
-C+='padding-bottom:5px;border-bottom:1px solid var(--line);';
-C+='overflow-x:auto}';
+C+='padding-bottom:5px;';
+C+='border-bottom:1px solid var(--line);overflow-x:auto}';
 C+='.emoji-cats button{flex:none;padding:4px 8px;';
 C+='border:1px solid transparent;border-radius:8px;';
-C+='background:none;font-size:15px;cursor:pointer;opacity:.5}';
+C+='background:none;font-size:15px;cursor:pointer;';
+C+='opacity:.5}';
 C+='.emoji-cats button.on{opacity:1;';
 C+='border-color:rgba(200,240,75,.3);';
 C+='background:rgba(200,240,75,.1)}';
@@ -64,8 +64,8 @@ C+='.big-av img,.ic-av img{width:100%;height:100%;';
 C+='object-fit:cover;display:block}';
 C+='.call-local{position:absolute;bottom:16px;right:16px;';
 C+='width:100px;height:150px;border-radius:12px;';
-C+='overflow:hidden;border:2px solid rgba(255,255,255,.2);';
-C+='background:#111}';
+C+='overflow:hidden;';
+C+='border:2px solid rgba(255,255,255,.2);background:#111}';
 C+='.call-local video{width:100%;height:100%;';
 C+='object-fit:cover}';
 C+='.call-info{position:absolute;top:16px;left:16px;';
@@ -106,9 +106,9 @@ C+='display:grid;place-items:center;color:#fff}';
 C+='.ic-actions button svg{width:17px;height:17px}';
 C+='.ic-accept{background:var(--green)}';
 C+='.ic-decline{background:var(--red)}';
-var st=document.createElement('style');
-st.textContent=C;
-document.head.appendChild(st);
+var stx=document.createElement('style');
+stx.textContent=C;
+document.head.appendChild(stx);
 document.addEventListener('error',function(e){
 var t=e.target;
 if(t&&t.tagName==='AUDIO'){
@@ -123,99 +123,98 @@ return o.l;
 }
 var L;
 L=cat('Smileys','😀');
-L.push('😀 😃  😁 😆  🤣 😂 🙂 🙃');
+L.push('😀 😃 😄  😆 😅 🤣 😂 🙂 🙃');
 L.push('😉 😊 😇 🥰 😍  😜 🤪  🥳');
-L.push('🤩 🥺 😭  🤫  😱 😨 😰 😥');
+L.push('🤩 🥺 😭  🤫 🤯 😱 😨 😰 😥');
 L.push('😢 😣 😩  🥱  😡 😠  😈');
 L.push('👿  💩 🤡 👹 👺 👻 👽 👾 🤖');
 L=cat('Gestur','👋');
-L.push('👋 🤚 🖐 ✋ 🖖 👌 🤌 🤏 ✌️ 🤞');
-L.push('🫰 🤟 🤘 🤙 👈 👉  🖕 👇 ️');
-L.push(' 👍 👎 ✊ 👊  🤜 👏 🙌 ');
-L.push(' 🤲 🤝  ✍️  🤳 💪 🦾 🦵');
-L.push('🦶 👂 🦻 👃 🧠 🫀 🫁 🦷 🦴 👀');
+L.push('👋  🖐 ✋ 🖖  🤌  ✌️ 🤞');
+L.push('🫰 🤟 🤘 🤙 👈 👉 👆 🖕 👇 ☝️');
+L.push('🫵 👍 👎 ✊ 👊  🤜 👏 🙌 ');
+L.push(' 🤲 🤝  ✍️ 💅  💪  🦵');
+L.push('🦶 👂 🦻 👃 🧠 🫀 🫁  🦴 👀');
 L.push('👁 👅 👄');
 L=cat('Hewan','🐶');
-L.push('🐶  🐭 🐹 🐰 🦊 🐻 🐼 🐨 🐯');
-L.push('🦁  🐷 🐸 🐵 🙈 🙉 🙊 🐒 🐔');
+L.push('🐶 🐱 🐭 🐹 🐰 🦊 🐻 🐼 🐨 🐯');
+L.push('🦁 🐮 🐷 🐸 🐵 🙈 🙉 🙊 🐒 🐔');
 L.push('🐧 🐦 🐤 🐣 🐥  🦅 🦉 🦇 🐺');
-L.push('🐗 🐴 🦄 🐝 🐛 🦋 🐌 🐞 🐜 🐢');
-L.push('🐍 🦎 🦖 🦕 🐙 🦑 🦐 🦞 🦀 🐡');
+L.push('🐗 🐴 🦄 🐝 🐛 🦋 🐌 🐞 🐜 ');
+L.push(' 🦎 🦖 🦕 🐙 🦑 🦐 🦞 🦀 🐡');
 L.push('🐠  🐬 🐳 🐋 🦈 🐊 🐅 🐆 🦓');
-L.push('🦍 🦧 🐘 🦛 🦏 🐪 🐫 🦒 🦘 🐃');
+L.push('🦍 🦧 🐘 🦛 🦏 🐪  🦒 🦘 ');
 L.push('🐂 🐄 🐎 🐖 🐏 🐑 🦙 🐐 🦌 🐕');
 L.push('🐩 🐈 🐇 🦝 🦨 🦡 🦫 🦦 🦥 🐁');
 L.push('🐀 🐿 🦔');
 L=cat('Makanan','🍎');
 L.push('🍏 🍎 🍐 🍊 🍋 🍌 🍉 🍇 🍓 🫐');
-L.push('🍈 🍒 🍑 🥭 🍍 🥥  🍅 🍆 🥑');
-L.push('🥦 🥬 🥒 🌶 🫑 🌽 🥕  🧄 ');
-L.push('🥔 🍠 🥐  🍞  🧀 🥚 🍳 🧈');
+L.push('🍈 🍒 🍑 🥭 🍍 🥥 🥝 🍅 🍆 🥑');
+L.push('🥦 🥬 🥒 🌶 🫑 🌽 🥕 🫒  🧅');
+L.push('🥔 🍠 🥐  🍞  🧀  🍳 🧈');
 L.push('🥞 🧇 🥓 🥩 🍗 🍖 🍔 🍟 🍕 🫓');
 L.push('🥪 🥙 🧆 🌮 🌯 🥗 🫕 🍝 🍜 🍲');
-L.push('🍛 🍣 🍱 🥟 🦪 🍤 🍙 🍚 🍘 🍥');
-L.push('🥠 🥮 🍢 🍡 🍧 🍨 🍦 🥧 🧁 🍰');
-L.push('🎂  🍭 🍬 🍫 🍿 🍩 🍪 🌰 🥜');
-L.push('🍯  🍼 🫖  🍵  🥤  🍶');
-L.push('🍺 🍻 🥂 🍷 🥃 🍸 🍹 🧉 🍾 🧊');
+L.push('🍛  🍱  🦪  🍙 🍚 🍘 🍥');
+L.push('🥠 🥮 🍢 🍡 🍧 🍨  🥧  🍰');
+L.push('🎂 🍮  🍬 🍫 🍿 🍩 🍪 🌰 🥜');
+L.push('🍯 🥛 🍼  ☕  🧃 🥤 🧋 🍶');
+L.push('🍺 🍻  🍷 🥃 🍸 🍹 🧉 🍾 🧊');
 L.push('🥄 🍴 🍽 🥣 🥡 🥢 🧂');
 L=cat('Aktivitas','⚽');
-L.push('⚽ 🏀 🏈 ⚾ 🥎 🎾 🏐 🏉 🥏 🎱');
+L.push('⚽ 🏀 🏈 ⚾ 🥎  🏐 🏉  🎱');
 L.push('🪀 🏓 🏸 🏒 🏑 🥍 🏏 🪃 🥅 ⛳');
-L.push('🪁 🏹 🎣 🤿 🥊 🥋 🎽 🛹 🛼 🛷');
-L.push('⛸  🎿  🏂  🏋️  🤸 🤺');
-L.push('🏇  🏄  🤽  🧗  🚴 🏆');
+L.push('🪁 🏹 🎣 🤿 🥊 🥋 🎽 🛹  🛷');
+L.push('⛸ 🥌 🎿 ⛷ 🏂 🪂 🏋️ 🤼 🤸 🤺');
+L.push('🏇 🧘 🏄 🏊 🤽 🚣  🚵 🚴 ');
 L.push('🥇 🥈 🥉 🏅 🎖 🏵 🎗 🎫 🎟 🎪');
 L.push('🤹 🎭 🩰 🎨 🎬 🎤 🎧 🎼 🎹 🥁');
 L.push('🪘 🎷 🎺 🪗 🎸 🪕 🎻 🎲 ♟ 🎯');
-L.push('🎳  🎰 🧩');
+L.push('🎳 🎮 🎰 🧩');
 L=cat('Travel','🚗');
-L.push('🚗 🚕 🚙 🚌 🚎  🚓  🚒 🚐');
-L.push('🛻 🚚 🚛 🚜 🏍  🚲  🛺 ');
+L.push('🚗 🚕 🚙 🚌 🚎 🏎 🚓 🚑 🚒 🚐');
+L.push('🛻 🚚 🚛 🚜 🏍 🛵 🚲 🛴 🛺 🚔');
 L.push('🚍 🚘 🚖 ✈️ 🛫 🛬 🛩 💺 🛰 ');
-L.push('🛸  🛶  🚤 🛥 🛳 ⛴ 🚢 ⚓');
+L.push('🛸  🛶 ⛵ 🚤 🛥 🛳 ⛴ 🚢 ⚓');
 L.push('🪝 ⛽ 🚧 🚥 🚦 🗺 🗿 🗽 🗼 🏰');
 L.push('🏯 🏟 🎡 🎢 🎠 ⛲ ⛱ 🏖 🏝 🏜');
-L.push('🌋 ⛰  🗻  ⛺  🏠 🏡 🏘');
-L.push('🏚 🏗 🏭 🏢 🏬 🏣 🏤 🏥 🏦 🏨');
+L.push('🌋 ⛰ 🏔 🗻 🏕 ⛺ 🛖 🏠 🏡 🏘');
+L.push('🏚 🏗 🏭 🏢 🏬  🏤 🏥  🏨');
 L.push('🏪 🏫 🏩 💒  ⛪ 🕌 🕍  🕋');
-L.push('⛩  🛣 🗾 🎑 🏞  🌄  🎇');
+L.push('⛩ 🛤 🛣 🗾 🎑  🌅 🌄  🎇');
 L.push('🎆 🌇 🌆 🏙 🌃 🌌 🌉 🌁');
 L=cat('Objek','⌚');
-L.push('⌚ 📱 💻 ️ 🖥 🖨 🖱 🖲 🕹 🗜');
+L.push('⌚  💻 ⌨️ 🖥 🖨 🖱 🖲 🕹 🗜');
 L.push('💽 💾 💿 📀 📼 📷 📸 📹 🎥 📽');
-L.push('🎞  ☎️  📠  📻 🎙 🎚 🎛');
+L.push('🎞 📞 ☎️  📠 📺 📻 🎙 🎚 🎛');
 L.push('🧭 ⏱ ⏲ ⏰ 🕰 ⌛ ⏳ 📡 🔋 🔌');
-L.push('💡 🔦 🕯  🧯  💸 💵 💴 💶');
-L.push('💷 🪙 💰 💳 💎 ⚖️  🧰 🪛 🔧');
-L.push('🔨 ⚒ 🛠 ⛏ 🪚 🔩 ⚙️ 🪤 🧱 ⛓');
-L.push('🧲 🔫  🧨  🔪 🗡 ⚔️ 🛡 🚬');
+L.push('💡 🔦  🪔 🧯  💸 💵 💴 💶');
+L.push('💷 🪙 💰  💎 ⚖️ 🪜  🪛 🔧');
+L.push('🔨 ⚒ 🛠 ⛏ 🪚 🔩 ⚙️  🧱 ');
+L.push('🧲 🔫 💣 🧨 🪓 🔪  ⚔️  🚬');
 L.push('⚰️  ⚱️  🔮 📿  💈 ️ 🔭');
-L.push('🔬  🩹 🩺 💊 💉 🩸 🧬  🧫');
-L.push('🧪 🌡 🧹 🪠 🧺 🧻  🚰  🛁');
-L.push('🛀 🧼 🪥 🪒 🧽 🪣 🧴 🛎 🔑 ');
-L.push('🚪 🪑 🛋 🛏 🛌 🧸 🪆 🖼 🪞 🪟');
-L.push('🛍 🛒 🎁 🎈 🎏 🎀  🪅 🎊 🎉');
-L.push('🎎  🎐 🧧 ✉️  📨  💌 📥');
-L.push('📤 📦 🏷 🪧  📫  📭  📯');
-L.push('📜 📃 📄 📑 🧾 📊 📈 📉 🗒 🗓');
-L.push('📆 📅 🗑 📇 🗃 🗳 🗄 📋 📁 📂');
-L.push('🗂 🗞 📰 📓 📔 📒 📕 📗 📘 📙');
-L.push('📚  🔖  🔗  🖇  📏 ');
-L.push('📌 📍 ✂️ 🖊 🖋 ✒️ 🖌 🖍 📝 ✏️');
-L.push('🔍 🔎 🔏 🔐 🔒 🔓');
+L.push('🔬 🕳 🩹 🩺 💊 💉 🩸 🧬 🦠 🧫');
+L.push('🧪  🧹  🧺 🧻 🚽 🚰 🚿 🛁');
+L.push('🛀 🧼 🪥 🪒 🧽 🪣 🧴  🔑 🗝');
+L.push('🚪  🛋 🛏 🛌 🧸 🪆 🖼 🪞 🪟');
+L.push('🛍 🛒 🎁 🎈 🎏 🎀 🪄 🪅 🎊 🎉');
+L.push('🎎 🏮 🎐 🧧 ✉️  📨  💌');
+L.push('📥 📤 📦 🏷 🪧  📫  📭 📮');
+L.push('📯 📜 📃 📄 📑 🧾 📊  📉 ');
+L.push(' 📆 📅  📇  🗳 🗄 📋 📁');
+L.push('📂 🗂 🗞 📰 📓 📔 📒 📕 📗 📘');
+L.push('📙  📖 🔖  🔗 📎  📐 📏');
+L.push('🧮 📌 📍 ✂️ 🖊 🖋 ✒️ 🖌 🖍 📝');
+L.push('✏️ 🔍 🔎 🔏 🔐 🔒 🔓');
 L=cat('Simbol','❤️');
-L.push('❤️ 🧡 💛 💚 💙 💜 🖤 🤍 🤎 💔');
+L.push('❤️ 🧡 💛  💙 💜 🖤 🤍 🤎 💔');
 L.push('❣️ 💕 💞 💓 💗 💖 💘 💝 💟 ✨');
-L.push('⭐ 🌟 💫 ⚡ 🔥  💥 💦 🎵 🎶');
+L.push('⭐ 🌟 💫 ⚡ 🔥  💥 💦  🎶');
 L.push('✅ ❌  ⛔  ❗ ❕ ❓ ❔ ‼️');
-L.push('⁉️ 🔔 🔕 📣 📢 💬 💭 💤 🌐 ♻️');
-L.push('🆗 🆒 🆕 🆙 🆓 🆖 🔢 🔟 ▶️ ⏸');
-L.push('0️⃣ 1️⃣ 2️⃣ 3️⃣ 4️⃣ 5️⃣ 6️⃣ 7️⃣ 8️⃣ 9️⃣');
-L.push('⏹  ⏭ ⏮ ⏩ ⏪ 🔼 🔽 ➡️ ️');
+L.push('⁉️ 🔔 🔕  📢  💭 💤 🌐 ♻️');
+L.push('🆗 🆒 🆕 🆙 🆓 🆖 🔢  ▶️ ⏸');
+L.push('⏹ ⏺ ⏭ ⏮ ⏩ ⏪ 🔼 🔽 ➡️ ️');
 L.push('⬆️ ️ ↗️ ↘️ ↙️ ↖️ ↕️ ↔️ 🔄 ');
-L.push(' 🔀 ➕ ➖ ➗ ✖️ ♾  💱 ™️');
-L.push('©️ ®️ 〰️ ➰ ➿  🔙 🔛 🔝 🔜');
+L.push(' 🔀 ➕  ➗ ✖️  💲 💱 ™️');
+L.push('©️ ®️ 〰️ ➰ ➿ 🔚 🔙 🔛 🔝 🔜');
 L.push('✔️ ☑️ 🔘 🔴  🟡 🟢 🔵 🟣 ⚫');
 L.push('⚪  🔺 🔻 🔸 🔹 🔶 🔷 🔳 🔲');
 L.push('▪️ ▫️ ◾ ◽ ◼️ ◻️  🟧 🟨 🟩');
@@ -223,9 +222,9 @@ L.push('🟦 🟪 ⬛  🟫');
 L=cat('Bendera','🏁');
 L.push('🏁 🚩 🎌 🏴 🏳 🏳️‍🌈 🏴‍☠️ 🇮🇩 🇲🇾 🇸🇬');
 L.push('🇧🇳 🇹🇱 🇯🇵 🇰🇷 🇨🇳 🇹🇼 🇭🇰 🇮🇳 🇹🇭 🇻🇳');
-L.push('🇵🇭 🇦🇺 🇳 🇺🇸 🇨🇦 🇲🇽 🇧🇷 🇦🇷 🇨🇱 🇨🇴');
-L.push('🇵🇪 🇬🇧 🇫🇷 🇩🇪 🇮🇹 🇪🇸 🇵🇹 🇳🇱 🇧🇪 🇨🇭');
-L.push('🇦🇹 🇸🇪 🇳🇴 🇩🇰 🇫🇮 🇮🇪 🇵🇱 🇷🇺 🇹🇷 🇬🇷');
+L.push('🇵🇭 🇦🇺 🇳🇿 🇺🇸 🇨🇦 🇲🇽 🇧🇷 🇦🇷 🇨🇱 🇨🇴');
+L.push('🇵🇪 🇬🇧 🇫 🇩 🇮 🇪 🇵 🇳🇱 🇧🇪 🇨🇭');
+L.push('🇦🇹 🇸🇪 🇳🇴 🇰 🇫🇮 🇮🇪 🇵🇱 🇷🇺 🇹🇷 🇬🇷');
 L.push('🇪🇬 🇿🇦 🇳🇬 🇰🇪 🇲🇦 🇸🇦 🇦🇪 🇮🇷 🇮🇱 🇵🇰');
 L.push('🇧🇩 🇶🇦 🇰🇼 🇺🇦 🇰🇿');
 CATS.forEach(function(c){
@@ -324,7 +323,6 @@ buildEmojiUI();
 var composer=gid('composer');
 var menu=document.createElement('div');
 menu.className='attach-menu';
-menu.innerHTML='';
 var b1=document.createElement('button');
 b1.type='button';
 b1.setAttribute('data-a','img');
@@ -471,7 +469,9 @@ gid('recIndicator').classList.add('on');
 gid('input').style.display='none';
 tmr=setInterval(function(){
 var s=Math.floor((Date.now()-t0)/1000);
-gid('recTime').textContent=Math.floor(s/60)+':'+('0'+(s%60)).slice(-2);
+var mm2=Math.floor(s/60);
+var ss=('0'+(s%60)).slice(-2);
+gid('recTime').textContent=mm2+':'+ss;
 },250);
 }).catch(function(){
 toast('Izinkan akses mikrofon');
@@ -531,7 +531,16 @@ var partner=null,incoming=null,ctmr=null,sec=0;
 var callMode='video';
 var ICE={iceServers:[
 {urls:'stun:stun.l.google.com:19302'},
-{urls:'stun:stun1.l.google.com:19302'}
+{urls:'stun:stun1.l.google.com:19302'},
+{urls:'turn:openrelay.metered.ca:80',
+username:'openrelayproject',
+credential:'openrelayproject'},
+{urls:'turn:openrelay.metered.ca:443',
+username:'openrelayproject',
+credential:'openrelayproject'},
+{urls:'turn:openrelay.metered.ca:443?transport=tcp',
+username:'openrelayproject',
+credential:'openrelayproject'}
 ]};
 function nm(u){
 return QC.displayName?QC.displayName(u):u;
@@ -610,6 +619,20 @@ if(!answered)timer();
 pc.onicecandidate=function(e){
 if(e.candidate)csend({type:'ice',cand:e.candidate});
 };
+pc.oniceconnectionstatechange=function(){
+if(!pc)return;
+var s=pc.iceConnectionState;
+if(s==='failed'){
+endCall(true);
+toast('Koneksi panggilan gagal (jaringan memblokir)');
+}else if(s==='disconnected'){
+setTimeout(function(){
+if(pc&&pc.iceConnectionState==='disconnected'){
+endCall(true);
+}
+},4000);
+}
+};
 pc.onconnectionstatechange=function(){
 if(!pc)return;
 var bad=/disconnected|failed|closed/;
@@ -637,6 +660,13 @@ return pc.createOffer().then(function(of){
 return pc.setLocalDescription(of).then(function(){
 csend({type:'offer',sdp:of,mode:callMode});
 active=true;
+setTimeout(function(){
+if(active&&!answered&&pc){
+if(pc.signalingState==='have-local-offer'){
+toast('Peer belum merespons sinyal panggilan');
+}
+}
+},12000);
 setTimeout(function(){
 if(!answered&&active){
 endCall(true);
@@ -768,4 +798,4 @@ try{QC.toast('Modul media gagal: '+e.message);}catch(x){}
 if(window.console)console.error(e);
 }
 })();
-/* END media.js v12 */
+/* END media.js v13 */
