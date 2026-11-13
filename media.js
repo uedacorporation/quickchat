@@ -1,4 +1,4 @@
-/* media.js v8 — emoji kategori, gambar, suara, video call (mode akun) */
+/* media.js v10 — emoji kategori, gambar, suara, video call & panggilan suara */
 (function(){
 'use strict';
 if(!window.QC)return;
@@ -30,15 +30,15 @@ document.head.appendChild(css);
 document.addEventListener('error',function(e){var t=e.target;if(t&&t.tagName==='AUDIO'){toast('Audio tidak didukung browser ini');}},true);
 
 var CATS=[
-{k:'Smileys',i:'😀',l:'😀 😃  😁 😆  🤣 😂 🙂 🙃 😉 😊 😇 🥰 😍 😘 😜  😎  🤩 🥺 😭  🤔  🤯  😨 😰  😢 😣  😫 🥱 😤 😡 😠  😈 👿  💩 🤡 👹 👺 👻  👾 🤖'.split(' ')},
-{k:'Gestur',i:'👋',l:'👋 🤚  ✋ 🖖 👌 🤌 🤏 ✌️ 🤞 🫰 🤟 🤘 🤙 👈 👉  🖕 👇 ☝️ 🫵 👍 👎 ✊ 👊 🤛  👏  🫶  🤲  🙏 ✍️ 💅 🤳 💪 🦾 🦵 🦶 👂 🦻 👃  🫀 🫁 🦷 🦴 👀 👁 👅 👄'.split(' ')},
-{k:'Hewan',i:'🐶',l:'🐶 🐱 🐭 🐹 🐰 🦊 🐻 🐼 🐨 🐯 🦁  🐷 🐸 🐵 🙈 🙉 🙊 🐒 🐔 🐧 🐦 🐤 🐣 🐥  🦅 🦉 🦇 🐺 🐗  🦄 🐝 🐛 🦋 🐌 🐞 🐜 🐢 🐍 🦎 🦖 🦕 🐙 🦑 🦐 🦞 🦀 🐡 🐠 🐟 🐬 🐳 🐋 🦈 🐊 🐅 🐆  🦍 🦧 🐘  🦏  🐫 🦒  🐃  🐄 🐎 🐖 🐏 🐑 🦙 🐐 🦌 🐕 🐩 🐈 🐇 🦝 🦨 🦡 🦫 🦦 🦥 🐁 🐀 🐿 🦔'.split(' ')},
-{k:'Makanan',i:'🍎',l:'🍏 🍎 🍐 🍊 🍋 🍌 🍉 🍇 🍓 🫐 🍈 🍒 🍑 🥭  🥥  🍅  🥑  🥬  🌶  🌽  🫒 🧄 🧅 🥔 🍠 🥐  🍞  🧀  🍳 🧈 🥞  🥓  🍗  🍔 🍟 🍕 🫓 🥪 🥙 🧆 🌮 🌯  🫕  🍜  🍛 🍣 🍱 🥟 🦪  🍙  🍘  🥠  🍢 🍡 🍧 🍨  🥧 🧁 🍰 🎂  🍭 🍬 🍫 🍿 🍩 🍪  🥜  🥛 🍼  ☕ 🍵 🧃 🥤 🧋 🍶 🍺 🍻 🥂  🥃  🍹  🍾  🥄  🍽  🥡 🥢 🧂'.split(' ')},
-{k:'Aktivitas',i:'⚽',l:'⚽ 🏀 🏈 ⚾ 🥎 🎾 🏐 🏉 🥏 🎱 🪀 🏓 🏸 🏒 🏑 🥍 🏏 🪃 🥅 ⛳ 🪁 🏹 🎣 🤿 🥊 🥋 🎽 🛹 🛼 🛷 ⛸ 🥌 🎿 ⛷ 🏂 🪂 🏋️  🤸  🏇  🏄  🤽  🧗  🚴 🏆 🥇 🥈 🥉 🏅 🎖 🏵 🎗 🎫 🎟 🎪 🤹 🎭 🩰 🎨 🎬 🎤 🎧 🎼 🎹 🥁 🪘 🎷 🎺 🪗 🎸 🪕 🎻 🎲 ♟ 🎯 🎳 🎮 🎰 🧩'.split(' ')},
-{k:'Travel',i:'🚗',l:'🚗 🚕 🚙 🚌 🚎  🚓  🚒  🛻 🚚 🚛 🚜  🛵  🛴  🚔  🚘  ✈️  🛬  💺 🛰  🛸  🛶  🚤  🛳  🚢  🪝  🚧 🚥 🚦 🗺 🗿 🗽 🗼 🏰 🏯  🎡 🎢 🎠 ⛲ ⛱ 🏖 🏝 🏜  ⛰ 🏔 🗻 🏕 ⛺ 🛖 🏠 🏡 🏘 🏚 🏗 🏭 🏢 🏬 🏣 🏤 🏥 🏦 🏨 🏪 🏫 🏩 💒 🏛 ⛪ 🕌 🕍 🛕 🕋 ⛩ 🛤 🛣 🗾 🎑 🏞  🌄  🎇  🌇  🏙 🌃 🌌 🌉 🌁'.split(' ')},
-{k:'Objek',i:'⌚',l:'⌚ 📱 💻 ️ 🖥 🖨 🖱 🖲 🕹  💽 💾 💿 📀 📼 📷 📸 📹 🎥 📽 🎞 📞 ☎️ 📟 📠 📺 📻 🎙 🎚 🎛 🧭 ⏱ ⏲ ⏰ 🕰 ⌛ ⏳ 📡 🔋 🔌 💡 🔦 🕯 🪔 🧯  💸 💵 💴 💶 💷 🪙 💰  💎 ️ 🪜 🧰 🪛 🔧 🔨 ⚒ 🛠 ⛏ 🪚 🔩 ⚙️  🧱  🧲 🔫 💣 🧨 🪓 🔪  ⚔️  🚬 ⚰️ 🪦 ⚱️  🔮  🧿 💈 ⚗️  🔬  🩹 🩺 💊 💉 🩸 🧬 🦠 🧫 🧪  🧹  🧺  🚽  🚿  🛀  🪥 🪒 🧽  🧴 🛎 🔑 🗝 🚪 🪑 🛋 🛏 🛌 🧸 🪆 🖼 🪞 🪟 🛍 🛒 🎁 🎈 🎏 🎀 🪄 🪅  🎉  🏮  🧧 ️ 📩  📧  📥 📤 📦 🏷 🪧  📫  📭  📯  📃 📄 📑 🧾 📊 📈 📉 🗒 🗓 📆 📅 🗑 📇 🗃 🗳 🗄 📋 📁 📂 🗂 🗞 📰 📓 📔 📒 📕  📘  📚  🔖  🔗  🖇  📏  📌 📍 ✂️ 🖊 🖋 ✒️ 🖌 🖍  ✏️ 🔍 🔎 🔏 🔐 🔒 🔓'.split(' ')},
-{k:'Simbol',i:'❤️',l:'❤️ 🧡 💛 💚 💙 💜 🖤 🤍 🤎 💔 ️ 💕 💞 💓 💗 💖 💘 💝 💟 ✨ ⭐ 🌟 💫 ⚡ 🔥 💢 💥 💦 🎵 🎶 ✅ ❌ ⭕ ⛔ 🚫 ❗ ❕ ❓ ❔ ‼️ ⁉️  🔕 📣  💬 💭 💤 🌐 ♻️ 🆗 🆒 🆕 🆙 🆓 🆖 🔢 0️⃣ 1️⃣ 2️⃣ 3️⃣ 4️⃣ 5️⃣ 6️⃣ 7️⃣ 8️⃣ 9️⃣ 🔟 ▶️ ⏸ ⏹ ⏺ ⏭ ⏮ ⏩ ⏪ 🔼 🔽 ➡️ ⬅️ ⬆️ ⬇️ ↗️ ↘️ ↙️ ↖️ ↕️ ↔️ 🔄  🔂 🔀 ➕ ➖ ➗ ✖️ ♾ 💲 💱 ™️ ©️ ®️ 〰️ ➰ ➿ 🔚 🔙 🔛 🔝 🔜 ✔️ ☑️ 🔘 🔴 🟠 🟡 🟢 🔵  ⚫  🟤 🔺 🔻 🔸 🔹 🔶 🔷 🔳 🔲 ▪️ ▫️ ◾ ◽ ◼️ ◻️  🟧 🟨 🟩 🟦 🟪 ⬛ ⬜ 🟫'.split(' ')},
-{k:'Bendera',i:'🏁',l:'🏁 🚩 🎌 🏴 🏳 🏳️‍🌈 🏴‍☠️ 🇩 🇲🇾 🇸🇬 🇧🇳 🇹🇱 🇯🇵 🇰🇷 🇨🇳 🇹🇼 🇭🇰 🇮🇳 🇹🇭 🇻🇳 🇵🇭 🇦🇺 🇳 🇺 🇨 🇲 🇧 🇦🇷 🇨🇱 🇨🇴 🇵🇪 🇧 🇷 🇩🇪 🇮🇹 🇪🇸 🇵🇹 🇳 🇧 🇨 🇦 🇸 🇳🇴 🇰 🇫🇮 🇮🇪 🇵🇱 🇷🇺 🇹🇷 🇬🇷 🇪🇬 🇿🇦 🇳🇬 🇰🇪 🇲🇦 🇸🇦 🇦🇪 🇮🇷 🇮🇱 🇵🇰 🇧🇩 🇶🇦 🇰🇼 🇺🇦 🇰🇿'.split(' ')}
+{k:'Smileys',i:'😀',l:'😀 😃  😁 😆  🤣 😂 🙂 🙃 😉 😊 😇  😍  😜 🤪 😎 🥳 🤩 🥺 😭  🤔  🤯 😱 😨 😰 😥  😣 😩 😫 🥱 😤 😡 😠 🤬  👿 💀 💩 🤡 👹  👻 👽  🤖'.split(' ')},
+{k:'Gestur',i:'👋',l:'👋 🤚 🖐 ✋ 🖖 👌 🤌 🤏 ✌️ 🤞 🫰 🤟 🤘 🤙 👈 👉  🖕 👇 ☝️ 🫵 👍 👎 ✊ 👊 🤛  👏  🫶 👐 🤲 🤝 🙏 ✍️ 💅 🤳 💪 🦾 🦵 🦶 👂 🦻 👃  🫀  🦷 🦴 👀 👁 👅 👄'.split(' ')},
+{k:'Hewan',i:'🐶',l:'🐶 🐱 🐭 🐹 🐰 🦊 🐻 🐼 🐨 🐯 🦁 🐮 🐷 🐸 🐵 🙈 🙉 🙊 🐒 🐔 🐧 🐦 🐤 🐣 🐥  🦅 🦉 🦇 🐺 🐗 🐴 🦄  🐛 🦋 🐌 🐞 🐜 🐢 🐍 🦎 🦖 🦕 🐙 🦑 🦐 🦞 🦀 🐡 🐠 🐟 🐬 🐳 🐋 🦈 🐊 🐅 🐆 🦓 🦍 🦧 🐘  🦏 🐪 🐫 🦒  🐃  🐄 🐎 🐖 🐏  🦙 🐐 🦌 🐕 🐩 🐈 🐇 🦝 🦨 🦡 🦫 🦦 🦥 🐁 🐀 🐿 🦔'.split(' ')},
+{k:'Makanan',i:'🍎',l:'🍏 🍎 🍐 🍊 🍋 🍌  🍇  🫐  🍒  🥭  🥥 🥝 🍅 🍆 🥑 🥦 🥬 🥒 🌶  🌽  🫒  🧅 🥔 🍠 🥐  🍞  🧀  🍳 🧈 🥞 🧇 🥓 🥩 🍗 🍖 🍔 🍟 🍕  🥪  🧆  🌯  🫕  🍜  🍛 🍣 🍱 🥟 🦪  🍙  🍘  🥠  🍢  🍧  🍦  🧁 🍰  🍮  🍬 🍫 🍿 🍩 🍪 🌰 🥜 🍯 🥛 🍼 🫖  🍵  🥤  🍶  🍻  🍷  🍸  🧉  🧊  🍴  🥣  🥢 '.split(' ')},
+{k:'Aktivitas',i:'⚽',l:'⚽ 🏀 🏈 ⚾  🎾  🏉  🎱  🏓 🏸 🏒 🏑 🥍 🏏  🥅 ⛳ 🪁  🎣  🥊 🥋 🎽 🛹 🛼 🛷 ⛸ 🥌 🎿 ⛷ 🏂 🪂 🏋️  🤸  🏇  🏄  🤽  🧗  🚴  🥇  🥉  🎖  🎗  🎟  🤹 🎭 🩰 🎨 🎬 🎤 🎧 🎼 🎹 🥁 🪘 🎷 🎺 🪗 🎸 🪕 🎻 🎲 ♟  🎳  🎰 🧩'.split(' ')},
+{k:'Travel',i:'🚗',l:'🚗 🚕 🚙 🚌 🚎  🚓  🚒  🛻 🚚 🚛 🚜 🏍  🚲  🛺  🚍  🚖 ✈️  🛬 🛩 💺 🛰 🚀  🚁  ⛵  🛥 🛳 ⛴ 🚢 ⚓ 🪝 ⛽ 🚧 🚥 🚦 🗺 🗿 🗽 🗼 🏰 🏯 🏟 🎡 🎢 🎠 ⛲ ⛱ 🏖 🏝 🏜  ⛰ 🏔 🗻 🏕 ⛺ 🛖 🏠 🏡 🏘 🏚 🏗 🏭 🏢 🏬 🏣 🏤 🏥 🏦 🏨 🏪 🏫 🏩 💒  ⛪  🕍  🕋  🛤  🗾  🏞 🌅 🌄 🌠 🎇 🎆 🌇 🌆 🏙 🌃 🌌 🌉 🌁'.split(' ')},
+{k:'Objek',i:'⌚',l:'⌚ 📱 💻 ⌨️ 🖥 🖨 🖱 🖲 🕹  💽 💾 💿 📀 📼 📷 📸 📹 🎥 📽 🎞 📞 ☎️  📠  📻  🎚 🎛 🧭 ⏱ ⏲ ⏰ 🕰 ⌛ ⏳ 📡 🔋 🔌 💡 🔦 🕯 🪔 🧯 🛢 💸 💵 💴 💶 💷 🪙 💰 💳 💎 ⚖️  🧰  🔧 🔨 ⚒ 🛠 ⛏ 🪚 🔩 ⚙️  🧱  🧲  💣 🧨 🪓 🔪  ⚔️  🚬 ⚰️ 🪦 ⚱️  🔮  🧿 💈 ⚗️  🔬  🩹 🩺 💊 💉 🩸 🧬 🦠 🧫 🧪  🧹  🧺  🚽  🚿  🛀  🪥  🧽  🧴  🔑 🗝 🚪 🪑 🛋 🛏 🛌 🧸 🪆 🖼 🪞 🪟 🛍 🛒 🎁 🎈 🎏 🎀 🪄 🪅 🎊 🎉 🎎 🏮 🎐 🧧 ✉️  📨  💌 📥 📤 📦 🏷 🪧 📪  📬  📮 📯 📜 📃 📄 📑 🧾 📊 📈 📉 🗒 🗓 📆 📅 🗑 📇  🗳  📋  📂 🗂 🗞 📰 📓 📔 📒 📕 📗 📘 📙 📚 📖 🔖  🔗  🖇  📏  📌 📍 ✂️ 🖊 🖋 ✒️ 🖌 🖍 📝 ️ 🔍 🔎 🔏 🔐 🔒 🔓'.split(' ')},
+{k:'Simbol',i:'❤️',l:'❤️ 🧡 💛 💚 💙 💜 🖤 🤍 🤎 💔 ❣️ 💕 💞 💓 💗 💖 💘 💝 💟 ✨ ⭐ 🌟 💫 ⚡ 🔥 💢 💥 💦 🎵 🎶 ✅ ❌ ⭕ ⛔ 🚫 ❗ ❕ ❓ ❔ ‼️ ⁉️ 🔔 🔕 📣 📢 💬 💭 💤 🌐 ♻️  🆒 🆕 🆙 🆓 🆖 🔢 0️⃣ 1️⃣ 2️⃣ 3️⃣ 4️⃣ 5️⃣ 6️⃣ 7️⃣ 8️⃣ 9️⃣ 🔟 ▶️ ⏸ ⏹ ⏺ ⏭ ⏮ ⏩ ⏪ 🔼 🔽 ➡️ ⬅️ ⬆️ ⬇️ ↗️ ↘️ ↙️ ↖️ ↕️ ↔️ 🔄  🔂 🔀 ➕ ➖ ➗ ✖️ ♾  💱 ™️ ©️ ®️ 〰️ ➰ ➿ 🔚 🔙 🔛 🔝 🔜 ✔️ ☑️ 🔘 🔴 🟠 🟡 🟢 🔵  ⚫  🟤  🔻 🔸 🔹 🔶 🔷 🔳 🔲 ▪️ ▫️ ◾ ◽ ◼️ ◻️  🟧 🟨 🟩 🟦 🟪 ⬛ ⬜ 🟫'.split(' ')},
+{k:'Bendera',i:'🏁',l:'🏁 🚩 🎌 🏴 🏳 🏳️‍🌈 🏴‍☠️ 🇩 🇲🇾 🇸🇬 🇧🇳 🇹🇱 🇯🇵 🇰🇷 🇨🇳 🇹🇼 🇭🇰 🇳 🇹🇭 🇻🇳 🇵🇭 🇦🇺 🇳 🇺🇸 🇨🇦 🇲🇽 🇧🇷 🇦🇷 🇨🇱 🇨🇴 🇵🇪 🇧 🇫🇷 🇩🇪 🇮🇹 🇪🇸 🇵🇹 🇳🇱 🇧🇪 🇨🇭 🇦🇹 🇸🇪 🇳🇴 🇰 🇮 🇮🇪 🇵🇱 🇷🇺 🇹🇷 🇬🇷 🇪🇬 🇿🇦 🇳🇬 🇰🇪 🇲🇦 🇸🇦 🇦🇪 🇮🇷 🇮🇱 🇵🇰 🇧🇩 🇶🇦 🇰🇼 🇺🇦 🇰🇿'.split(' ')}
 ];
 var cat=0;
 function buildEmojiUI(){
@@ -99,10 +99,11 @@ function stopRec(){if(!mr||mr.state!=='recording')return;clearInterval(tmr);mr.s
 gid('btnMic').onclick=function(){if(mr&&mr.state==='recording')stopRec();else startRec();};
 
 document.body.insertAdjacentHTML('beforeend',
-'<div id="callModal" class="call-modal hidden"><div class="call-remote"><video id="remoteVideo" autoplay playsinline></video><div id="callPlaceholder" class="call-placeholder"><div id="callBigAv" class="big-av"></div><div id="callBigName">—</div></div><div id="callStatus" class="call-status" style="display:none">Memanggil…</div><div class="call-info"><span id="callName">—</span><small id="callTimer">00:00</small></div><div class="call-local"><video id="localVideo" autoplay playsinline muted></video></div></div><div class="call-controls"><button id="ctrlMute" class="ctrl-mute" type="button">'+icon('mic')+'</button><button id="ctrlVideo" class="ctrl-video" type="button">'+icon('video')+'</button><button id="ctrlEnd" class="ctrl-end" type="button">'+icon('phoneOff')+'</button></div></div>'+
-'<div id="incomingCall" class="incoming-call hidden"><div class="ic-top"><div id="icAv" class="ic-av"></div><div class="ic-name"><div id="icName">—</div><small>Panggilan video masuk…</small></div></div><div class="ic-actions"><button id="icDecline" class="ic-decline" type="button">'+icon('phoneOff')+'</button><button id="icAccept" class="ic-accept" type="button">'+icon('phone')+'</button></div></div>');
-var pc=null,ls=null,active=false,answered=false,partner=null,incoming=null,ctmr=null,sec=0;
+'<div id="callModal" class="call-modal hidden"><div class="call-remote"><video id="remoteVideo" autoplay playsinline></video><div id="callPlaceholder" class="call-placeholder"><div id="callBigAv" class="big-av"></div><div id="callBigName">—</div><div id="callModeTxt" style="font-size:12px;color:var(--muted)"></div></div><div id="callStatus" class="call-status" style="display:none">Memanggil…</div><div class="call-info"><span id="callName">—</span><small id="callTimer">00:00</small></div><div class="call-local" id="callLocal"><video id="localVideo" autoplay playsinline muted></video></div></div><div class="call-controls"><button id="ctrlMute" class="ctrl-mute" type="button">'+icon('mic')+'</button><button id="ctrlVideo" class="ctrl-video" type="button">'+icon('video')+'</button><button id="ctrlEnd" class="ctrl-end" type="button">'+icon('phoneOff')+'</button></div></div>'+
+'<div id="incomingCall" class="incoming-call hidden"><div class="ic-top"><div id="icAv" class="ic-av"></div><div class="ic-name"><div id="icName">—</div><small id="icMode">Panggilan video masuk…</small></div></div><div class="ic-actions"><button id="icDecline" class="ic-decline" type="button">'+icon('phoneOff')+'</button><button id="icAccept" class="ic-accept" type="button">'+icon('phone')+'</button></div></div>');
+var pc=null,ls=null,active=false,answered=false,partner=null,incoming=null,ctmr=null,sec=0,callMode='video';
 var ICE={iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'}]};
+function nm(u){return QC.displayName?QC.displayName(u):u;}
 function setAvByName(node,name,size){
   if(!node)return;
   var p=QC.profileOf(name);
@@ -110,17 +111,74 @@ function setAvByName(node,name,size){
   node.innerHTML=QC.avatarHTML(name,size||60);
 }
 function csend(o){if(!partner)return;var k='dm:'+([QC.me,partner].sort().join('+'));QC.publishTo(QC.callTopic(k),Object.assign({},o,{from:QC.me,to:partner}));}
-function openUI(name,ans){gid('callModal').classList.remove('hidden');setAvByName(gid('callBigAv'),name,56);gid('callBigName').textContent=name;gid('callName').textContent=name;gid('callPlaceholder').style.display='';gid('callStatus').style.display=ans?'none':'';}
+function openUI(name,ans,mode){
+  callMode=mode||'video';
+  gid('callModal').classList.remove('hidden');
+  setAvByName(gid('callBigAv'),name,56);
+  gid('callBigName').textContent=nm(name);
+  gid('callName').textContent=nm(name);
+  gid('callModeTxt').textContent=callMode==='audio'?'Panggilan suara':'Panggilan video';
+  gid('callPlaceholder').style.display='';
+  gid('callStatus').style.display=ans?'none':'';
+  gid('callLocal').style.display=callMode==='audio'?'none':'';
+  gid('ctrlVideo').style.display=callMode==='audio'?'none':'';
+  gid('remoteVideo').style.display=callMode==='audio'?'none':'';
+}
 function timer(){answered=true;sec=0;clearInterval(ctmr);var st=gid('callStatus');if(st)st.style.display='none';ctmr=setInterval(function(){sec++;gid('callTimer').textContent=('0'+Math.floor(sec/60)).slice(-2)+':'+('0'+(sec%60)).slice(-2);},1000);}
-function getMedia(){return navigator.mediaDevices.getUserMedia({video:true,audio:{echoCancellation:true,noiseSuppression:true}}).catch(function(){return navigator.mediaDevices.getUserMedia({audio:true});});}
-function wirePC(){pc=new RTCPeerConnection(ICE);ls.getTracks().forEach(function(t){pc.addTrack(t,ls);});pc.ontrack=function(e){gid('remoteVideo').srcObject=e.streams[0];gid('callPlaceholder').style.display='none';var st=gid('callStatus');if(st)st.style.display='none';if(!answered)timer();};pc.onicecandidate=function(e){if(e.candidate)csend({type:'ice',cand:e.candidate});};pc.onconnectionstatechange=function(){if(pc&&/disconnected|failed|closed/.test(pc.connectionState))endCall(true);};}
-function startCall(u){if(active){toast('Sedang dalam panggilan');return;}if(!S.presence||!S.presence[u]){toast('Pengguna tidak online');return;}partner=u;answered=false;getMedia().then(function(st){ls=st;gid('localVideo').srcObject=st;openUI(u,false);wirePC();return pc.createOffer().then(function(of){return pc.setLocalDescription(of).then(function(){csend({type:'offer',sdp:of});active=true;setTimeout(function(){if(!answered&&active){endCall(true);toast('Tidak ada jawaban');}},30000);});});}).catch(function(){endCall(true);toast('Izinkan kamera & mic');});}
-function accept(){if(!incoming)return;var of=incoming.offer,from=incoming.from;partner=from;incoming=null;answered=false;gid('incomingCall').classList.add('hidden');getMedia().then(function(st){ls=st;gid('localVideo').srcObject=st;openUI(from,true);wirePC();return pc.setRemoteDescription(of).then(function(){return pc.createAnswer();}).then(function(an){return pc.setLocalDescription(an).then(function(){csend({type:'answer',sdp:an});active=true;timer();});});}).catch(function(){endCall(true);toast('Izinkan kamera & mic');});}
+function getMedia(video){
+  if(video)return navigator.mediaDevices.getUserMedia({video:true,audio:{echoCancellation:true,noiseSuppression:true}}).catch(function(){return navigator.mediaDevices.getUserMedia({audio:true});});
+  return navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}});
+}
+function wirePC(){
+  pc=new RTCPeerConnection(ICE);
+  ls.getTracks().forEach(function(t){pc.addTrack(t,ls);});
+  pc.ontrack=function(e){gid('remoteVideo').srcObject=e.streams[0];if(callMode==='video')gid('callPlaceholder').style.display='none';var st=gid('callStatus');if(st)st.style.display='none';if(!answered)timer();};
+  pc.onicecandidate=function(e){if(e.candidate)csend({type:'ice',cand:e.candidate});};
+  pc.onconnectionstatechange=function(){if(pc&&/disconnected|failed|closed/.test(pc.connectionState))endCall(true);};
+}
+function startCall(u,video){
+  if(active){toast('Sedang dalam panggilan');return;}
+  if(!S.presence||!S.presence[u]){toast('Pengguna tidak online');return;}
+  partner=u;answered=false;
+  var wantVideo=video!==false;
+  getMedia(wantVideo).then(function(st){
+    ls=st;gid('localVideo').srcObject=st;openUI(u,false,wantVideo?'video':'audio');wirePC();
+    return pc.createOffer().then(function(of){return pc.setLocalDescription(of).then(function(){csend({type:'offer',sdp:of,mode:callMode});active=true;setTimeout(function(){if(!answered&&active){endCall(true);toast('Tidak ada jawaban');}},30000);});});
+  }).catch(function(){endCall(true);toast('Izinkan akses mikrofon'+(wantVideo?' & kamera':''));});
+}
+function accept(){
+  if(!incoming)return;
+  var of=incoming.offer,from=incoming.from,mode=incoming.mode||'video';
+  partner=from;incoming=null;answered=false;
+  gid('incomingCall').classList.add('hidden');
+  getMedia(mode==='video').then(function(st){
+    ls=st;gid('localVideo').srcObject=st;openUI(from,true,mode);wirePC();
+    return pc.setRemoteDescription(of).then(function(){return pc.createAnswer();}).then(function(an){return pc.setLocalDescription(an).then(function(){csend({type:'answer',sdp:an});active=true;timer();});});
+  }).catch(function(){endCall(true);toast('Izinkan akses mikrofon'+(mode==='video'?' & kamera':''));});
+}
 function decline(){if(incoming){csend({type:'decline'});incoming=null;}gid('incomingCall').classList.add('hidden');}
-function endCall(silent){clearInterval(ctmr);if(pc){try{pc.close();}catch(e){}pc=null;}if(ls){ls.getTracks().forEach(function(t){t.stop();});ls=null;}if(partner&&!silent)csend({type:'end'});active=false;answered=false;partner=null;gid('callModal').classList.add('hidden');gid('remoteVideo').srcObject=null;gid('localVideo').srcObject=null;}
+function endCall(silent){
+  clearInterval(ctmr);
+  if(pc){try{pc.close();}catch(e){}pc=null;}
+  if(ls){ls.getTracks().forEach(function(t){t.stop();});ls=null;}
+  if(partner&&!silent)csend({type:'end'});
+  active=false;answered=false;partner=null;
+  gid('callModal').classList.add('hidden');
+  gid('remoteVideo').srcObject=null;
+  gid('localVideo').srcObject=null;
+}
 QC.onCallSignal=function(d){
   if(!d||d.from===QC.me||d.to!==QC.me)return;
-  if(d.type==='offer'){if(active){csend({type:'busy'});return;}incoming={from:d.from,offer:d.sdp};setAvByName(gid('icAv'),d.from,22);gid('icName').textContent=d.from;gid('incomingCall').classList.remove('hidden');QC.Sound.play('call');setTimeout(function(){if(incoming)decline();},30000);}
+  if(d.type==='offer'){
+    if(active){csend({type:'busy'});return;}
+    incoming={from:d.from,offer:d.sdp,mode:d.mode||'video'};
+    setAvByName(gid('icAv'),d.from,22);
+    gid('icName').textContent=nm(d.from);
+    gid('icMode').textContent=incoming.mode==='audio'?'Panggilan suara masuk…':'Panggilan video masuk…';
+    gid('incomingCall').classList.remove('hidden');
+    QC.Sound.play('call');
+    setTimeout(function(){if(incoming)decline();},30000);
+  }
   else if(d.type==='answer'&&pc){pc.setRemoteDescription(d.sdp).then(timer).catch(function(){});}
   else if(d.type==='ice'&&pc){pc.addIceCandidate(d.cand).catch(function(){});}
   else if(d.type==='decline'||d.type==='busy'||d.type==='end'){endCall(true);}
@@ -129,9 +187,9 @@ QC.startCall=startCall;QC.endCall=endCall;
 gid('icAccept').onclick=accept;
 gid('icDecline').onclick=decline;
 gid('ctrlMute').onclick=function(){if(!ls)return;var a=ls.getAudioTracks()[0];if(!a)return;a.enabled=!a.enabled;this.classList.toggle('on',!a.enabled);};
-gid('ctrlVideo').onclick=function(){if(!ls)return;var v=ls.getVideoTracks()[0];if(!v){toast('Video tidak tersedia');return;}v.enabled=!v.enabled;this.classList.toggle('off',!v.enabled);};
+gid('ctrlVideo').onclick=function(){if(callMode==='audio'){toast('Mode panggilan suara');return;}if(!ls)return;var v=ls.getVideoTracks()[0];if(!v){toast('Video tidak tersedia');return;}v.enabled=!v.enabled;this.classList.toggle('off',!v.enabled);};
 gid('ctrlEnd').onclick=function(){endCall(false);};
 window.QC_MEDIA=true;
 }catch(e){try{QC.toast('Modul media gagal: '+e.message);}catch(x){}if(window.console)console.error(e);}
 })();
-/* END media.js v8 */
+/* END media.js v10 */
