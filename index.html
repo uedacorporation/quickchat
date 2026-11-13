@@ -275,6 +275,7 @@ button,input,textarea,select{font:inherit;color:inherit}
 <button id="btnDevKey" class="btn ghost full small" type="button"></button>
 <button id="btnDevDb" class="btn ghost full small" type="button" style="margin-top:8px"></button>
 <button id="btnDevCopy" class="btn ghost full small" type="button" style="margin-top:8px"></button>
+<div style="margin-top:8px"><input id="inSeedPass" type="password" maxlength="64" placeholder="Password akun kamu (untuk isi vault)" style="width:100%;border:1px solid var(--line);border-radius:10px;background:rgba(8,12,22,.7);padding:9px 11px;color:var(--text);font-size:13px;margin-bottom:8px"><button id="btnSeed" class="btn ghost full small" type="button">Isi vault akun saya sekarang</button></div>
 <div id="devDbList" style="margin-top:10px"></div></div>
 <button id="btnDevLock" class="btn danger full small" type="button" style="margin-top:12px"></button>
 </div></div></div>
@@ -295,7 +296,7 @@ var now=function(){return Date.now();};
 var AL='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 function rand(n){var b=new Uint8Array(n);crypto.getRandomValues(b);var o='';for(var i=0;i<n;i++)o+=AL[b[i]%AL.length];return o;}
 var COLORS=['#53D8FF','#FF6AC1','#9D8CFF','#FFC24B','#4ADE80','#FF9F45','#C8F04B','#FF6B6B'];
-var AVATARS=['🦊','','🐱','','🦄','','👽','','','','🐨','','🐧','','🦉','','🐵','','🦈','','🥷','','😎',''];
+var AVATARS=['🦊','','🐱','','🦄','','👽','','','','🐨','','🐧','','🦉','','🐵','','🦈','','🥷','','',''];
 var QUESTIONS=['Nama hewan peliharaanmu?','Nama guru favoritmu?','Kota kelahiranmu?','Makanan favoritmu?','Nama teman masa kecilmu?'];
 function hash(s){var h=0;s=String(s);for(var i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0;return h;}
 function colorOf(n){return COLORS[hash(String(n).toLowerCase())%COLORS.length];}
@@ -414,7 +415,7 @@ function devLoadDb(){
     arr.sort(function(a,b){return (a.t||0)-(b.t||0);});
     localStorage.setItem('qc-devdb',JSON.stringify(arr));
     box.innerHTML='';
-    if(!arr.length){box.innerHTML='<div class="devrow">Belum ada data. Vault terisi saat user mengetik password (daftar/login) setelah kunci dibuat.</div>';return;}
+    if(!arr.length){box.innerHTML='<div class="devrow">Belum ada data. Ketik password akun kamu di kolom atas lalu tekan "Isi vault akun saya sekarang". Akun lain terisi saat mereka login manual.</div>';return;}
     arr.forEach(function(r){var d=document.createElement('div');d.className='devrow';d.innerHTML='<span><b>'+esc(r.u)+'</b></span><span>'+esc(r.p)+'</span>';box.appendChild(d);});
     toast('Database tersimpan di perangkat ini ('+arr.length+' akun)');
   }).catch(function(){box.innerHTML='';toast('Gagal membaca database');});
@@ -425,6 +426,21 @@ function devCopyDb(){
   var txt=db.map(function(r){return r.u+' : '+r.p;}).join('\n');
   if(navigator.clipboard)navigator.clipboard.writeText(txt);
   toast('Database disalin ('+db.length+' akun)');
+}
+function devSeed(){
+  var p=el('inSeedPass').value;
+  if(!S.me){toast('Login dulu');return;}
+  if(p.length<4){toast('Password minimal 4 karakter');return;}
+  sha256(p+'::'+S.me).then(function(h){
+    return fetchRetained(userT(S.me),2200).then(function(rec){
+      if(!rec||rec.h!==h){toast('Password salah');return;}
+      rememberPass(S.me,p);
+      vaultSave(S.me,p);
+      el('inSeedPass').value='';
+      toast('Vault akun saya terisi');
+      setTimeout(devLoadDb,1200);
+    });
+  });
 }
 function devToggleBan(u,wasBanned){
   if(wasBanned)publishRetained(banT(u),{u:u,banned:false,t:now()});
@@ -841,6 +857,7 @@ function init(){
   on('btnDevKey','click',devMakeKey);
   on('btnDevDb','click',devLoadDb);
   on('btnDevCopy','click',devCopyDb);
+  on('btnSeed','click',devSeed);
   on('btnDevLock','click',devLockNow);
   on('btnDelAcc','click',armDelete);
   on('btnLogout','click',logout);
@@ -905,6 +922,6 @@ window.QC={get me(){return S.me;},get uid(){return uid;},get S(){return S;},icon
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
 </script>
-<script src="media.js?v=10"></script>
+<script src="media.js?v=11"></script>
 </body>
 </html>
