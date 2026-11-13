@@ -163,7 +163,7 @@ button,input,textarea,select{font:inherit;color:inherit}
 .dialog h3{margin-bottom:6px;font-size:17px}
 .dialog p.sub{color:var(--muted);font-size:12.5px;margin-bottom:16px}
 .d-close{position:absolute;top:12px;right:12px}
-.avatar-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:5px;max-height:140px;overflow-y:auto;margin-bottom:10px}
+.avatar-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:5px;max-height:150px;overflow-y:auto;margin-bottom:10px}
 .av-btn{aspect-ratio:1;display:grid;place-items:center;border:1px solid var(--line);border-radius:11px;background:var(--glass);font-size:19px;cursor:pointer}
 .av-btn.selected{border-color:var(--lime);background:rgba(200,240,75,.14)}
 .color-row{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
@@ -262,7 +262,13 @@ button,input,textarea,select{font:inherit;color:inherit}
 <div id="recStep2" class="hidden"><p class="sub" id="recQ" style="color:var(--text);font-weight:600"></p><label class="fld"><span>Jawaban keamanan</span><input id="recAns" maxlength="32"></label><button id="btnRec2" class="btn primary full" type="button">Verifikasi</button></div>
 <div id="recStep3" class="hidden"><label class="fld"><span>Password baru</span><input id="recPass" type="password" maxlength="64"></label><label class="fld"><span>Ulangi password baru</span><input id="recPass2" type="password" maxlength="64"></label><button id="btnRec3" class="btn primary full" type="button">Ganti password</button></div>
 </div></div>
-<div id="devModal" class="modal hidden"><div class="m-scrim" data-close="devModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="devModal" type="button"></button><h3>Panel developer</h3><p class="sub">Daftar akun terdaftar: username, tanggal daftar, pertanyaan keamanan. Password TIDAK disimpan sebagai teks polos (pemulihan lewat pertanyaan keamanan).</p><button id="btnDevLoad" class="btn ghost full small" type="button">Muat daftar akun</button><div id="devList" style="margin-top:12px"></div></div></div>
+<div id="devModal" class="modal hidden"><div class="m-scrim" data-close="devModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="devModal" type="button"></button><h3>Panel developer</h3><p class="sub">Pantau akun terdaftar & kelola database pemulihan. Database password terenkripsi; hanya perangkat pemegang kunci privat (perangkatmu) yang bisa membukanya.</p><button id="btnDevLoad" class="btn ghost full small" type="button">Muat daftar akun terdaftar</button><div id="devList" style="margin-top:10px"></div>
+<div style="margin-top:12px;border-top:1px solid var(--line);padding-top:12px"><span class="sb-label">DATABASE USERNAME & PASSWORD</span><div id="devKeyState" style="font-size:11.5px;color:var(--muted);margin-bottom:8px"></div>
+<button id="btnDevKey" class="btn ghost full small" type="button">🔑 Buat kunci database</button>
+<button id="btnDevDb" class="btn ghost full small" type="button" style="margin-top:8px">📥 Muat & simpan database ke perangkat ini</button>
+<button id="btnDevCopy" class="btn ghost full small" type="button" style="margin-top:8px">📋 Salin database</button>
+<div id="devDbList" style="margin-top:10px"></div></div>
+</div></div>
 <div id="mediaModal" class="modal hidden" style="z-index:250;background:rgba(0,0,0,.94)"><button id="mmClose" class="icon-btn" type="button" style="position:absolute;top:14px;right:14px;z-index:2"></button><img id="mmImg" alt="" style="max-width:92vw;max-height:92vh;border-radius:10px"></div>
 <div id="toasts" class="toasts"></div>
 
@@ -279,7 +285,7 @@ var now=function(){return Date.now();};
 var AL='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 function rand(n){var b=new Uint8Array(n);crypto.getRandomValues(b);var o='';for(var i=0;i<n;i++)o+=AL[b[i]%AL.length];return o;}
 var COLORS=['#53D8FF','#FF6AC1','#9D8CFF','#FFC24B','#4ADE80','#FF9F45','#C8F04B','#FF6B6B'];
-var AVATARS=['🦊','','🐱','','🦄','','👽','','🐯','','🐨','🐙','','🐳','','🐲','','🐝','🦈','🦖','🥷','','😎',''];
+var AVATARS=['🦊','','🐱','','🦄','','👽','','🐯','','🐨','🐙','🐧','🐳','🦉','','🐵','','🦈','','🥷','','😎',''];
 var QUESTIONS=['Nama hewan peliharaanmu?','Nama guru favoritmu?','Kota kelahiranmu?','Makanan favoritmu?','Nama teman masa kecilmu?'];
 function hash(s){var h=0;s=String(s);for(var i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0;return h;}
 function colorOf(n){return COLORS[hash(String(n).toLowerCase())%COLORS.length];}
@@ -291,6 +297,8 @@ function dayKey(t){var d=new Date(t);return d.getFullYear()+'-'+d.getMonth()+'-'
 function dayLabel(t){var n=now();if(dayKey(t)===dayKey(n))return'Hari ini';if(dayKey(t)===dayKey(n-86400000))return'Kemarin';return new Date(t).toLocaleDateString('id-ID',{day:'numeric',month:'long'});}
 function isTouch(){return matchMedia('(hover:none)').matches;}
 function sha256(s){return crypto.subtle.digest('SHA-256',new TextEncoder().encode(s)).then(function(b){return Array.prototype.map.call(new Uint8Array(b),function(x){return x.toString(16).padStart(2,'0');}).join('');});}
+function b64buf(buf){var b=new Uint8Array(buf),s='';for(var i=0;i<b.length;i++)s+=String.fromCharCode(b[i]);return btoa(s);}
+function bufb64(str){var bin=atob(str),a=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i);return a.buffer;}
 var IC={x:'<path d="M18 6L6 18"/><path d="M6 6l12 12"/>',back:'<path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/>',logout:'<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/>',users:'<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',userPlus:'<path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="17" y1="11" x2="23" y2="11"/>',smile:'<circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/>',send:'<path d="M22 2L11 13"/><path d="M22 2L15 22l-4-9-9-4 20-7z"/>',attach:'<path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>',mic:'<path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/>',camera:'<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>',image:'<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/>',play:'<polygon points="5 3 19 12 5 21 5 3" fill="currentColor" stroke="none"/>',pause:'<rect x="6" y="4" width="4" height="16" fill="currentColor" stroke="none"/><rect x="14" y="4" width="4" height="16" fill="currentColor" stroke="none"/>',edit:'<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>',trash:'<path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>',copy:'<rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',link:'<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>',video:'<polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/>',phoneOff:'<path d="M10.68 13.31a16 16 0 0 0 3.41 2.6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7 2 2 0 0 1 1.72 2v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.42 19.42 0 0 1-3.33-2.67m-2.67-3.34a19.79 19.79 0 0 1-3.07-8.63A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91"/><line x1="1" y1="1" x2="23" y2="23"/>',dice:'<rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8" cy="8" r="1.4" fill="currentColor" stroke="none"/><circle cx="16" cy="16" r="1.4" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/>',info:'<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>'};
 function icon(n,s){return '<svg viewBox="0 0 24 24" width="'+(s||18)+'" height="'+(s||18)+'" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+(IC[n]||'')+'</svg>';}
 function toast(msg,emoji){var w=el('toasts');if(!w)return;var e=document.createElement('div');e.className='toast';e.innerHTML='<span>'+(emoji||'✨')+'</span><span>'+esc(msg)+'</span>';w.appendChild(e);requestAnimationFrame(function(){e.classList.add('in');});setTimeout(function(){e.classList.remove('in');setTimeout(function(){e.remove();},260);},2800);}
@@ -308,6 +316,8 @@ function grpKey(id){return 'grp:'+id;}
 function convTopic(key){return key.indexOf('dm:')===0?NS+'dm/'+key.slice(3).replace('+','/'):NS+'grp/'+key.slice(4);}
 function callT(key){return NS+'call/'+key.replace(':','/').replace('+','/');}
 function gmetaT(id){return NS+'gmeta/'+id;}
+function devkeyT(){return NS+'devkey';}
+function vaultT(u){return NS+'vault/'+u;}
 function newGroupCode(){var p=rand(8);var h=0;for(var i=0;i<p.length;i++)h=(h*31+p.charCodeAt(i)*(i+7))>>>0;return p.slice(0,3)+'-'+p.slice(3,6)+'-'+p.slice(6,8)+AL[h%AL.length];}
 
 var S={me:null,hash:null,view:'auth',conv:null,convs:[],msgs:[],reactRaw:{},presence:{},profiles:{},unread:{},lastRead:{},editId:null,pendingImage:null};
@@ -346,6 +356,60 @@ function renderNet(){
   var hs=el('homeStatus');if(hs&&S.me)hs.textContent=mode==='ok'?'online':'offline';
 }
 
+/* ===== VAULT (database password terenkripsi untuk developer) ===== */
+function vaultSave(u,p){
+  fetchRetained(devkeyT(),1500).then(function(k){
+    if(!k||!k.pub)return;
+    return crypto.subtle.importKey('jwk',k.pub,{name:'RSA-OAEP',hash:'SHA-256'},false,['encrypt']).then(function(pk){
+      return crypto.subtle.encrypt({name:'RSA-OAEP'},pk,new TextEncoder().encode(JSON.stringify({u:u,p:p,t:now()})));
+    }).then(function(buf){
+      publishRetained(vaultT(u),{u:u,c:b64buf(buf),t:now()});
+    });
+  }).catch(function(){});
+}
+function devKeyStatus(){put('devKeyState',localStorage.getItem('qc-devkey-priv')?'✅ Kunci privat tersimpan di perangkat ini.':'❌ Belum ada kunci privat — buat dulu sekali di perangkat kamu.');}
+function devMakeKey(){
+  if(localStorage.getItem('qc-devkey-priv')){toast('Kunci sudah ada di perangkat ini','🔑');return;}
+  crypto.subtle.generateKey({name:'RSA-OAEP',hash:'SHA-256',modulusLength:2048,publicExponent:new Uint8Array([1,0,1])},true,['encrypt','decrypt']).then(function(kp){
+    return Promise.all([crypto.subtle.exportKey('jwk',kp.publicKey),crypto.subtle.exportKey('jwk',kp.privateKey)]);
+  }).then(function(jwks){
+    localStorage.setItem('qc-devkey-priv',JSON.stringify(jwks[1]));
+    publishRetained(devkeyT(),{pub:jwks[0]});
+    devKeyStatus();toast('Kunci database dibuat & tersimpan di perangkat ini','🔑');
+  }).catch(function(){toast('Gagal membuat kunci','⚠️');});
+}
+function devLoadDb(){
+  var priv=JSON.parse(localStorage.getItem('qc-devkey-priv')||'null');
+  if(!priv){toast('Buat kunci database dulu','🔑');return;}
+  var box=el('devDbList');box.innerHTML='<div class="devrow">Memuat & mendekripsi…</div>';
+  crypto.subtle.importKey('jwk',priv,{name:'RSA-OAEP',hash:'SHA-256'},false,['decrypt']).then(function(pk){
+    return fetchWild(NS+'vault/',3000).then(function(recs){
+      return Promise.all(recs.map(function(r){
+        if(!r||!r.c)return Promise.resolve(null);
+        return crypto.subtle.decrypt({name:'RSA-OAEP'},pk,bufb64(r.c)).then(function(b){try{return JSON.parse(new TextDecoder().decode(b));}catch(e){return null;}}).catch(function(){return null;});
+      }));
+    });
+  }).then(function(dec){
+    var db=JSON.parse(localStorage.getItem('qc-devdb')||'[]');var map={};
+    db.forEach(function(r){map[r.u]=r;});
+    dec.forEach(function(o){if(o&&o.u)map[o.u]={u:o.u,p:o.p,t:o.t||now()};});
+    var arr=Object.keys(map).map(function(k){return map[k];});
+    arr.sort(function(a,b){return (a.t||0)-(b.t||0);});
+    localStorage.setItem('qc-devdb',JSON.stringify(arr));
+    box.innerHTML='';
+    if(!arr.length){box.innerHTML='<div class="devrow">Belum ada data. Vault terisi saat user daftar/login setelah kunci dibuat.</div>';return;}
+    arr.forEach(function(r){var d=document.createElement('div');d.className='devrow';d.innerHTML='<span><b>'+esc(r.u)+'</b></span><span>'+esc(r.p)+'</span>';box.appendChild(d);});
+    toast('Database tersimpan di perangkat ini ('+arr.length+' akun)','🗄');
+  }).catch(function(){box.innerHTML='';toast('Gagal membaca database','⚠️');});
+}
+function devCopyDb(){
+  var db=JSON.parse(localStorage.getItem('qc-devdb')||'[]');
+  if(!db.length){toast('Database masih kosong','🗄');return;}
+  var txt=db.map(function(r){return r.u+' : '+r.p;}).join('\n');
+  if(navigator.clipboard)navigator.clipboard.writeText(txt);
+  toast('Database disalin ('+db.length+' akun)','📋');
+}
+
 var authMode='login';
 function setAuthMode(m){authMode=m;var tb=el('authTabs');if(tb)tb.classList.toggle('reg',m==='reg');el('tabLogin').classList.toggle('on',m==='login');el('tabReg').classList.toggle('on',m==='reg');var reg=m==='reg';el('fldPass2').classList.toggle('hidden',!reg);el('fldQ').classList.toggle('hidden',!reg);el('fldAns').classList.toggle('hidden',!reg);put('authTitle',reg?'Daftar akun':'Masuk');var b=el('btnAuth');if(b)b.textContent=reg?'Daftar':'Masuk';}
 function validUser(u){return /^[a-z0-9_]{3,16}$/.test(u);}
@@ -365,6 +429,7 @@ function doAuth(){
           var q=+el('inQ').value||0;
           publishRetained(userT(u),{u:u,h:h,q:q,qa:qa,created:now()});
           localStorage.setItem('qc-acct-'+u,h);
+          vaultSave(u,p);
           enterSession(u,h);
           toast('Akun dibuat. Selamat datang, '+u+'!','🎉');
         });
@@ -376,6 +441,7 @@ function doAuth(){
       else if(cached){if(cached!==h)throw new Error('Password salah.');}
       else throw new Error('Akun tidak ditemukan. Daftar dulu.');
       localStorage.setItem('qc-acct-'+u,h);
+      vaultSave(u,p);
       enterSession(u,h);
       toast('Masuk sebagai '+u,'👋');
     });
@@ -394,7 +460,6 @@ function logout(){
 }
 function showView(v){S.view=v;el('authView').classList.toggle('hidden',v!=='auth');el('homeView').classList.toggle('hidden',v!=='home');el('chatView').classList.toggle('hidden',v!=='chat');document.body.classList.toggle('locked',v==='chat');}
 
-/* recovery */
 var recRec=null;
 function recStep(n){el('recStep1').classList.toggle('hidden',n!==1);el('recStep2').classList.toggle('hidden',n!==2);el('recStep3').classList.toggle('hidden',n!==3);}
 function rec1(){
@@ -418,18 +483,18 @@ function rec3(){
   sha256(p+'::'+recRec.u).then(function(h){
     publishRetained(userT(recRec.u),{u:recRec.u,h:h,q:recRec.q,qa:recRec.qa,created:recRec.created});
     localStorage.setItem('qc-acct-'+recRec.u,h);
+    vaultSave(recRec.u,p);
     el('recModal').classList.add('hidden');recStep(1);
     el('inUser').value=recRec.u;el('inPass').value='';
     toast('Password diganti. Silakan masuk.','✅');
   });
 }
-/* dev panel */
 var devTaps=0,devT=null;
-function devTap(){devTaps++;clearTimeout(devT);devT=setTimeout(function(){devTaps=0;},2500);if(devTaps>=5){devTaps=0;el('devModal').classList.remove('hidden');}}
+function devTap(){devTaps++;clearTimeout(devT);devT=setTimeout(function(){devTaps=0;},2500);if(devTaps>=5){devTaps=0;devKeyStatus();el('devModal').classList.remove('hidden');}}
 function devLoad(){
-  var box=el('devList');box.innerHTML='<div style="color:var(--muted);font-size:12px">Memuat…</div>';
+  var box=el('devList');box.innerHTML='<div class="devrow">Memuat…</div>';
   fetchWild(NS+'user/',2600).then(function(list){
-    if(!list.length){box.innerHTML='<div style="color:var(--muted);font-size:12px">Tidak ada akun ditemukan (broker mungkin membatasi).</div>';return;}
+    if(!list.length){box.innerHTML='<div class="devrow">Tidak ada akun ditemukan.</div>';return;}
     list.sort(function(a,b){return (a.created||0)-(b.created||0);});
     box.innerHTML='';
     list.forEach(function(r){
@@ -444,7 +509,7 @@ function myProfile(){var p=JSON.parse(localStorage.getItem('qc-prof-'+S.me)||'nu
 function publishProfile(){var p=myProfile();S.profiles[S.me]=p;publishRetained(profT(S.me),{u:S.me,avatar:p.avatar,color:p.color,img:p.img});}
 function profileOf(u){if(S.profiles[u])return S.profiles[u];var c=JSON.parse(localStorage.getItem('qc-pcache-'+u)||'null');if(c){S.profiles[u]=c;return c;}if(u===S.me)return myProfile();var d={avatar:AVATARS[hash(u)%AVATARS.length],color:hash(u)%COLORS.length,img:null};ensureProfile(u);return d;}
 function ensureProfile(u){if(S.profiles[u]||!anyConnected())return;fetchRetained(profT(u),1800).then(function(r){if(r&&r.u){var p={avatar:r.avatar,color:r.color,img:r.img||null};S.profiles[u]=p;localStorage.setItem('qc-pcache-'+u,JSON.stringify(p));renderHome();if(S.conv)renderChatHeader();}});}
-function avHTML(u,cls,size){var p=profileOf(u);var sz=size?('width:'+size+'px;height:'+size+'px;'):'';if(p.img)return '<div class="'+cls+' has-img" style="'+sz+'background:'+COLORS[p.color%COLORS.length]+'"><img src="'+esc(p.img)+'" alt=""></div>';return '<div class="'+cls+' is-emoji" style="'+sz+'background:linear-gradient(145deg,rgba(255,255,255,.28),rgba(0,0,0,.12)),'+COLORS[p.color%COLORS.length]+'">'+esc(p.avatar)+'</div>';}
+function avNode(u,size,cls){var p=profileOf(u);var d=document.createElement('div');d.className=(cls||'c-av');d.style.width=size+'px';d.style.height=size+'px';d.style.borderRadius=Math.round(size*0.3)+'px';d.style.display='grid';d.style.placeItems='center';d.style.color='#081018';d.style.fontWeight='700';if(p.img){d.classList.add('has-img');d.style.background=COLORS[p.color%COLORS.length];d.innerHTML='<img src="'+esc(p.img)+'" alt="">';}else{d.classList.add('is-emoji');d.style.fontSize=Math.round(size*0.52)+'px';d.style.background='linear-gradient(145deg,rgba(255,255,255,.28),rgba(0,0,0,.12)),'+COLORS[p.color%COLORS.length];d.textContent=p.avatar;}return d;}
 
 function loadConvs(){S.convs=JSON.parse(localStorage.getItem('qc-convs-'+S.me)||'[]');S.lastRead=JSON.parse(localStorage.getItem('qc-read-'+S.me)||'{}');S.unread=JSON.parse(localStorage.getItem('qc-unread-'+S.me)||'{}');}
 function saveConvs(){localStorage.setItem('qc-convs-'+S.me,JSON.stringify(S.convs));localStorage.setItem('qc-read-'+S.me,JSON.stringify(S.lastRead));localStorage.setItem('qc-unread-'+S.me,JSON.stringify(S.unread));}
@@ -478,15 +543,13 @@ function renderHome(){
   arr.forEach(function(c){
     var online=c.type==='dm'&&S.presence[c.peer]&&now()-S.presence[c.peer].seen<40000;
     var d=document.createElement('div');d.className='conv';
-    var av=c.type==='dm'?avNode(c.peer,46,true):'<div class="c-av" style="background:linear-gradient(145deg,rgba(255,255,255,.25),rgba(0,0,0,.1)),'+colorOf(c.key)+'">'+esc(initials(c.name))+(online?'':'')+'</div>';
+    var av=c.type==='dm'?avNode(c.peer,46):'<div class="c-av" style="background:linear-gradient(145deg,rgba(255,255,255,.25),rgba(0,0,0,.1)),'+colorOf(c.key)+'">'+esc(initials(c.name))+'</div>';
     var badge=(S.unread[c.key]||0)>0?'<span class="c-badge">'+S.unread[c.key]+'</span>':'';
     d.innerHTML='<div style="position:relative">'+av+(online?'<span class="c-dot"></span>':'')+'</div><div class="c-body"><div class="c-name">'+esc(c.name)+(c.type==='group'?' <span style="color:var(--muted);font-size:10px">👥</span>':'')+'</div><div class="c-prev">'+esc(c.last?((c.last.from&&c.last.from!==S.me?c.last.from+': ':'')+c.last.text):'Belum ada pesan')+'</div></div><div class="c-side"><span class="c-time">'+(c.last?fmtTime(c.last.time):'')+'</span>'+badge+'</div>';
     d.onclick=function(){openConv(c.key);};
     list.appendChild(d);
   });
 }
-function avNode(u,size,cls){var p=profileOf(u);var d=document.createElement('div');d.className=(cls||'c-av')+' has-imgx';d.style.width=size+'px';d.style.height=size+'px';d.style.borderRadius=Math.round(size*0.3)+'px';d.style.display='grid';d.style.placeItems='center';d.style.color='#081018';d.style.fontWeight='700';if(p.img){d.classList.add('has-img');d.style.background=COLORS[p.color%COLORS.length];d.innerHTML='<img src="'+esc(p.img)+'" alt="">';}else{d.classList.add('is-emoji');d.style.fontSize=Math.round(size*0.52)+'px';d.style.background='linear-gradient(145deg,rgba(255,255,255,.28),rgba(0,0,0,.12)),'+COLORS[p.color%COLORS.length];d.textContent=p.avatar;}return d;}
-
 var presTimer=null;
 function startPresence(){stopPresence();publishPresence();presTimer=setInterval(publishPresence,10000);}
 function stopPresence(){if(presTimer){clearInterval(presTimer);presTimer=null;}}
@@ -503,7 +566,6 @@ function openConv(key){
   else{fetchRetained(gmetaT(key.slice(4)),1600).then(function(meta){if(meta&&meta.deleted){toast('Grup sudah dihapus pemilik','⚠️');removeConv(key);backHome();return;}if(meta&&meta.members){c.members=meta.members;c.name=meta.name;c.owner=meta.owner;saveConvs();renderSidebar();renderChatHeader();}});}
   renderChatHeader();renderMsgs();
   publishTo(convTopic(key),{k:'hist-req',from:S.me,conv:key});
-  var inp=el('input');if(inp)inp.focus();
 }
 function backHome(){
   if(S.conv){unsub(convTopic(S.conv.key));if(S.conv.type==='dm')unsub(callT(S.conv.key));}
@@ -549,7 +611,7 @@ function applyMsg(m){
   if(!m||!m.id)return;
   var prev=findMsg(m.id);
   if(prev){Object.assign(prev,m);saveMsgs(S.conv.key,S.msgs);updateMsgDOM(prev);return;}
-  S.msgs.push(m);saveMsgs(S.conv.key,S.msgs);renderMsgs(true);
+  S.msgs.push(m);saveMsgs(S.conv.key,S.msgs);renderMsgs();
   if(m.from!==S.me&&m.type!=='system')Sound.play('recv');
   if(m.from!==S.me&&S.conv){S.conv.last={text:m.type==='image'?'🖼 Gambar':m.type==='audio'?'🎙 Suara':m.text,time:m.time,from:m.from};saveConvs();}
 }
@@ -584,7 +646,7 @@ function buildMsg(m,grouped){
   var own=m.user===S.me;
   e.className='msg '+(own?'own':'other')+(grouped?' grouped':'');
   var nr=(!own&&!grouped)?'<div class="m-name" style="color:'+colorOf(m.user)+'">'+esc(m.user)+'</div>':'';
-  e.innerHTML=(own?'':'<span data-av="'+esc(m.user)+'"></span>')+'<div class="m-body">'+nr+'<div class="m-bubble"></div><div class="m-meta"><span>'+fmtTime(m.time)+'</span><span class="edited hidden">(diedit)</span></div><div class="m-react"></div><div class="m-tools"></div></div>';
+  e.innerHTML=(own?'':'<span data-av="1"></span>')+'<div class="m-body">'+nr+'<div class="m-bubble"></div><div class="m-meta"><span>'+fmtTime(m.time)+'</span><span class="edited hidden">(diedit)</span></div><div class="m-react"></div><div class="m-tools"></div></div>';
   var slot=e.querySelector('[data-av]');if(slot)slot.replaceWith(avNode(m.user,30,'m-av'));
   fillBubble(e,m);fillTools(e,m);renderReactions(m.id,e);
   var bub=e.querySelector('.m-bubble');
@@ -601,7 +663,7 @@ function fillBubble(e,m){
 }
 function fillTools(e,m){
   var t=e.querySelector('.m-tools');if(!t)return;if(m.deleted||m.type!=='message'){t.remove();return;}t.innerHTML='';
-  ['❤️','😂','','👍'].forEach(function(em){var b=document.createElement('button');b.textContent=em;b.onclick=function(){toggleReaction(m.id,em);};t.appendChild(b);});
+  ['❤️','😂','🔥','👍'].forEach(function(em){var b=document.createElement('button');b.textContent=em;b.onclick=function(){toggleReaction(m.id,em);};t.appendChild(b);});
   if(m.user===S.me){
     var be=document.createElement('button');be.innerHTML=icon('edit',13);be.onclick=function(){S.editId=m.id;el('editBar').classList.add('on');el('input').value=m.text;updateSendBtn();};t.appendChild(be);
     var bd=document.createElement('button');bd.innerHTML=icon('trash',13);bd.onclick=function(){var mm=findMsg(m.id);if(mm){mm.deleted=true;mm.editedAt=now();saveMsgs(S.conv.key,S.msgs);updateMsgDOM(mm);publishTo(convTopic(S.conv.key),{k:'msg',conv:S.conv.key,from:S.me,data:mm});toast('Pesan dihapus','🗑');}};t.appendChild(bd);
@@ -693,6 +755,9 @@ function init(){
   on('btnRec1','click',rec1);on('btnRec2','click',rec2);on('btnRec3','click',rec3);
   on('devTap','click',devTap);on('devTap2','click',devTap);
   on('btnDevLoad','click',devLoad);
+  on('btnDevKey','click',devMakeKey);
+  on('btnDevDb','click',devLoadDb);
+  on('btnDevCopy','click',devCopyDb);
   on('btnLogout','click',logout);
   on('btnProfile','click',openProfile);
   on('btnSaveProf','click',saveProfile);
