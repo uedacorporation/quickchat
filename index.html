@@ -29,6 +29,7 @@ button,input,textarea,select{font:inherit;color:inherit}
 .btn.danger{background:rgba(255,107,107,.1);border-color:rgba(255,107,107,.36);color:#ff9090}
 .btn.full{width:100%}
 .btn.small{padding:9px 14px;font-size:13px;border-radius:11px}
+.btn svg{width:16px;height:16px}
 .icon-btn{position:relative;width:38px;height:38px;flex:none;display:grid;place-items:center;border:1px solid var(--line);border-radius:11px;background:var(--glass);color:var(--muted);cursor:pointer}
 .icon-btn:hover{color:var(--lime)}
 .icon-btn.sm{width:30px;height:30px;border-radius:9px}
@@ -191,7 +192,7 @@ button,input,textarea,select{font:inherit;color:inherit}
       <h1 id="authTitle">Masuk</h1>
       <p class="sub">Chat lintas perangkat — pribadi & grup. Cukup nama pengguna + password.</p>
       <div class="tabs" id="authTabs"><i class="thumb"></i><button id="tabLogin" class="on" type="button">Masuk</button><button id="tabReg" type="button">Daftar</button></div>
-      <label class="fld" id="fldUser"><span>Nama pengguna</span><input id="inUser" maxlength="16" placeholder="contoh: ryo" autocomplete="username"><small class="err">3-16 karakter: huruf kecil, angka, atau _</small></label>
+      <label class="fld" id="fldUser"><span>Nama pengguna</span><input id="inUser" maxlength="16" placeholder="username" autocomplete="username"><small class="err">3-16 karakter: huruf kecil, angka, atau _</small></label>
       <label class="fld" id="fldPass"><span>Password</span><input id="inPass" type="password" maxlength="64" placeholder="••••••"><small class="err">Password minimal 4 karakter</small></label>
       <label class="fld hidden" id="fldPass2"><span>Ulangi password</span><input id="inPass2" type="password" maxlength="64" placeholder="••••••"><small class="err">Password tidak sama</small></label>
       <label class="fld hidden" id="fldQ"><span>Pertanyaan keamanan</span><select id="inQ"></select></label>
@@ -254,10 +255,10 @@ button,input,textarea,select{font:inherit;color:inherit}
 </aside>
 <div id="sbScrim" class="scrim hidden"></div>
 
-<div id="dmModal" class="modal hidden"><div class="m-scrim" data-close="dmModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="dmModal" type="button"></button><h3>Chat pribadi baru</h3><p class="sub">Masukkan nama pengguna tujuan.</p><label class="fld"><span>Username</span><input id="inDM" maxlength="16" placeholder="contoh: sari"></label><button id="btnDM" class="btn primary full" type="button">Mulai chat</button></div></div>
+<div id="dmModal" class="modal hidden"><div class="m-scrim" data-close="dmModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="dmModal" type="button"></button><h3>Chat pribadi baru</h3><p class="sub">Masukkan nama pengguna tujuan.</p><label class="fld"><span>Username</span><input id="inDM" maxlength="16" placeholder="username teman"></label><button id="btnDM" class="btn primary full" type="button">Mulai chat</button></div></div>
 <div id="grpModal" class="modal hidden"><div class="m-scrim" data-close="grpModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="grpModal" type="button"></button><h3>Buat / gabung grup</h3><p class="sub">Buat grup baru atau masuk pakai kode undangan.</p><label class="fld"><span>Nama grup baru</span><input id="inGrp" maxlength="24" placeholder="contoh: Tim Kelas"></label><button id="btnGrp" class="btn primary full" type="button">Buat grup</button><div style="margin:12px 0;text-align:center;color:var(--muted);font-size:12px">— atau —</div><label class="fld"><span>Kode undangan grup</span><input id="inGrpCode" maxlength="32" placeholder="XXX-XXX-XXX"></label><button id="btnGrpJoin" class="btn ghost full" type="button">Gabung grup</button></div></div>
 <div id="profModal" class="modal hidden"><div class="m-scrim" data-close="profModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="profModal" type="button"></button><h3>Profil & pengaturan akun</h3><p class="sub">Avatar emoji atau foto dari perangkat.</p><div class="profile-top"><div class="avatar-preview" id="avatarPreview">🦊</div><div style="flex:1"><div id="profName" style="font-weight:700">—</div><div style="color:var(--muted);font-size:12px;margin-top:2px">Avatar tampil di chat & kontak</div></div><div style="display:flex;flex-direction:column;gap:6px"><button id="btnUploadAvatar" class="mini-btn" type="button"></button><button id="btnRandomAvatar" class="mini-btn" type="button"></button></div><input id="avatarInput" type="file" accept="image/*" hidden></div><div class="avatar-grid" id="avatarGrid"></div><div class="color-row" id="colorRow"></div><button id="btnSaveProf" class="btn primary full" type="button">Simpan profil</button>
-<div style="margin-top:14px;border-top:1px solid var(--line);padding-top:14px"><span class="sb-label">PENGATURAN AKUN</span><button id="btnDelAcc" class="btn danger full small" type="button">🗑 Hapus akun permanen</button><p class="sub" style="margin:8px 0 0;font-size:11px">Akun, profil, dan salinan di database developer ikut terhapus. Username bisa dipakai daftar lagi nanti.</p></div>
+<div style="margin-top:14px;border-top:1px solid var(--line);padding-top:14px"><span class="sb-label">PENGATURAN AKUN</span><button id="btnDelAcc" class="btn danger full small" type="button"></button><p class="sub" style="margin:8px 0 0;font-size:11px">Akun, profil, dan salinan di database developer ikut terhapus. Username bisa dipakai daftar lagi nanti.</p></div>
 </div></div>
 <div id="recModal" class="modal hidden"><div class="m-scrim" data-close="recModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="recModal" type="button"></button><h3>Pulihkan akun</h3><p class="sub">Reset password lewat pertanyaan keamanan.</p>
 <div id="recStep1"><label class="fld"><span>Username</span><input id="recUser" maxlength="16"></label><button id="btnRec1" class="btn primary full" type="button">Cari akun</button></div>
@@ -293,7 +294,7 @@ var now=function(){return Date.now();};
 var AL='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 function rand(n){var b=new Uint8Array(n);crypto.getRandomValues(b);var o='';for(var i=0;i<n;i++)o+=AL[b[i]%AL.length];return o;}
 var COLORS=['#53D8FF','#FF6AC1','#9D8CFF','#FFC24B','#4ADE80','#FF9F45','#C8F04B','#FF6B6B'];
-var AVATARS=['🦊','','🐱','','🦄','','👽','','','','🐨','','🐧','','🦉','','🐵','','🦈','','🥷','','',''];
+var AVATARS=['🦊','','🐱','','🦄','','👽','','','','🐨','','🐧','','🦉','','🐵','','🦈','','🥷','','😎',''];
 var QUESTIONS=['Nama hewan peliharaanmu?','Nama guru favoritmu?','Kota kelahiranmu?','Makanan favoritmu?','Nama teman masa kecilmu?'];
 function hash(s){var h=0;s=String(s);for(var i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0;return h;}
 function colorOf(n){return COLORS[hash(String(n).toLowerCase())%COLORS.length];}
@@ -307,7 +308,7 @@ function isTouch(){return matchMedia('(hover:none)').matches;}
 function sha256(s){return crypto.subtle.digest('SHA-256',new TextEncoder().encode(s)).then(function(b){return Array.prototype.map.call(new Uint8Array(b),function(x){return x.toString(16).padStart(2,'0');}).join('');});}
 function b64buf(buf){var b=new Uint8Array(buf),s='';for(var i=0;i<b.length;i++)s+=String.fromCharCode(b[i]);return btoa(s);}
 function bufb64(str){var bin=atob(str),a=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i);return a.buffer;}
-var IC={x:'<path d="M18 6L6 18"/><path d="M6 6l12 12"/>',back:'<path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/>',logout:'<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/>',users:'<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',userPlus:'<path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="17" y1="11" x2="23" y2="11"/>',smile:'<circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/>',send:'<path d="M22 2L11 13"/><path d="M22 2L15 22l-4-9-9-4 20-7z"/>',attach:'<path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>',mic:'<path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/>',camera:'<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>',image:'<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/>',play:'<polygon points="5 3 19 12 5 21 5 3" fill="currentColor" stroke="none"/>',pause:'<rect x="6" y="4" width="4" height="16" fill="currentColor" stroke="none"/><rect x="14" y="4" width="4" height="16" fill="currentColor" stroke="none"/>',edit:'<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>',trash:'<path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>',copy:'<rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',link:'<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>',video:'<polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/>',phoneOff:'<path d="M10.68 13.31a16 16 0 0 0 3.41 2.6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7 2 2 0 0 1 1.72 2v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.42 19.42 0 0 1-3.33-2.67m-2.67-3.34a19.79 19.79 0 0 1-3.07-8.63A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91"/><line x1="1" y1="1" x2="23" y2="23"/>',dice:'<rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8" cy="8" r="1.4" fill="currentColor" stroke="none"/><circle cx="16" cy="16" r="1.4" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/>',info:'<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>'};
+var IC={x:'<path d="M18 6L6 18"/><path d="M6 6l12 12"/>',back:'<path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/>',logout:'<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/>',users:'<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',userPlus:'<path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="17" y1="11" x2="23" y2="11"/>',userX:'<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="17" y1="9" x2="23" y2="15"/><line x1="23" y1="9" x2="17" y2="15"/>',smile:'<circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/>',send:'<path d="M22 2L11 13"/><path d="M22 2L15 22l-4-9-9-4 20-7z"/>',attach:'<path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>',mic:'<path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/>',camera:'<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>',image:'<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/>',play:'<polygon points="5 3 19 12 5 21 5 3" fill="currentColor" stroke="none"/>',pause:'<rect x="6" y="4" width="4" height="16" fill="currentColor" stroke="none"/><rect x="14" y="4" width="4" height="16" fill="currentColor" stroke="none"/>',edit:'<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>',trash:'<path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>',copy:'<rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',link:'<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>',video:'<polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/>',phoneOff:'<path d="M10.68 13.31a16 16 0 0 0 3.41 2.6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7 2 2 0 0 1 1.72 2v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.42 19.42 0 0 1-3.33-2.67m-2.67-3.34a19.79 19.79 0 0 1-3.07-8.63A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91"/><line x1="1" y1="1" x2="23" y2="23"/>',dice:'<rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8" cy="8" r="1.4" fill="currentColor" stroke="none"/><circle cx="16" cy="16" r="1.4" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/>',info:'<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>'};
 function icon(n,s){return '<svg viewBox="0 0 24 24" width="'+(s||18)+'" height="'+(s||18)+'" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+(IC[n]||'')+'</svg>';}
 function toast(msg){var w=el('toasts');if(!w)return;var e=document.createElement('div');e.className='toast';e.textContent=msg;w.appendChild(e);requestAnimationFrame(function(){e.classList.add('in');});setTimeout(function(){e.classList.remove('in');setTimeout(function(){e.remove();},260);},2400);}
 var uid=sessionStorage.getItem('qc-uid');if(!uid){uid=rand(10);sessionStorage.setItem('qc-uid',uid);}
@@ -527,15 +528,17 @@ function deleteAccount(){
   publishRetained(profT(u),{u:u,deleted:true});
   localStorage.removeItem('qc-acct-'+u);
   localStorage.removeItem('qc-session');
-  toast('Akun '+u+' dihapus permanen');
+  var pm=el('profModal');if(pm)pm.classList.add('hidden');
   logout();
+  setAuthMode('reg');
+  toast('Akun '+u+' dihapus permanen');
 }
 var delArm=0,delT=null;
 function armDelete(){
   var b=el('btnDelAcc');if(!b)return;
-  if(delArm){clearTimeout(delT);delArm=0;b.textContent='🗑 Hapus akun permanen';deleteAccount();return;}
-  delArm=1;b.textContent='⚠️ Ketuk lagi untuk konfirmasi hapus';
-  delT=setTimeout(function(){delArm=0;b.textContent='🗑 Hapus akun permanen';},4000);
+  if(delArm){clearTimeout(delT);delArm=0;b.innerHTML=icon('userX')+' Hapus akun permanen';deleteAccount();return;}
+  delArm=1;b.innerHTML=icon('userX')+' Ketuk lagi untuk konfirmasi';
+  delT=setTimeout(function(){delArm=0;b.innerHTML=icon('userX')+' Hapus akun permanen';},4000);
 }
 function showView(v){S.view=v;el('authView').classList.toggle('hidden',v!=='auth');el('homeView').classList.toggle('hidden',v!=='home');el('chatView').classList.toggle('hidden',v!=='chat');document.body.classList.toggle('locked',v==='chat');}
 
@@ -727,7 +730,7 @@ function fillBubble(e,m){
 }
 function fillTools(e,m){
   var t=e.querySelector('.m-tools');if(!t)return;if(m.deleted||m.type!=='message'){t.remove();return;}t.innerHTML='';
-  ['❤️','😂','🔥','👍'].forEach(function(em){var b=document.createElement('button');b.textContent=em;b.onclick=function(){toggleReaction(m.id,em);};t.appendChild(b);});
+  ['❤️','😂','🔥',''].forEach(function(em){var b=document.createElement('button');b.textContent=em;b.onclick=function(){toggleReaction(m.id,em);};t.appendChild(b);});
   if(m.user===S.me){
     var be=document.createElement('button');be.innerHTML=icon('edit',13);be.onclick=function(){S.editId=m.id;el('editBar').classList.add('on');el('input').value=m.text;updateSendBtn();};t.appendChild(be);
     var bd=document.createElement('button');bd.innerHTML=icon('trash',13);bd.onclick=function(){var mm=findMsg(m.id);if(mm){mm.deleted=true;mm.editedAt=now();saveMsgs(S.conv.key,S.msgs);updateMsgDOM(mm);publishTo(convTopic(S.conv.key),{k:'msg',conv:S.conv.key,from:S.me,data:mm});toast('Pesan dihapus');}};t.appendChild(bd);
@@ -789,7 +792,7 @@ function joinGroup(code){
 }
 
 var tmpProf=null;
-function openProfile(){tmpProf=Object.assign({},myProfile());renderProfModal();el('profModal').classList.remove('hidden');var b=el('btnDelAcc');if(b){delArm=0;b.textContent='🗑 Hapus akun permanen';}}
+function openProfile(){tmpProf=Object.assign({},myProfile());renderProfModal();el('profModal').classList.remove('hidden');var b=el('btnDelAcc');if(b){delArm=0;b.innerHTML=icon('userX')+' Hapus akun permanen';}}
 function renderProfModal(){
   put('profName',S.me);
   var av=el('avatarPreview');
@@ -810,6 +813,7 @@ function init(){
   put('fabDM',icon('userPlus',22));put('fabGroup',icon('users',22));
   put('btnAttach',icon('attach'));put('btnMic',icon('mic'));put('btnEmoji',icon('smile'));put('btnSend',icon('send'));put('cpClear',icon('x'));put('btnCancelEdit',icon('x'));put('mmClose',icon('x'));
   put('btnUploadAvatar',icon('camera')+' Foto');put('btnRandomAvatar',icon('dice')+' Acak');
+  put('btnDelAcc',icon('userX')+' Hapus akun permanen');
   document.querySelectorAll('.d-close').forEach(function(b){b.innerHTML=icon('x');});
   on('tabLogin','click',function(){setAuthMode('login');});
   on('tabReg','click',function(){setAuthMode('reg');});
