@@ -1,11 +1,12 @@
-/* media.js v3.1 — modul media QuickChat (emoji kategori, gambar, suara, video call) */
+/* media.js v3.3 — modul media QuickChat (emoji kategori, gambar, suara, video call) */
 (function(){
 'use strict';
 if(!window.QC)return;
 var QC=window.QC,S=QC.S,icon=QC.icon,toast=QC.toast;
+function gid(i){return document.getElementById(i);}
 try{
-var css=document.createElement('style');
-css.textContent='.emoji-pop{display:flex;flex-direction:column;max-height:340px;width:min(360px,calc(100vw - 44px));overflow:hidden}'
+var st=document.createElement('style');
+st.textContent='.emoji-pop{display:flex;flex-direction:column;max-height:340px;width:min(360px,calc(100vw - 44px));overflow:hidden}'
 +'.emoji-search{width:100%;margin-bottom:8px;border:1px solid var(--line);border-radius:10px;background:rgba(148,170,220,.06);padding:8px 12px;color:var(--text);font-size:13px}'
 +'.emoji-cats{display:flex;gap:2px;margin-bottom:6px;padding-bottom:6px;border-bottom:1px solid var(--line);overflow-x:auto}'
 +'.emoji-cats button{flex:none;padding:5px 9px;border:1px solid transparent;border-radius:8px;background:none;font-size:16px;cursor:pointer;opacity:.5}'
@@ -24,56 +25,90 @@ css.textContent='.emoji-pop{display:flex;flex-direction:column;max-height:340px;
 +'.ctrl-mute,.ctrl-video{background:rgba(255,255,255,.15)}.ctrl-mute.on,.ctrl-video.off{background:var(--red)}.ctrl-end{background:var(--red);width:68px;height:68px}'
 +'.call-status{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#fff;font:700 18px var(--body);text-align:center}.call-status small{display:block;font-size:12px;color:rgba(255,255,255,.7)}'
 +'.incoming-call{position:fixed;top:20px;right:20px;z-index:350;min-width:280px;border:1px solid var(--line);border-radius:18px;background:rgba(11,17,32,.98);padding:14px}.ic-top{display:flex;align-items:center;gap:12px;margin-bottom:10px}.ic-av{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;color:#081018;font-size:22px;overflow:hidden}.ic-name{flex:1;font-weight:700;font-size:14px}.ic-name small{display:block;font-weight:500;font-size:11px;color:var(--cyan)}.ic-actions{display:flex;gap:8px;justify-content:flex-end}.ic-actions button{width:42px;height:42px;border-radius:50%;border:0;cursor:pointer;display:grid;place-items:center;color:#fff}.ic-actions button svg{width:18px;height:18px}.ic-accept{background:var(--green)}.ic-decline{background:var(--red)}';
-document.head.appendChild(css);
+document.head.appendChild(st);
 document.addEventListener('error',function(e){var t=e.target;if(t&&t.tagName==='AUDIO'){toast('Audio ini tidak didukung browser ini','🔇');}},true);
 
 /* ===== 1) Emoji berkategori + pencarian ===== */
 var CATS=[
-{k:'Smileys',i:'😀',l:['😀','😃','😄','😁','😆','😅','🤣','😂','🙂','🙃','😉','😊','😇','🥰','😍','😘','😜','🤪','😎','🥳','🤩','🥺','😭','😅','🙃','😴','🤔','🤫','🤯','😱','😨','😰','😥','😢','😣','😩','😫','🥱','😤','😡','😠','🤬','😈','👿','💀','💩','🤡','👹','👺','👻','👽','👾','🤖']},
-{k:'Gestur',i:'👋',l:['👋','🤚','🖐','✋','🖖','👌','🤌','🤏','✌️','🤞','🫰','🤟','🤘','🤙','👈','👉','👆','🖕','👇','☝️','🫵','👍','👎','✊','👊','🤛','🤜','👏','🙌','🫶','👐','🤲','🤝','🙏','✍️','💅','🤳','💪','🦾','🦵','🦶','👂','🦻','👃','🧠','🫀','🫁','🦷','🦴','👀','👁','👅','👄']},
-{k:'Hewan',i:'🐶',l:['🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼','🐨','🐯','🦁','🐮','🐷','🐸','🐵','🙈','🙉','🙊','🐒','🐔','🐧','🐦','🐤','🐣','🐥','🦆','🦅','🦉','🦇','🐺','🐗','🐴','🦄','🐝','🐛','🦋','🐌','🐞','🐜','🐢','🐍','🦎','🦖','🦕','🐙','','🦐','🦞','🦀','🐡','🐠','🐟','🐬','🐳','🐋','🦈','🐊','🐅','🐆','🦓','🦍','🦧','🐘','🦛','🦏','🐪','🐫','🦒','🦘','🐃','🐂','🐄','🐎','🐖','🐏','🐑','🦙','🐐','','🐕','🐩','🐈','🐇','🦝','🦨','🦡','🦫','🦦','🦥','🐁','🐀','🐿','🦔']},
-{k:'Makanan',i:'🍎',l:['🍏','🍎','🍐','🍊','🍋','🍌','🍉','🍇','🍓','🫐','🍈','🍒','🍑','🥭','🍍','🥥','🥝','🍅','🍆','🥑','🥦','🥬','🥒','🌶','🫑','🌽','🥕','🫒','🧄','🧅','🥔','🍠','🥐','🥯','🍞','🥖','🧀','🥚','🍳','🧈','🥞','🧇','🥓','🥩','🍗','🍖','🍔','🍟','🍕','🫓','🥪','🥙','🧆','🌮','🌯','🥗','🫕','🍝','🍜','🍲','🍛','','🍱','🥟','🦪','🍤','🍙','🍚','🍘','🍥','🥠','🥮','🍢','🍡','🍧','🍨','🍦','🥧','🧁','🍰','🎂','🍮','🍭','🍬','🍫','🍿','🍩','🍪','🌰','🥜','🍯','🥛','🍼','🫖','☕','🍵','🧃','🥤','🧋','🍶','🍺','🍻','🥂','🍷','🥃','🍸','🍹','🧉','🍾','🧊','🥄','🍴','🍽','🥣','🥡','🥢','🧂']},
-{k:'Aktivitas',i:'⚽',l:['⚽','🏀','🏈','⚾','🥎','🎾','🏐','🏉','🥏','🎱','🪀','🏓','🏸','🏒','🏑','🥍','🏏','🪃','🥅','⛳','🪁','🏹','🎣','🤿','🥊','🥋','🎽','🛹','🛼','🛷','','🥌','🎿','⛷','🏂','🪂','🏋️','🤼','🤸','🤺','🏇','🧘','🏄','🏊','🤽','🚣','🧗','🚵','🚴','🏆','🥇','🥈','🥉','🏅','🎖','🏵','🎗','🎫','🎟','🎪','🤹','🎭','🩰','🎨','🎬','🎤','🎧','🎼','🎹','🥁','🪘','🎷','🎺','🪗','🎸','🪕','🎻','🎲','♟','🎯','🎳','🎮','🎰','🧩']},
-{k:'Travel',i:'🚗',l:['🚗','🚕','🚙','🚌','🚎','🏎','🚓','🚑','🚒','🚐','🛻','🚚','🚛','🚜','🏍','🛵','🚲','🛴','🛺','🚔','🚍','🚘','🚖','✈️','🛫','🛬','🛩','💺','🛰','🚀','🛸','🚁','🛶','⛵','🚤','🛥','🛳','⛴','🚢','⚓','🪝','⛽','🚧','🚥','🚦','🗺','🗿','🗽','🗼','🏰','🏯','🏟','🎡','🎢','🎠','⛲','⛱','🏖','🏝','🏜','🌋','⛰','🏔','🗻','🏕','⛺','🛖','🏠','🏡','🏘','🏚','🏗','🏭','🏢','🏬','🏣','🏤','🏥','🏦','🏨','🏪','🏫','🏩','💒','🏛','⛪','🕌','🕍','🛕','🕋','⛩','🛤','🛣','','🎑','🏞','🌅','🌄','🌠','🎇','🎆','🌇','🌆','🏙','🌃','🌌','🌉','🌁']},
-{k:'Objek',i:'⌚',l:['⌚','📱','💻','⌨️','🖥','🖨','🖱','🖲','🕹','🗜','💽','💾','💿','📀','📼','📷','📸','📹','🎥','📽','🎞','📞','☎️','📟','📠','📺','📻','🎙','🎚','🎛','🧭','⏱','⏲','⏰','🕰','⌛','⏳','📡','🔋','🔌','💡','🔦','🕯','🪔','🧯','🛢','💸','💵','💴','💶','💷','🪙','💰','💳','💎','⚖️','🪜','🧰','🪛','🔧','🔨','⚒','🛠','⛏','🪚','🔩','⚙️','🪤','🧱','⛓','🧲','🔫','💣','🧨','🪓','🔪','🗡','⚔️','🛡','🚬','⚰️','🪦','⚱️','🏺','🔮','📿','🧿','💈','⚗️','🔭','🔬','🕳','🩹','🩺','💊','💉','🩸','🧬','🦠','🧫','🧪','🌡','🧹','🪠','🧺','🧻','🚽','🚰','🚿','🛁','🛀','🧼','🪥','🪒','🧽','🪣','🧴','🛎','🔑','🗝','🚪','🪑','🛋','🛏','🛌','🧸','🪆','','🪞','🪟','🛍','🛒','🎁','🎈','🎏','🎀','🪄','🪅','🎊','🎉','🎎','🏮','🎐','🧧','✉️','📩','📨','📧','💌','📥','📤','📦','🏷','🪧','📪','📫','📬','📭','📮','📯','📜','📃','📄','📑','🧾','📊','📈','📉','🗒','🗓','📆','📅','🗑','📇','🗃','🗳','🗄','📋','📁','📂','🗂','🗞','📰','📓','📔','📒','📕','📗','📘','📙','📚','📖','🔖','🧷','🔗','📎','🖇','📐','📏','🧮','📌','📍','✂️','🖊','🖋','✒️','🖌','🖍','📝','✏️','🔍','🔎','🔏','🔐','🔒','🔓']},
-{k:'Simbol',i:'❤️',l:['❤️','🧡','💛','💚','💙','💜','🖤','🤍','🤎','💔','❣️','💕','💞','💓','💗','💖','💘','💝','💟','✨','⭐','🌟','💫','⚡','🔥','💢','💥','💦','🎵','🎶','✅','❌','⭕','⛔','🚫','❗','❕','❓','❔','‼️','⁉️','🔔','🔕','📣','📢','💬','💭','💤','🌐','♻️','🆗','🆒','🆕','🆙','🆓','🆖','🔢','0️⃣','1️⃣','2️⃣','3️⃣','4️⃣','5️⃣','6️⃣','7️⃣','8️⃣','9️⃣','🔟','▶️','⏸','⏹','⏺','⏭','⏮','⏩','⏪','🔼','🔽','➡️','⬅️','⬆️','⬇️','↗️','↘️','↙️','↖️','↕️','↔️','🔄','🔁','🔂','🔀','➕','➖','➗','✖️','♾','💲','💱','™️','©️','®️','〰️','➰','➿','🔚','🔙','🔛','🔝','🔜','✔️','☑️','🔘','🔴','🟠','🟡','🟢','🔵','🟣','⚫','⚪','🟤','🔺','🔻','🔸','🔹','🔶','🔷','🔳','🔲','▪️','▫️','◾','◽','◼️','◻️','🟥','🟧','🟨','🟩','🟦','🟪','⬛','⬜','🟫']},
-{k:'Bendera',i:'🏁',l:['🏁','🚩','🎌','🏴','🏳','🏳️‍🌈','🏴‍☠️','🇮🇩','🇲🇾','🇸🇬','🇧🇳','🇹🇱','🇯🇵','🇰🇷','🇨🇳','🇹🇼','🇭🇰','🇮🇳','🇹🇭','🇻🇳','🇵🇭','🇦🇺','🇳🇿','🇺🇸','🇨🇦','🇲🇽','🇧🇷','🇦🇷','🇨🇱','🇨🇴','🇵🇪','🇬🇧','🇫🇷','🇩🇪','🇮🇹','🇪🇸','🇵🇹','🇳🇱','🇧🇪','🇨🇭','🇦🇹','🇸🇪','🇳🇴','🇩🇰','🇫🇮','🇮🇪','🇵🇱','🇷🇺','🇹🇷','🇬🇷','🇪🇬','🇿🇦','🇳🇬','🇰🇪','🇲🇦','🇸🇦','🇦🇪','🇮🇷','🇮🇱','🇵🇰','🇧🇩','🇶🇦','🇰🇼','🇺🇦','🇰🇿']}
+{k:'Smileys',i:'😀',l:['😀','😃','😄','😁','😆','😅','🤣','','🙂','','😉','😊','','🥰','😍','😘','😜','🤪','😎','🥳','','🥺','😭','😴','🤔','','🤯','','😨','😰','😥','😢','😣','😩','😫','🥱','','😡','😠','🤬','😈','👿','💀','💩','🤡','','👺','','👽','','🤖']},
+{k:'Gestur',i:'👋',l:['👋','🤚','🖐','✋','🖖','','🤌','','✌️','','🫰','🤟','🤘','🤙','👈','👉','👆','🖕','👇','☝️','🫵','👍','👎','✊','👊','🤛','','👏','','🫶','👐','🤲','','🙏','✍️','💅','🤳','💪','🦾','🦵','🦶','👂','','👃','','🫀','','🦷','🦴','','👁','','👄']},
+{k:'Hewan',i:'🐶',l:['🐶','','🐭','','🐰','','🐻','','🐨','🐯','','🐮','','🐸','','🙈','','🙊','','🐔','','🐦','','🐣','','🦆','','🦉','','🐺','','🐴','','🐝','','🦋','','🐞','','🐢','','🦎','','🦕','','🦑','','🦞','','🐡','','🐟']},
+{k:'Makanan',i:'🍎',l:['🍏','🍎','🍐','🍊','🍋','🍌','🍉','🍇','🍓','🫐','','🍒','','🥭','','🥥','','🍅','','🥑','','🥬','','🌶','','🌽','','🫒','','🧅','','🍠','🥐','🥯','','🥖','','🥚','','🧈','','🧇','','🥩','','🍖','','🍟']},
+{k:'Aktivitas',i:'⚽',l:['⚽','🏀','🏈','⚾','🥎','','🏐','','🥏','','🪀','','🏸','','🏑','','🏏','','🥅','','🪁','🏹','🎣','🤿','🥊','🥋','🎽','🛹','🛼','🛷','⛸','🥌','','⛷','🏂','🪂','🏋️','🤼','','🤺']},
+{k:'Travel',i:'🚗',l:['🚗','','🚙','🚌','🚎','','🚓','','🚒','','🛻','','🚛','🚜','🏍','','🚲','','🛺','','🚍','','🚖','✈️','🛫','🛬','🛩','💺','🛰','🚀','🛸','🚁','🛶','⛵','🚤','🛥','🛳','⛴','🚢','⚓']},
+{k:'Objek',i:'⌚',l:['⌚','📱','💻','⌨️','🖥','','🖱','🖲','','🗜','💽','💾','💿','📀','','📷','','📹','🎥','📽','','📞','☎️','📟','','📺','','🎙','','🎛','','⏱','','⏰','','⌛','⏳','📡','🔋','🔌','💡','🔦','','🪔','','🛢','💸','💵','💴']},
+{k:'Simbol',i:'❤️',l:['❤️','🧡','💛','💚','💙','💜','🖤','🤍','🤎','💔','❣️','💕','💞','💓','💗','💖','💘','💝','💟','✨','⭐','🌟','💫','⚡','','💢','💥','💦','','🎶','✅','❌','','⛔','🚫','❗','❕','❓','❔','‼️','⁉️','🔔','','📣','','💬','💭','💤','🌐','♻️']},
+{k:'Bendera',i:'🏁',l:['🏁','🚩','🎌','🏴','🏳','🏳️‍🌈','🏴‍☠️','🇮🇩','🇲🇾','🇬','🇧🇳','🇱','🇯🇵','🇷','🇨🇳','🇼','🇭🇰','🇳','🇭','🇳','🇭','🇦🇺','🇳🇿','🇺🇸','🇨🇦','🇧','🇩🇪','🇷','🇮🇹','🇪🇸','🇦','🇪']}
 ];
 var cat=0;
-var pop=document.getElementById('emojiPop');
+var pop=gid('emojiPop');
 if(pop){
   pop.innerHTML='<input id="emojiSearch" class="emoji-search" placeholder="Cari emoji…" autocomplete="off"><div id="emojiCats" class="emoji-cats"></div><div id="emojiGrid" class="emoji-grid"></div>';
-  var buildCats=function(){var c=document.getElementById('emojiCats');c.innerHTML='';CATS.forEach(function(k,i){var b=document.createElement('button');b.type='button';b.textContent=k.i;b.title=k.k;if(i===cat)b.classList.add('on');b.onclick=function(){cat=i;buildCats();grid('');};c.appendChild(b);});};
-  var grid=function(f){var g=document.getElementById('emojiGrid');g.innerHTML='';var add=function(em){if(!em)return;var b=document.createElement('button');b.type='button';b.textContent=em;b.onclick=function(){QC.insertEmoji(em);};g.appendChild(b);};if(f){var q=f.toLowerCase();CATS.forEach(function(k){k.l.forEach(function(em){if(em.indexOf(q)>=0)add(em);});});}else{CATS[cat].l.forEach(add);}};
+  var buildCats=function(){
+    var c=gid('emojiCats');c.innerHTML='';
+    CATS.forEach(function(k,i){
+      var b=document.createElement('button');b.type='button';b.textContent=k.i;b.title=k.k;
+      if(i===cat)b.classList.add('on');
+      b.onclick=function(){cat=i;buildCats();grid('');};
+      c.appendChild(b);
+    });
+  };
+  var grid=function(f){
+    var g=gid('emojiGrid');g.innerHTML='';
+    var add=function(em){if(!em)return;var b=document.createElement('button');b.type='button';b.textContent=em;b.onclick=function(){QC.insertEmoji(em);};g.appendChild(b);};
+    if(f){
+      var q=f.toLowerCase();
+      CATS.forEach(function(k){
+        if(k.k.toLowerCase().indexOf(q)>=0){k.l.forEach(add);}
+        else{k.l.forEach(function(em){if(em.indexOf(q)>=0)add(em);});}
+      });
+    }else{CATS[cat].l.forEach(add);}
+  };
   buildCats();grid('');
-  document.getElementById('emojiSearch').addEventListener('input',function(e){grid(e.target.value.trim());});
+  gid('emojiSearch').addEventListener('input',function(e){grid(e.target.value.trim());});
 }
 
 /* ===== 2) Lampiran gambar ===== */
-var composer=document.getElementById('composer');
+var composer=gid('composer');
 var menu=document.createElement('div');menu.className='attach-menu';
 menu.innerHTML='<button type="button" data-a="img">'+icon('image')+' Pilih gambar</button><button type="button" data-a="cam">'+icon('camera')+' Buka kamera</button>';
 composer.appendChild(menu);
 var fi=document.createElement('input');fi.type='file';fi.accept='image/*';fi.hidden=true;composer.appendChild(fi);
 var ci=document.createElement('input');ci.type='file';ci.accept='image/*';ci.setAttribute('capture','environment');ci.hidden=true;composer.appendChild(ci);
-document.getElementById('btnAttach').onclick=function(e){e.stopPropagation();menu.classList.toggle('on');document.getElementById('emojiPop').classList.add('hidden');};
+gid('btnAttach').onclick=function(e){e.stopPropagation();menu.classList.toggle('on');gid('emojiPop').classList.add('hidden');};
 document.addEventListener('click',function(e){if(!e.target.closest('.attach-menu')&&!e.target.closest('#btnAttach'))menu.classList.remove('on');});
 menu.querySelector('[data-a="img"]').onclick=function(){fi.click();menu.classList.remove('on');};
 menu.querySelector('[data-a="cam"]').onclick=function(){ci.click();menu.classList.remove('on');};
 fi.onchange=function(){if(fi.files[0])handleImg(fi.files[0]);};
 ci.onchange=function(){if(ci.files[0])handleImg(ci.files[0]);};
-function compress(file){return new Promise(function(res,rej){var r=new FileReader();r.onload=function(ev){var im=new Image();im.onload=function(){var w=im.width,h=im.height,mx=1280;if(w>mx||h>mx){var s=Math.min(mx/w,mx/h);w=Math.round(w*s);h=Math.round(h*s);}var cv=document.createElement('canvas');cv.width=w;cv.height=h;cv.getContext('2d').drawImage(im,0,0,w,h);res(cv.toDataURL('image/jpeg',0.72));};im.onerror=rej;im.src=ev.target.result;};r.onerror=rej;r.readAsDataURL(file);});}
+function compress(file){
+  return new Promise(function(res,rej){
+    var r=new FileReader();
+    r.onload=function(ev){
+      var im=new Image();
+      im.onload=function(){
+        var w=im.width,h=im.height,mx=1280;
+        if(w>mx||h>mx){var s=Math.min(mx/w,mx/h);w=Math.round(w*s);h=Math.round(h*s);}
+        var cv=document.createElement('canvas');cv.width=w;cv.height=h;
+        cv.getContext('2d').drawImage(im,0,0,w,h);
+        res(cv.toDataURL('image/jpeg',0.72));
+      };
+      im.onerror=rej;im.src=ev.target.result;
+    };
+    r.onerror=rej;r.readAsDataURL(file);
+  });
+}
 function handleImg(f){
   if(!f.type||f.type.indexOf('image/')!==0){toast('Pilih file gambar','🖼');return;}
   if(f.size>12*1024*1024){toast('Maksimal 12MB','📦');return;}
   compress(f).then(function(d){
     S.pendingImage=d;
-    document.getElementById('cpImg').src=d;
-    document.getElementById('composePreview').classList.add('on');
+    gid('cpImg').src=d;
+    gid('composePreview').classList.add('on');
     QC.updateSendBtn();
   }).catch(function(){toast('Gagal memproses gambar','❌');});
 }
-window.addEventListener('qc-image-sent',function(){document.getElementById('composePreview').classList.remove('on');fi.value='';ci.value='';});
+window.addEventListener('qc-image-sent',function(){gid('composePreview').classList.remove('on');fi.value='';ci.value='';});
 
 /* ===== 3) Pesan suara ===== */
 var mr=null,chunks=[],t0=0,tmr=null;
@@ -84,13 +119,13 @@ function pickMime(){
 }
 function startRec(){
   if(typeof MediaRecorder==='undefined'){toast('Browser tidak mendukung rekaman','🎙');return;}
-  navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}}).then(function(st){
+  navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}}).then(function(stream){
     chunks=[];t0=Date.now();
     var mime=pickMime();
-    mr=new MediaRecorder(st,mime?{mimeType:mime}:undefined);
+    mr=new MediaRecorder(stream,mime?{mimeType:mime}:undefined);
     mr.ondataavailable=function(e){if(e.data&&e.data.size)chunks.push(e.data);};
     mr.onstop=function(){
-      st.getTracks().forEach(function(t){t.stop();});
+      stream.getTracks().forEach(function(t){t.stop();});
       var dur=Math.round((Date.now()-t0)/1000);
       if(dur<1){toast('Rekaman terlalu pendek','🎙');return;}
       var usedMime=(mr.mimeType||'audio/mp4').split(';')[0];
@@ -103,21 +138,21 @@ function startRec(){
     };
     mr.start(250);
     composer.classList.add('recording');
-    document.getElementById('btnMic').classList.add('recording');
-    document.getElementById('recIndicator').classList.add('on');
-    document.getElementById('input').style.display='none';
-    tmr=setInterval(function(){var s=Math.floor((Date.now()-t0)/1000);document.getElementById('recTime').textContent=Math.floor(s/60)+':'+('0'+(s%60)).slice(-2);},250);
+    gid('btnMic').classList.add('recording');
+    gid('recIndicator').classList.add('on');
+    gid('input').style.display='none';
+    tmr=setInterval(function(){var s=Math.floor((Date.now()-t0)/1000);gid('recTime').textContent=Math.floor(s/60)+':'+('0'+(s%60)).slice(-2);},250);
   }).catch(function(){toast('Izinkan akses mikrofon','🎙');});
 }
 function stopRec(){
   if(!mr||mr.state!=='recording')return;
   clearInterval(tmr);mr.stop();
   composer.classList.remove('recording');
-  document.getElementById('btnMic').classList.remove('recording');
-  document.getElementById('recIndicator').classList.remove('on');
-  document.getElementById('input').style.display='';
+  gid('btnMic').classList.remove('recording');
+  gid('recIndicator').classList.remove('on');
+  gid('input').style.display='';
 }
-document.getElementById('btnMic').onclick=function(){if(mr&&mr.state==='recording')stopRec();else startRec();};
+gid('btnMic').onclick=function(){if(mr&&mr.state==='recording')stopRec();else startRec();};
 
 /* ===== 4) Penampil gambar layar penuh ===== */
 var mm=document.createElement('div');mm.className='media-modal hidden';mm.id='mediaModal';
@@ -125,7 +160,7 @@ mm.innerHTML='<button class="mm-close" type="button">'+icon('x')+'</button><img 
 document.body.appendChild(mm);
 mm.querySelector('.mm-close').onclick=function(){mm.classList.add('hidden');};
 mm.addEventListener('click',function(e){if(e.target===mm)mm.classList.add('hidden');});
-window.QC_MEDIA={viewImage:function(src){document.getElementById('mmImg').src=src;mm.classList.remove('hidden');}};
+window.QC_MEDIA={viewImage:function(src){gid('mmImg').src=src;mm.classList.remove('hidden');}};
 
 /* ===== 5) Video call (WebRTC P2P, sinyal lewat MQTT) ===== */
 document.body.insertAdjacentHTML('beforeend',
@@ -134,32 +169,31 @@ document.body.insertAdjacentHTML('beforeend',
 var pc=null,ls=null,active=false,answered=false,partner=null,incoming=null,ctmr=null,sec=0;
 var ICE={iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'}]};
 function initialsOf(n){var p=String(n).trim().split(/\s+/).slice(0,2),o='';for(var i=0;i<p.length;i++)o+=p[i].charAt(0).toUpperCase();return o||'?';}
-function setAv(elId,p){var e=document.getElementById(elId);if(!e)return;if(p.avatarImg){e.innerHTML='<img src="'+p.avatarImg+'" alt="">';}else{e.textContent=p.avatar||initialsOf(p.user);e.style.background='linear-gradient(145deg,rgba(255,255,255,.3),rgba(0,0,0,.12)),'+QC.COLORS[(p.avatarColor||0)%QC.COLORS.length];}}
+function setAv(elId,p){var e=gid(elId);if(!e)return;if(p.avatarImg){e.innerHTML='<img src="'+p.avatarImg+'" alt="">';}else{e.textContent=p.avatar||initialsOf(p.user);e.style.background='linear-gradient(145deg,rgba(255,255,255,.3),rgba(0,0,0,.12)),'+QC.COLORS[(p.avatarColor||0)%QC.COLORS.length];}}
 function csend(o){if(!partner||!S.room)return;QC.publishTo(QC.callTopic(S.room,QC.uid,partner),Object.assign({},o,{from:QC.uid,room:S.room}));}
 function openUI(p,ans){
-  document.getElementById('callModal').classList.remove('hidden');
+  gid('callModal').classList.remove('hidden');
   setAv('callBigAv',p);
-  document.getElementById('callBigName').textContent=p.user;
-  document.getElementById('callName').textContent=p.user;
-  document.getElementById('callPlaceholder').style.display='';
-  document.getElementById('callStatus').style.display=ans?'none':'';
+  gid('callBigName').textContent=p.user;
+  gid('callName').textContent=p.user;
+  gid('callPlaceholder').style.display='';
+  gid('callStatus').style.display=ans?'none':'';
 }
 function timer(){
-  answered=true;
-  sec=0;
-  clearInterval(ctmr);
-  var st=document.getElementById('callStatus');
-  if(st) st.style.display='none';
-  ctmr=setInterval(function(){
-    sec++;
-    document.getElementById('callTimer').textContent=('0'+Math.floor(sec/60)).slice(-2)+':'+('0'+(sec%60)).slice(-2);
-  },1000);
+  answered=true;sec=0;clearInterval(ctmr);
+  var s=gid('callStatus');if(s)s.style.display='none';
+  ctmr=setInterval(function(){sec++;gid('callTimer').textContent=('0'+Math.floor(sec/60)).slice(-2)+':'+('0'+(sec%60)).slice(-2);},1000);
 }
 function getMedia(){return navigator.mediaDevices.getUserMedia({video:true,audio:{echoCancellation:true,noiseSuppression:true}}).catch(function(){return navigator.mediaDevices.getUserMedia({audio:true});});}
 function wirePC(){
   pc=new RTCPeerConnection(ICE);
   ls.getTracks().forEach(function(t){pc.addTrack(t,ls);});
-  pc.ontrack=function(e){document.getElementById('remoteVideo').srcObject=e.streams[0];document.getElementById('callPlaceholder').style.display='none';};
+  pc.ontrack=function(e){
+    gid('remoteVideo').srcObject=e.streams[0];
+    gid('callPlaceholder').style.display='none';
+    var s=gid('callStatus');if(s)s.style.display='none';
+    if(!answered)timer();
+  };
   pc.onicecandidate=function(e){if(e.candidate)csend({type:'ice',cand:e.candidate});};
   pc.onconnectionstatechange=function(){if(pc&&/disconnected|failed|closed/.test(pc.connectionState))endCall(true);};
 }
@@ -167,34 +201,34 @@ function startCall(u){
   if(active){toast('Sedang dalam panggilan','📞');return;}
   var p=S.presence.get(u);if(!p){toast('Pengguna tidak online','🚫');return;}
   partner=u;answered=false;
-  getMedia().then(function(st){
-    ls=st;document.getElementById('localVideo').srcObject=st;openUI(p,false);wirePC();
+  getMedia().then(function(stream){
+    ls=stream;gid('localVideo').srcObject=stream;openUI(p,false);wirePC();
     return pc.createOffer().then(function(of){return pc.setLocalDescription(of).then(function(){
       csend({type:'offer',sdp:of});active=true;
-      setTimeout(function(){if(!answered&&active){endCall(true);toast('Tidak ada jawaban. Pastikan perangkat tujuan terbuka dan modul media termuat.','📞');}},30000);
+      setTimeout(function(){if(!answered&&active){endCall(true);toast('Tidak ada jawaban. Pastikan perangkat tujuan terbuka.','📞');}},30000);
     });});
   }).catch(function(){endCall(true);toast('Izinkan kamera & mic untuk video call','🎥');});
 }
 function accept(){
   if(!incoming)return;
   var of=incoming.offer,from=incoming.from;partner=from;incoming=null;answered=false;
-  document.getElementById('incomingCall').classList.add('hidden');
+  gid('incomingCall').classList.add('hidden');
   var p=S.presence.get(from)||{user:'Teman',avatar:'🦊',avatarColor:0};
-  getMedia().then(function(st){
-    ls=st;document.getElementById('localVideo').srcObject=st;openUI(p,true);wirePC();
+  getMedia().then(function(stream){
+    ls=stream;gid('localVideo').srcObject=stream;openUI(p,true);wirePC();
     return pc.setRemoteDescription(of).then(function(){return pc.createAnswer();}).then(function(an){return pc.setLocalDescription(an).then(function(){csend({type:'answer',sdp:an});active=true;timer();});});
   }).catch(function(){endCall(true);toast('Izinkan kamera & mic untuk video call','🎥');});
 }
-function decline(){if(incoming){csend({type:'decline'});incoming=null;}document.getElementById('incomingCall').classList.add('hidden');}
+function decline(){if(incoming){csend({type:'decline'});incoming=null;}gid('incomingCall').classList.add('hidden');}
 function endCall(silent){
   clearInterval(ctmr);
   if(pc){try{pc.close();}catch(e){}pc=null;}
   if(ls){ls.getTracks().forEach(function(t){t.stop();});ls=null;}
   if(partner&&!silent)csend({type:'end'});
   active=false;answered=false;partner=null;
-  document.getElementById('callModal').classList.add('hidden');
-  document.getElementById('remoteVideo').srcObject=null;
-  document.getElementById('localVideo').srcObject=null;
+  gid('callModal').classList.add('hidden');
+  gid('remoteVideo').srcObject=null;
+  gid('localVideo').srcObject=null;
 }
 QC.onCallSignal=function(d){
   if(!d||d.from===QC.uid||!S.joined)return;
@@ -203,8 +237,8 @@ QC.onCallSignal=function(d){
     var p=S.presence.get(d.from)||{user:'Teman',avatar:'🦊',avatarColor:0};
     incoming={from:d.from,offer:d.sdp};
     setAv('icAv',p);
-    document.getElementById('icName').textContent=p.user;
-    document.getElementById('incomingCall').classList.remove('hidden');
+    gid('icName').textContent=p.user;
+    gid('incomingCall').classList.remove('hidden');
     QC.Sound.play('call');
     setTimeout(function(){if(incoming)decline();},30000);
   }
@@ -213,11 +247,11 @@ QC.onCallSignal=function(d){
   else if(d.type==='decline'||d.type==='busy'||d.type==='end'){endCall(true);}
 };
 QC.startCall=startCall;QC.endCall=endCall;
-document.getElementById('icAccept').onclick=accept;
-document.getElementById('icDecline').onclick=decline;
-document.getElementById('ctrlMute').onclick=function(){if(!ls)return;var a=ls.getAudioTracks()[0];if(!a)return;a.enabled=!a.enabled;this.classList.toggle('on',!a.enabled);};
-document.getElementById('ctrlVideo').onclick=function(){if(!ls)return;var v=ls.getVideoTracks()[0];if(!v){toast('Video tidak tersedia','📷');return;}v.enabled=!v.enabled;this.classList.toggle('off',!v.enabled);};
-document.getElementById('ctrlEnd').onclick=function(){endCall(false);};
+gid('icAccept').onclick=accept;
+gid('icDecline').onclick=decline;
+gid('ctrlMute').onclick=function(){if(!ls)return;var a=ls.getAudioTracks()[0];if(!a)return;a.enabled=!a.enabled;this.classList.toggle('on',!a.enabled);};
+gid('ctrlVideo').onclick=function(){if(!ls)return;var v=ls.getVideoTracks()[0];if(!v){toast('Video tidak tersedia','📷');return;}v.enabled=!v.enabled;this.classList.toggle('off',!v.enabled);};
+gid('ctrlEnd').onclick=function(){endCall(false);};
 
 window.QC_MEDIA=true;
 }catch(e){
@@ -225,3 +259,4 @@ window.QC_MEDIA=true;
   if(window.console)console.error(e);
 }
 })();
+/* END media.js v3.3 */
