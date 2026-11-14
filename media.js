@@ -1,4 +1,4 @@
-/* media.js v17 — emoji, gambar, suara, call video+suara (STUN+TURN) */
+/* media.js v19 — emoji, gambar, suara, call (lengkap) */
 (function(){
 'use strict';
 if(!window.QC)return;
@@ -8,6 +8,7 @@ function gid(i){return document.getElementById(i);}
 function badEm(em){
 if(!em)return true;
 if(em==='\uFE0F'||em==='\u200D')return true;
+if(em.indexOf('?')>=0)return true;
 var cp=em.codePointAt(0);
 if(cp>=0x1F1E6&&cp<=0x1F1FF&&em.length<4)return true;
 return false;
@@ -17,16 +18,17 @@ var C='';
 C+='.emoji-pop{display:flex;flex-direction:column;';
 C+='max-height:320px;overflow:hidden}';
 C+='.emoji-head{display:flex;gap:6px;margin-bottom:7px}';
-C+='.emoji-search{flex:1;min-width:0;border:1px solid var(--line);';
-C+='border-radius:10px;background:rgba(148,170,220,.06);';
-C+='padding:7px 11px;color:var(--text);font-size:13px}';
+C+='.emoji-search{flex:1;min-width:0;';
+C+='border:1px solid var(--line);border-radius:10px;';
+C+='background:rgba(148,170,220,.06);padding:7px 11px;';
+C+='color:var(--text);font-size:13px}';
 C+='.emoji-close{width:36px;height:36px;flex:none;';
 C+='border:1px solid var(--line);border-radius:10px;';
 C+='background:var(--glass);color:var(--muted);';
 C+='cursor:pointer;display:grid;place-items:center}';
 C+='.emoji-cats{display:flex;gap:2px;margin-bottom:5px;';
-C+='padding-bottom:5px;border-bottom:1px solid var(--line);';
-C+='overflow-x:auto}';
+C+='padding-bottom:5px;';
+C+='border-bottom:1px solid var(--line);overflow-x:auto}';
 C+='.emoji-cats button{flex:none;padding:4px 8px;border:0;';
 C+='border-radius:8px;background:none;font-size:15px;';
 C+='cursor:pointer;opacity:.5}';
@@ -35,11 +37,13 @@ C+='background:rgba(200,240,75,.12)}';
 C+='.emoji-grid{flex:1;min-height:150px;max-height:190px;';
 C+='overflow-y:auto;display:grid;';
 C+='grid-template-columns:repeat(8,1fr);gap:2px}';
-C+='.emoji-grid button{height:32px;border:0;border-radius:8px;';
-C+='background:none;font-size:19px;cursor:pointer}';
-C+='.attach-menu{position:absolute;bottom:calc(100% + 8px);';
-C+='left:0;z-index:28;display:none;flex-direction:column;';
-C+='gap:4px;min-width:170px;border:1px solid var(--line);';
+C+='.emoji-grid button{height:32px;border:0;';
+C+='border-radius:8px;background:none;font-size:19px;';
+C+='cursor:pointer}';
+C+='.attach-menu{position:absolute;';
+C+='bottom:calc(100% + 8px);left:0;z-index:28;';
+C+='display:none;flex-direction:column;gap:4px;';
+C+='min-width:170px;border:1px solid var(--line);';
 C+='border-radius:14px;background:rgba(11,17,32,.98);';
 C+='padding:6px}';
 C+='.attach-menu.on{display:flex}';
@@ -51,9 +55,11 @@ C+='.attach-menu button svg{width:17px;height:17px;';
 C+='color:var(--cyan)}';
 C+='.call-modal{position:fixed;inset:0;z-index:300;';
 C+='background:#000;display:flex;flex-direction:column}';
-C+='.call-remote{flex:1;position:relative;background:#0a0a0a;';
-C+='display:grid;place-items:center;overflow:hidden}';
-C+='.call-remote video{width:100%;height:100%;object-fit:cover}';
+C+='.call-remote{flex:1;position:relative;';
+C+='background:#0a0a0a;display:grid;';
+C+='place-items:center;overflow:hidden}';
+C+='.call-remote video{width:100%;height:100%;';
+C+='object-fit:cover}';
 C+='.call-ph{display:flex;flex-direction:column;';
 C+='align-items:center;gap:12px;color:var(--muted)}';
 C+='.call-ph .big-av{width:100px;height:100px;';
@@ -64,8 +70,8 @@ C+='.big-av img,.ic-av img{width:100%;height:100%;';
 C+='object-fit:cover;display:block}';
 C+='.call-local{position:absolute;bottom:16px;right:16px;';
 C+='width:100px;height:150px;border-radius:12px;';
-C+='overflow:hidden;border:2px solid rgba(255,255,255,.2);';
-C+='background:#111}';
+C+='overflow:hidden;';
+C+='border:2px solid rgba(255,255,255,.2);background:#111}';
 C+='.call-local video{width:100%;height:100%;';
 C+='object-fit:cover;transform:scaleX(-1)}';
 C+='.call-info{position:absolute;top:16px;left:16px;';
@@ -76,8 +82,8 @@ C+='.call-ctrl{display:flex;justify-content:center;';
 C+='align-items:center;gap:14px;padding:16px;';
 C+='background:rgba(0,0,0,.6)}';
 C+='.call-ctrl button{width:54px;height:54px;';
-C+='border-radius:50%;border:0;color:#fff;cursor:pointer;';
-C+='display:grid;place-items:center}';
+C+='border-radius:50%;border:0;color:#fff;';
+C+='cursor:pointer;display:grid;place-items:center}';
 C+='.call-ctrl button svg{width:21px;height:21px}';
 C+='.c-mute,.c-vid{background:rgba(255,255,255,.15)}';
 C+='.c-mute.on,.c-vid.off{background:var(--red)}';
@@ -85,10 +91,10 @@ C+='.c-end{background:var(--red);width:64px;height:64px}';
 C+='.call-status{position:absolute;top:50%;left:50%;';
 C+='transform:translate(-50%,-50%);color:#fff;';
 C+='font:700 17px var(--body)}';
-C+='.in-call{position:fixed;top:16px;right:16px;z-index:350;';
-C+='min-width:260px;border:1px solid var(--line);';
-C+='border-radius:18px;background:rgba(11,17,32,.98);';
-C+='padding:12px}';
+C+='.in-call{position:fixed;top:16px;right:16px;';
+C+='z-index:350;min-width:260px;';
+C+='border:1px solid var(--line);border-radius:18px;';
+C+='background:rgba(11,17,32,.98);padding:12px}';
 C+='.ic-top{display:flex;align-items:center;gap:10px;';
 C+='margin-bottom:9px}';
 C+='.ic-av{width:40px;height:40px;border-radius:11px;';
@@ -98,10 +104,11 @@ C+='.ic-av svg{width:22px;height:22px}';
 C+='.ic-nm{flex:1;font-weight:700;font-size:13.5px}';
 C+='.ic-nm small{display:block;font-weight:500;';
 C+='font-size:10.5px;color:var(--cyan)}';
-C+='.ic-act{display:flex;gap:8px;justify-content:flex-end}';
-C+='.ic-act button{width:40px;height:40px;border-radius:50%;';
-C+='border:0;cursor:pointer;display:grid;';
-C+='place-items:center;color:#fff}';
+C+='.ic-act{display:flex;gap:8px;';
+C+='justify-content:flex-end}';
+C+='.ic-act button{width:40px;height:40px;';
+C+='border-radius:50%;border:0;cursor:pointer;';
+C+='display:grid;place-items:center;color:#fff}';
 C+='.ic-act button svg{width:17px;height:17px}';
 C+='.ic-ok{background:var(--green)}';
 C+='.ic-no{background:var(--red)}';
@@ -122,17 +129,17 @@ return o.l;
 }
 var L;
 L=cat('Smileys','😀');
-L.push('😀 😃 😄  😆 😅  😂 🙂 🙃');
+L.push('😀 😃 😄 😁 😆 😅 🤣 😂 🙂 🙃');
 L.push('😉 😊 😇 🥰 😍 😘  🤪 😎 🥳');
-L.push('🤩  😭 🤔 🤫 🤯 😱 😨 😰 😥');
-L.push('😢 😣 😩 😫 🥱 😤 😡 😠 🤬 😈');
-L.push('👿 💀 💩 🤡  👺 👻 👽 👾 🤖');
+L.push('🤩 🥺 😭 🤔 🤫 🤯 😱 😨 😰 😥');
+L.push('😢 😣 😩  🥱 😤 😡 😠 🤬 😈');
+L.push('👿 💀 💩 🤡 👹 👺 👻 👽 👾 🤖');
 L=cat('Gestur','👋');
-L.push('👋 🤚 🖐 ✋  👌  🤏 ✌️ 🤞');
-L.push('🫰 🤟 🤘 🤙 👈 👉  🖕 👇 ️');
+L.push('👋 🤚 🖐 ✋ 🖖 👌 🤌  ✌️ ');
+L.push(' 🤟 🤘 🤙 👈 👉 👆 🖕 👇 ️');
 L.push(' 👍 👎 ✊ 👊  🤜 👏 🙌 🫶');
-L.push('👐 🤲 🤝 🙏 ✍️ 💅 🤳 💪 🦾 🦵');
-L.push('🦶 👂 🦻 👃 🧠  🫁 🦷 🦴 👀');
+L.push('👐  🤝  ✍️  🤳 💪 🦾 🦵');
+L.push('🦶 👂 🦻 👃 🧠 🫀 🫁 🦷 🦴 👀');
 L.push('👁 👅 👄');
 L=cat('Hewan','🐶');
 L.push('🐶 🐱 🐭 🐹 🐰 🦊 🐻 🐼 🐨 🐯');
@@ -146,62 +153,62 @@ L.push('🐂 🐄 🐎 🐖 🐏 🐑 🦙 🐐  🐕');
 L.push('🐩 🐈 🐇 🦝 🦨 🦡 🦫 🦦 🦥 🐁');
 L.push('🐀 🐿 🦔');
 L=cat('Makanan','🍎');
-L.push('🍏 🍎 🍐 🍊 🍋 🍌 🍉 🍇 🍓 🫐');
+L.push('🍏 🍎 🍐 🍊 🍋 🍌  🍇 🍓 🫐');
 L.push('🍈 🍒 🍑 🥭 🍍 🥥 🥝 🍅 🍆 🥑');
-L.push('🥦 🥬 🥒 🌶 🫑 🌽 🥕 🫒 🧄 🧅');
-L.push('🥔 🍠 🥐  🍞 🥖 🧀  🍳 🧈');
-L.push('🥞 🧇  🥩  🍖 🍔 🍟 🍕 🫓');
-L.push('🥪 🥙 🧆 🌮 🌯  🫕  🍜 🍲');
+L.push('🥦 🥬 🥒 🌶 🫑 🌽 🥕  🧄 🧅');
+L.push('🥔 🍠 🥐  🍞  🧀 🥚 🍳 🧈');
+L.push('🥞 🧇 🥓 🥩 🍗 🍖 🍔 🍟 🍕 🫓');
+L.push('🥪 🥙 🧆 🌮 🌯 🥗 🫕 🍝 🍜 🍲');
 L.push('🍛 🍣 🍱 🥟 🦪 🍤 🍙 🍚 🍘 🍥');
 L.push('🥠 🥮 🍢 🍡 🍧 🍨  🥧 🧁 🍰');
-L.push('🎂  🍭 🍬 🍫 🍿 🍩  🌰 ');
-L.push(' 🥛 🍼  ☕  🧃 🥤 🧋 🍶');
-L.push('🍺 🍻 🥂 🍷 🥃 🍸 🍹 🧉 🍾 🧊');
-L.push('🥄  🍽  🥡 🥢 🧂');
+L.push('🎂 🍮 🍭 🍬 🍫 🍿 🍩 🍪 🌰 🥜');
+L.push('🍯 🥛 🍼  ☕  🧃  🧋 ');
+L.push(' 🍻 🥂 🍷 🥃 🍸 🍹 🧉 🍾 🧊');
+L.push('🥄 🍴 🍽 🥣 🥡 🥢 🧂');
 L=cat('Aktivitas','⚽');
-L.push('⚽ 🏀 🏈 ⚾ 🥎 🎾 🏐 🏉 🥏 🎱');
+L.push('⚽ 🏀 🏈 ⚾  🎾 🏐 🏉 🥏 🎱');
 L.push('🪀 🏓 🏸 🏒 🏑 🥍 🏏 🪃 🥅 ⛳');
 L.push('🪁  🎣  🥊 🥋 🎽 🛹 🛼 🛷');
-L.push('⛸  🎿 ⛷ 🏂 🪂 🏋️  🤸 🤺');
-L.push('🏇 🧘 🏄 🏊 🤽 🚣 🧗 🚵 🚴 🏆');
+L.push('⛸ 🥌  ⛷  🪂 ️ 🤼  🤺');
+L.push('🏇  🏄  🤽  🧗  🚴 🏆');
 L.push('🥇 🥈 🥉 🏅 🎖 🏵 🎗 🎫 🎟 🎪');
 L.push('🤹 🎭 🩰 🎨 🎬 🎤 🎧 🎼 🎹 🥁');
-L.push('🪘  🎺 🪗 🎸 🪕 🎻 🎲 ♟ 🎯');
+L.push('🪘 🎷 🎺 🪗 🎸 🪕 🎻 🎲 ♟ 🎯');
 L.push('🎳 🎮 🎰 🧩');
 L=cat('Travel','🚗');
-L.push('🚗 🚕 🚙 🚌 🚎  🚓  🚒 ');
-L.push(' 🚚 🚛 🚜 🏍 🛵 🚲 🛴 🛺 🚔');
-L.push('🚍 🚘 🚖 ✈️ 🛫 🛬 🛩 💺 🛰 🚀');
-L.push('🛸  🛶  🚤  🛳  🚢 ');
-L.push(' ⛽  🚥 🚦 🗺 🗿 🗽 🗼 🏰');
-L.push('🏯 🏟 🎡 🎢 🎠 ⛲  🏖  🏜');
+L.push('🚗 🚕 🚙 🚌 🚎  🚓 🚑 🚒 🚐');
+L.push('🛻 🚚 🚛 🚜 🏍 🛵 🚲 🛴 🛺 🚔');
+L.push('🚍 🚘 🚖 ✈️ 🛫 🛬 🛩 💺 🛰 ');
+L.push('🛸 🚁  ⛵  🛥 🛳 ⛴ 🚢 ⚓');
+L.push('🪝  🚧 🚥 🚦 🗺 🗿 🗽 🗼 🏰');
+L.push('🏯 🏟 🎡 🎢 🎠 ⛲ ⛱ 🏖 🏝 🏜');
 L.push('🌋 ⛰ 🏔 🗻 🏕 ⛺ 🛖 🏠 🏡 🏘');
 L.push('🏚 🏗 🏭 🏢 🏬 🏣 🏤 🏥 🏦 🏨');
-L.push('🏪 🏫 🏩 💒  ⛪ 🕌 🕍 🛕 🕋');
-L.push('⛩ 🛤 🛣 🗾 🎑 🏞 🌅 🌄 🌠 ');
-L.push(' 🌇 🌆 🏙 🌃 🌌 🌉 🌁');
+L.push('🏪 🏫 🏩 💒 🏛 ⛪ 🕌 🕍 🛕 🕋');
+L.push('⛩ 🛤 🛣 🗾 🎑  🌅 🌄 🌠 🎇');
+L.push('🎆 🌇 🌆 🏙 🌃 🌌 🌉 🌁');
 L=cat('Objek','⌚');
 L.push('⌚ 📱 💻 ️ 🖥 🖨 🖱 🖲 🕹 🗜');
-L.push('💽 💾 💿 📀 📼 📷 📸 📹 🎥 📽');
-L.push('🎞  ☎️ 📟 📠 📺  🎙  🎛');
+L.push('💽 💾 💿 📀 📼  📸 📹  📽');
+L.push('🎞 📞 ☎️ 📟 📠 📺 📻 🎙 🎚 🎛');
 L.push('🧭 ⏱ ⏲ ⏰ 🕰 ⌛  📡 🔋 🔌');
-L.push('💡  🕯 🪔 🧯 🛢 💸 💵 💴 💶');
-L.push('💷 🪙 💰 💳 💎 ⚖️  🧰 🪛 🔧');
-L.push('🔨 ⚒ 🛠 ⛏ 🪚 🔩 ⚙️  🧱 ');
-L.push('🧲 🔫 💣 🧨 🪓 🔪 🗡 ⚔️  🚬');
-L.push('⚰️  ⚱️  🔮  🧿 💈 ⚗️ 🔭');
-L.push('🔬 🕳 🩹 🩺 💊 💉 🩸 🧬 🦠 🧫');
-L.push('🧪  🧹  🧺  🚽 🚰 🚿 🛁');
-L.push('🛀 🧼 🪥 🪒 🧽 🪣 🧴 🛎 🔑 🗝');
-L.push('🚪 🪑  🛏 🛌 🧸  🖼  🪟');
+L.push('💡 🔦  🪔 🧯  💸 💵 💴 💶');
+L.push('💷 🪙 💰 💳 💎 ⚖️  🧰  🔧');
+L.push('🔨 ⚒ 🛠 ⛏ 🪚  ⚙️  🧱 ');
+L.push('🧲 🔫 💣 🧨 🪓 🔪 🗡 ⚔️ 🛡 🚬');
+L.push('⚰️ 🪦 ⚱️  🔮  🧿 💈 ⚗️ ');
+L.push(' 🕳 🩹  💊 💉 🩸 🧬 🦠 🧫');
+L.push('🧪  🧹  🧺 🧻 🚽 🚰 🚿 🛁');
+L.push('🛀 🧼  🪒  🪣  🛎 🔑 🗝');
+L.push('🚪 🪑 🛋  🛌  🪆  🪞 ');
 L.push('🛍 🛒 🎁 🎈 🎏 🎀 🪄 🪅 🎊 🎉');
-L.push('🎎 🏮 🎐 🧧 ✉️ 📩 📨  💌');
-L.push('📥 📤 📦 🏷 🪧  📫  📭 ');
-L.push(' 📜 📃 📄 📑 🧾 📊 📈 📉 🗒');
-L.push('🗓 📆 📅 🗑 📇 🗃 🗳 🗄 📋 📁');
-L.push('📂  🗞  📓 📔 📒 📕 📗 📘');
-L.push('📙  📖 🔖 🧷 🔗 📎 🖇 📐 📏');
-L.push('🧮 📌 📍 ✂️ 🖊 🖋 ✒️ 🖌 🖍 📝');
+L.push('🎎 🏮 🎐 🧧 ✉️ 📩 📨 📧 💌');
+L.push('📥 📤 📦 🏷 🪧 📪 📫 📬 📭 📮');
+L.push('📯 📜 📃 📄 📑 🧾 📊 📈 📉 🗒');
+L.push('🗓  📅  📇  🗳 🗄 📋 📁');
+L.push('📂 🗂 🗞 📰 📓 📔 📒 📕  📘');
+L.push('📙 📚 📖 🔖  🔗 📎 🖇 📐 📏');
+L.push('🧮  📍 ✂️ 🖊 🖋 ✒️ 🖌 🖍 📝');
 L.push('✏️ 🔍 🔎 🔏 🔐 🔒 🔓');
 L=cat('Simbol','❤️');
 L.push('❤️ 🧡 💛 💚 💙 💜 🖤 🤍 🤎 💔');
@@ -215,18 +222,18 @@ L.push('⏹ ⏺ ⏭ ⏮ ⏩ ⏪ 🔼 🔽 ➡️ ⬅️');
 L.push('⬆️ ️ ↗️ ↘️ ↙️ ↖️ ↕️ ↔️ 🔄 ');
 L.push(' 🔀 ➕ ➖ ➗ ✖️ ♾ 💲 💱 ™️');
 L.push('©️ ®️ 〰️ ➰ ➿ 🔚 🔙 🔛 🔝 🔜');
-L.push('✔️ ☑️ 🔘 🔴  🟡 🟢 🔵 🟣 ⚫');
-L.push('⚪ 🟤 🔺 🔻 🔸 🔹 🔶 🔷 🔳 🔲');
+L.push('✔️ ☑️  🔴  🟡 🟢 🔵 🟣 ⚫');
+L.push('⚪  🔺 🔻 🔸 🔹 🔶 🔷 🔳 🔲');
 L.push('▪️ ▫️ ◾ ◽ ◼️ ◻️ 🟥 🟧 🟨 🟩');
-L.push('🟦 🟪 ⬛  🟫');
+L.push('🟦 🟪 ⬛ ⬜ 🟫');
 L=cat('Bendera','🏁');
-L.push('🏁 🚩 🎌 🏴 🏳 🏳️🌈 🏴☠️ 🇩 🇲🇾 🇸🇬');
-L.push('🇧🇳 🇹🇱 🇯🇵 🇰🇷 🇨🇳 🇹🇼 🇭🇰 🇮🇳 🇹🇭 🇻🇳');
-L.push('🇵🇭 🇦🇺 🇳🇿 🇺🇸 🇨🇦 🇲🇽 🇧🇷 🇦🇷 🇨🇱 🇨🇴');
-L.push('🇵 🇬🇧 🇫🇷 🇩🇪 🇮🇹 🇪🇸 🇵🇹 🇳🇱 🇧🇪 🇨🇭');
-L.push('🇦🇹 🇸🇪 🇳🇴 🇩🇰 🇫🇮 🇮🇪 🇵🇱 🇷 🇹🇷 🇬🇷');
-L.push('🇪🇬 🇿🇦 🇳🇬 🇰🇪 🇲🇦 🇸🇦 🇦🇪 🇮🇷 🇮🇱 🇵🇰');
-L.push('🇧🇩 🇶🇦 🇰🇼 🇺🇦 🇰🇿');
+L.push('🏁 🚩 🎌 🏴 🏳 🏳️‍🌈 🏴‍☠️ 🇮🇩 🇲🇾 🇸🇬');
+L.push('🇧🇳 🇹🇱 🇯🇵 🇰 🇨 🇹 🇭 🇮 🇹 🇻');
+L.push('🇭 🇦🇺 🇳 🇺 🇨 🇲 🇧 🇦 🇨 🇨🇴');
+L.push('🇵🇪 🇬🇧 🇫🇷 🇩🇪 🇮🇹 🇪 🇵🇹 🇱 🇪 🇨🇭');
+L.push('🇦🇹 🇸🇪 🇳🇴 🇩🇰 🇫🇮 🇮🇪 🇵🇱 🇷🇺 🇹🇷 🇬🇷');
+L.push('🇪🇬 🇿🇦 🇳 🇰 🇲 🇸 🇦 🇮 🇮 🇵');
+L.push('🇩 🇶🇦 🇰🇼 🇺🇦 🇰🇿');
 CATS.forEach(function(c){
 c.l=c.l.join(' ').split(' ');
 });
@@ -550,14 +557,18 @@ bg+=QC.COLORS[((p&&p.color)||0)%QC.COLORS.length];
 node.style.background=bg;
 node.innerHTML=QC.avatarHTML(name,size||60);
 }
-function csend(o){
-if(!partner)return;
-var pair=[QC.me,partner].sort().join('~');
+function csendTo(to,o){
+if(!to)return;
+var pair=[QC.me,to].sort().join('~');
 var k='dm:'+pair;
 var msg=Object.assign({},o);
 msg.from=QC.me;
-msg.to=partner;
+msg.to=to;
 QC.publishTo(QC.callTopic(k),msg);
+}
+function csend(o){
+if(!partner)return;
+csendTo(partner,o);
 }
 function styleRemote(){
 var rv=gid('remoteVideo');
@@ -727,7 +738,7 @@ toast('Izinkan akses mikrofon'+(mode==='video'?' & kamera':''));
 }
 function decline(){
 if(incoming){
-csend({type:'decline'});
+csendTo(incoming.from,{type:'decline'});
 incoming=null;
 }
 gid('incomingCall').classList.add('hidden');
@@ -754,7 +765,7 @@ QC.onCallSignal=function(d){
 if(!d||d.from===QC.me||d.to!==QC.me)return;
 if(d.type==='offer'){
 if(active){
-csend({type:'busy'});
+csendTo(d.from,{type:'busy'});
 return;
 }
 incoming={from:d.from,offer:d.sdp,mode:d.mode||'video'};
@@ -767,7 +778,11 @@ incoming.mode==='audio'
 gid('incomingCall').classList.remove('hidden');
 QC.Sound.play('call');
 setTimeout(function(){
-if(incoming)decline();
+if(incoming){
+csendTo(incoming.from,{type:'decline'});
+incoming=null;
+gid('incomingCall').classList.add('hidden');
+}
 },30000);
 }
 else if(d.type==='answer'&&pc){
@@ -777,7 +792,15 @@ pc.setRemoteDescription(d.sdp)
 else if(d.type==='ice'&&pc){
 pc.addIceCandidate(d.cand).catch(function(){});
 }
-else if(d.type==='decline'||d.type==='busy'||d.type==='end'){
+else if(d.type==='decline'){
+endCall(true);
+toast('Panggilan ditolak oleh '+nm2(d.from));
+}
+else if(d.type==='busy'){
+endCall(true);
+toast(nm2(d.from)+' sedang dalam panggilan lain');
+}
+else if(d.type==='end'){
 endCall(true);
 }
 };
@@ -815,4 +838,4 @@ try{QC.toast('Modul media gagal: '+e.message);}catch(x){}
 if(window.console)console.error(e);
 }
 })();
-/* END media.js v17 */
+/* END media.js v19 */
