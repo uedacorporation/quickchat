@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover,interactive-widget=resizes-content">
 <meta name="theme-color" content="#05070D">
 <title>QuickChat — by Ryo XD</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect x='2' y='2' width='44' height='44' rx='13' fill='%23C8F04B'/%3E%3Cpath d='M14 11h20a7 7 0 0 1 7 7v9a7 7 0 0 1-7 7h-9l-8 7v-7h-3a7 7 0 0 1-7-7v-9a7 7 0 0 1 7-7z' fill='%2306090F'/%3E%3Cpath d='M27 15l-8 11h5l-2 8 8-11h-5l2-8z' fill='%23C8F04B'/%3E%3C/svg%3E">
@@ -19,6 +19,8 @@ button:focus-visible{outline:none}
 a{-webkit-tap-highlight-color:transparent}
 input[type=range]{accent-color:var(--lime);width:100%}
 .hidden{display:none!important}
+.msg{-webkit-user-select:none;user-select:none}
+.m-bubble img{-webkit-touch-callout:none}
 .bg{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
 .blob{position:absolute;border-radius:50%;filter:blur(90px)}
 .b1{width:54vmax;height:54vmax;left:-16vmax;top:-20vmax;background:radial-gradient(circle,rgba(200,240,75,.15),transparent 66%);animation:d1 26s infinite alternate}
@@ -202,7 +204,7 @@ input[type=range]{accent-color:var(--lime);width:100%}
 <div class="bg"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div><div class="gridlines"></div></div>
 
 <main id="authView" class="view">
-  <div class="top"><div class="brand"><svg viewBox="0 0 48 48"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#C8F04B"/><stop offset="1" stop-color="#53D8FF"/></linearGradient></defs><rect x="2" y="2" width="44" height="44" rx="13" fill="url(#lg)"/><path d="M14 11h20a7 7 0 0 1 7 7v9a7 7 0 0 1-7 7h-9l-8 7v-7h-3a7 7 0 0 1-7-7v-9a7 7 0 0 1 7-7z" fill="#06090F"/><path d="M27 15l-8 11h5l-2 8 8-11h-5l2-8z" fill="#C8F04B"/></svg><div><div class="wordmark">Quick<b>Chat</b></div><div class="brand-dev" id="devTap">Developer: Ryo XD</div></div></div><span id="netChipAuth" class="net-chip wait"><i></i>Menyambung</span></div>
+  <div class="top"><div class="brand"><svg viewBox="0 0 48 48"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#C8F04B"/><stop offset="1" stop-color="#53D8FF"/></linearGradient></defs><rect x="2" y="2" width="44" height="44" rx="13" fill="url(#lg)"/><path d="M14 11h20a7 7 0 0 1 7 7v9a7 7 0 0 1-7 7h-9l-8 7v-7h-3a7 7 0 0 1-7-7v-9a7 7 0 0 1 7-7z" fill="%2306090F"/><path d="M27 15l-8 11h5l-2 8 8-11h-5l2-8z" fill="#C8F04B"/></svg><div><div class="wordmark">Quick<b>Chat</b></div><div class="brand-dev" id="devTap">Developer: Ryo XD</div></div></div><span id="netChipAuth" class="net-chip wait"><i></i>Menyambung</span></div>
   <div class="auth-wrap">
     <div class="auth-card">
       <h1 id="authTitle">Masuk</h1>
@@ -290,7 +292,7 @@ input[type=range]{accent-color:var(--lime);width:100%}
 
 <div id="dmModal" class="modal hidden"><div class="m-scrim" data-close="dmModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="dmModal" type="button"></button><h3>Chat pribadi baru</h3><p class="sub">Masukkan nama pengguna tujuan yang sudah terdaftar.</p><label class="fld"><span>Username</span><input id="inDM" maxlength="16" placeholder="username teman"></label><button id="btnDM" class="btn primary full" type="button">Mulai chat</button></div></div>
 <div id="grpModal" class="modal hidden"><div class="m-scrim" data-close="grpModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="grpModal" type="button"></button><h3>Buat / gabung grup</h3><p class="sub">Buat grup baru atau masuk pakai kode undangan.</p><label class="fld"><span>Nama grup baru</span><input id="inGrp" maxlength="24" placeholder="contoh: Tim Kelas"></label><button id="btnGrp" class="btn primary full" type="button">Buat grup</button><div style="margin:12px 0;text-align:center;color:var(--muted);font-size:12px">— atau —</div><label class="fld"><span>Kode undangan grup</span><input id="inGrpCode" maxlength="32" placeholder="XXX-XXX-XXX"></label><button id="btnGrpJoin" class="btn ghost full" type="button">Gabung grup</button></div></div>
-<div id="wallModal" class="modal hidden"><div class="m-scrim" data-close="wallModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="wallModal" type="button"></button><h3>Edit wallpaper</h3><p class="sub">Atur kegelapan & besar-kecil gambar, lihat preview langsung.</p>
+<div id="wallModal" class="modal hidden"><div class="m-scrim" data-close="wallModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="wallModal" type="button"></button><h3>Edit wallpaper</h3><p class="sub">Atur kegelapan & besar-kecil gambar, lihat preview lurus.</p>
 <div id="wallPreview" class="wall-preview"></div>
 <label class="fld"><span>Kegelapan — <b id="wallDarkVal" style="color:var(--lime)">65%</b></span><input id="wallDark" type="range" min="0" max="90" step="1" value="65"></label>
 <label class="fld"><span>Ukuran gambar — <b id="wallZoomVal" style="color:var(--lime)">140%</b></span><input id="wallZoom" type="range" min="100" max="300" step="5" value="140"></label>
@@ -351,6 +353,7 @@ var IC={x:'<path d="M18 6L6 18"/><path d="M6 6l12 12"/>',menu:'<line x1="3" y1="
 function icon(n,s){return '<svg viewBox="0 0 24 24" width="'+(s||18)+'" height="'+(s||18)+'" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+(IC[n]||'')+'</svg>';}
 function toast(msg){var w=el('toasts');if(!w)return;var e=document.createElement('div');e.className='toast';e.textContent=msg;w.appendChild(e);requestAnimationFrame(function(){e.classList.add('in');});setTimeout(function(){e.classList.remove('in');setTimeout(function(){e.remove();},260);},2400);}
 var uid=sessionStorage.getItem('qc-uid');if(!uid){uid=rand(10);sessionStorage.setItem('qc-uid',uid);}
+var lastLP=0;
 var Sound={ctx:null,on:localStorage.getItem('qc-sound')!=='0',ensure:function(){var A=window.AudioContext||window.webkitAudioContext;if(!this.ctx&&A){try{this.ctx=new A();}catch(e){}}if(this.ctx&&this.ctx.state==='suspended')this.ctx.resume().catch(function(){});},play:function(k){if(!this.on)return;this.ensure();var c=this.ctx;if(!c)return;var t=c.currentTime;function b(f0,f1,d,v,ty){var o=c.createOscillator(),g=c.createGain();o.type=ty;o.frequency.setValueAtTime(f0,t);o.frequency.exponentialRampToValueAtTime(Math.max(f1,1),t+d);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+.012);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(c.destination);o.start(t);o.stop(t+d+.03);}if(k==='send')b(540,820,.1,.05,'sine');else if(k==='recv')b(700,430,.11,.045,'sine');else if(k==='react')b(950,1150,.06,.035,'triangle');else if(k==='call')b(880,880,.12,.04,'triangle');},toggle:function(){this.on=!this.on;localStorage.setItem('qc-sound',this.on?'1':'0');}};
 
 var NS='qcx-v8/';
@@ -766,24 +769,44 @@ s.style.backgroundPosition='';
 s.style.backgroundRepeat='';
 }
 }
-function compressWall(file){
+function loadImgSafe(file){
 return new Promise(function(res,rej){
-var r=new FileReader();
-r.onload=function(ev){
+function fallback(){
+var u=URL.createObjectURL(file);
 var im=new Image();
-im.onload=function(){
-var w=im.width,h=im.height,mx=1920;
+im.onload=function(){URL.revokeObjectURL(u);res(im);};
+im.onerror=function(e){URL.revokeObjectURL(u);rej(e);};
+im.src=u;
+}
+if(window.createImageBitmap){
+createImageBitmap(file,{imageOrientation:'from-image'}).then(res).catch(fallback);
+}else{fallback();}
+});
+}
+function srcSize(o){
+var w=o.width||o.naturalWidth||0;
+var h=o.height||o.naturalHeight||0;
+return [w,h];
+}
+function compressWall(file){
+return loadImgSafe(file).then(function(src){
+var d=srcSize(src),w=d[0],h=d[1],mx=1920;
 if(w>mx||h>mx){var s2=Math.min(mx/w,mx/h);w=Math.round(w*s2);h=Math.round(h*s2);}
 var cv=document.createElement('canvas');
 cv.width=w;cv.height=h;
-cv.getContext('2d').drawImage(im,0,0,w,h);
-res(cv.toDataURL('image/jpeg',0.85));
-};
-im.onerror=rej;
-im.src=ev.target.result;
-};
-r.onerror=rej;
-r.readAsDataURL(file);
+cv.getContext('2d').drawImage(src,0,0,w,h);
+return cv.toDataURL('image/jpeg',0.85);
+});
+}
+function compressAvatar(file){
+return loadImgSafe(file).then(function(src){
+var d=srcSize(src),w=d[0],h=d[1];
+var s=Math.min(w,h);
+var size=256;
+var cv=document.createElement('canvas');
+cv.width=size;cv.height=size;
+cv.getContext('2d').drawImage(src,(w-s)/2,(h-s)/2,s,s,0,0,size,size);
+return cv.toDataURL('image/jpeg',0.82);
 });
 }
 var wallPending=null;
@@ -804,6 +827,12 @@ el('wallDark').value=wallPending.dark;
 el('wallZoom').value=wallPending.zoom;
 put('wallDarkVal',wallPending.dark+'%');
 put('wallZoomVal',wallPending.zoom+'%');
+}
+function pinChat(){
+try{window.scrollTo(0,0);}catch(e){}
+try{document.documentElement.scrollTop=0;document.body.scrollTop=0;}catch(e){}
+var s=el('msgScroll');
+if(s&&S.conv)s.scrollTop=s.scrollHeight;
 }
 
 function setupHomeSubs(){sub(inWild(S.me));sub(NS+'call/#');sub(presT(S.me));S.convs.forEach(subscribeConvPassive);}
@@ -1022,7 +1051,26 @@ e.innerHTML=(own?'':'<span data-av="1"></span>')+'<div class="m-body">'+nr+'<div
 var slot=e.querySelector('[data-av]');if(slot)slot.replaceWith(avNode(m.user,30,'m-av'));
 fillBubble(e,m);fillTools(e,m);renderReactions(m.id,e);
 var bub=e.querySelector('.m-bubble');
-bub.addEventListener('click',function(ev){if(!isTouch()||ev.target.closest('a')||ev.target.closest('img')||ev.target.closest('.m-audio'))return;var op=e.classList.contains('tools-open');document.querySelectorAll('.msg.tools-open').forEach(function(x){x.classList.remove('tools-open');});if(!op)e.classList.add('tools-open');});
+var lpT=null,lpFired=false;
+function lpOpen(){
+lpFired=true;
+lastLP=now();
+document.querySelectorAll('.msg.tools-open').forEach(function(x){x.classList.remove('tools-open');});
+e.classList.add('tools-open');
+if(navigator.vibrate){try{navigator.vibrate(25);}catch(v){}}
+}
+bub.addEventListener('touchstart',function(){
+lpFired=false;
+clearTimeout(lpT);
+lpT=setTimeout(lpOpen,420);
+},{passive:true});
+bub.addEventListener('touchmove',function(){clearTimeout(lpT);},{passive:true});
+bub.addEventListener('touchend',function(ev){
+clearTimeout(lpT);
+if(lpFired){ev.preventDefault();lpFired=false;lastLP=now();}
+});
+bub.addEventListener('touchcancel',function(){clearTimeout(lpT);});
+bub.addEventListener('contextmenu',function(ev){ev.preventDefault();});
 return e;
 }
 function fillBubble(e,m){
@@ -1037,10 +1085,10 @@ var ed=e.querySelector('.edited');if(ed)ed.classList.toggle('hidden',!m.editedAt
 }
 function fillTools(e,m){
 var t=e.querySelector('.m-tools');if(!t)return;if(m.deleted||m.type!=='message'){t.remove();return;}t.innerHTML='';
-['❤️','😂','','👍'].forEach(function(em){var b=document.createElement('button');b.textContent=em;b.onclick=function(){toggleReaction(m.id,em);};t.appendChild(b);});
+['❤️','😂','🔥',''].forEach(function(em){var b=document.createElement('button');b.type='button';b.textContent=em;b.onclick=function(ev){ev.stopPropagation();toggleReaction(m.id,em);};t.appendChild(b);});
 if(m.user===S.me){
-var be=document.createElement('button');be.innerHTML=icon('edit',13);be.onclick=function(){S.editId=m.id;el('editBar').classList.add('on');el('input').value=m.text;updateSendBtn();};t.appendChild(be);
-var bd=document.createElement('button');bd.innerHTML=icon('trash',13);bd.onclick=function(){var mm=findMsg(m.id);if(mm){mm.deleted=true;mm.editedAt=now();saveMsgs(S.conv.key,S.msgs);updateMsgDOM(mm);publishTo(convTopic(S.conv.key),{k:'msg',conv:S.conv.key,from:S.me,data:mm});toast('Pesan dihapus');}};t.appendChild(bd);
+var be=document.createElement('button');be.type='button';be.innerHTML=icon('edit',13);be.onclick=function(ev){ev.stopPropagation();S.editId=m.id;el('editBar').classList.add('on');el('input').value=m.text;updateSendBtn();e.classList.remove('tools-open');};t.appendChild(be);
+var bd=document.createElement('button');bd.type='button';bd.innerHTML=icon('trash',13);bd.onclick=function(ev){ev.stopPropagation();var mm=findMsg(m.id);if(mm){mm.deleted=true;mm.editedAt=now();saveMsgs(S.conv.key,S.msgs);updateMsgDOM(mm);publishTo(convTopic(S.conv.key),{k:'msg',conv:S.conv.key,from:S.me,data:mm});toast('Pesan dihapus');}e.classList.remove('tools-open');};t.appendChild(bd);
 }
 }
 function updateMsgDOM(m){var l=el('msgList');if(!l)return;var e=l.querySelector('[data-id="'+CSS.escape(m.id)+'"]');if(!e)return;fillBubble(e,m);renderReactions(m.id,e);}
@@ -1053,6 +1101,7 @@ patchRaw(mid,k,v);
 renderReactions(mid);
 Sound.play('react');
 publishTo(convTopic(S.conv.key),{k:'react',conv:S.conv.key,from:S.me,mid:mid,rk:k,val:v});
+document.querySelectorAll('.msg.tools-open').forEach(function(x){x.classList.remove('tools-open');});
 }
 function renderReactions(mid,e){
 e=e||(el('msgList')?el('msgList').querySelector('[data-id="'+CSS.escape(mid)+'"]'):null);if(!e)return;
@@ -1142,7 +1191,6 @@ publishProfile();
 closeOv('profModal');renderAcc();renderHome();if(S.conv){renderChatHeader();renderSidebar();}
 toast('Profil disimpan');
 }
-function compressAvatar(file){return new Promise(function(res,rej){var r=new FileReader();r.onload=function(ev){var im=new Image();im.onload=function(){var size=256,cv=document.createElement('canvas');cv.width=size;cv.height=size;var s=Math.min(im.width,im.height);cv.getContext('2d').drawImage(im,(im.width-s)/2,(im.height-s)/2,s,s,0,0,size,size);res(cv.toDataURL('image/jpeg',0.82));};im.onerror=rej;im.src=ev.target.result;};r.onerror=rej;r.readAsDataURL(file);});}
 function pickAvatarFile(f){if(!f)return;compressAvatar(f).then(function(d){tmpProf.img=d;renderProfModal();}).catch(function(){toast('Gagal memproses foto');});}
 
 function init(){
@@ -1242,9 +1290,22 @@ on('btnLeaveGroup','click',function(){var c=S.conv;if(!c||c.type!=='group')retur
 on('btnDeleteGroup','click',function(){var c=S.conv;if(!c||c.type!=='group'||c.owner!==S.me)return;publishTo(convTopic(c.key),{k:'grp-del',from:S.me,conv:c.key});publishRetained(gmetaT(c.key.slice(4)),{id:c.key.slice(4),name:c.name,owner:c.owner,members:[],deleted:true});removeConv(c.key);backHome();toast('Grup dihapus untuk semua anggota');});
 on('btnSend','click',sendMessage);
 var ta=el('input');
-if(ta){ta.addEventListener('input',function(){autoGrow();updateSendBtn();if(S.conv)publishTo(convTopic(S.conv.key),{k:'type',from:S.me,conv:S.conv.key});});ta.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}});}
+if(ta){
+ta.addEventListener('input',function(){autoGrow();updateSendBtn();if(S.conv)publishTo(convTopic(S.conv.key),{k:'type',from:S.me,conv:S.conv.key});});
+ta.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}});
+ta.addEventListener('focus',function(){setTimeout(pinChat,200);setTimeout(pinChat,500);});
+}
+if(window.visualViewport){
+visualViewport.addEventListener('resize',function(){if(S.view==='chat')pinChat();});
+}
 on('btnEmoji','click',function(e){e.stopPropagation();el('emojiPop').classList.toggle('hidden');});
-document.addEventListener('click',function(e){if(!e.target.closest('#emojiPop')&&!e.target.closest('#btnEmoji'))el('emojiPop').classList.add('hidden');if(!e.target.closest('.msg'))document.querySelectorAll('.msg.tools-open').forEach(function(x){x.classList.remove('tools-open');});});
+document.addEventListener('click',function(e){
+if(now()-lastLP<700)return;
+if(!e.target.closest('#emojiPop')&&!e.target.closest('#btnEmoji'))el('emojiPop').classList.add('hidden');
+if(!e.target.closest('.m-tools')){
+document.querySelectorAll('.msg.tools-open').forEach(function(x){x.classList.remove('tools-open');});
+}
+});
 document.querySelectorAll('[data-close]').forEach(function(x){x.addEventListener('click',function(){closeOv(x.dataset.close);});});
 window.addEventListener('online',function(){renderNet();reconnectAll();});
 window.addEventListener('offline',function(){renderNet();});
@@ -1285,4 +1346,4 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 <script src="media.js?v=22"></script>
 </body>
 </html>
-<!-- END index.html v24 -->
+<!-- END index.html v25 -->
