@@ -208,6 +208,8 @@ input[type=range]{accent-color:var(--lime);width:100%}
 .dev-stat b{display:block;font:700 16px var(--mono);color:var(--lime)}
 .dev-stat span{color:var(--muted);font-size:9.5px;font-family:var(--mono);letter-spacing:.08em}
 .dev-sec{border:1px solid var(--line);border-radius:14px;background:rgba(148,170,220,.04);padding:10px;margin-bottom:10px}
+.dev-btnrow{display:flex;gap:8px;align-items:center}
+.dev-btnrow .btn{flex:1}
 .dev-row2{display:flex;align-items:center;gap:6px;padding:7px 9px;border:1px solid var(--line);border-radius:10px;margin-bottom:6px;font:11px var(--mono);color:var(--muted);background:rgba(8,12,22,.4);flex-wrap:wrap}
 .dev-row2 b{color:var(--text)}
 .dev-row2 .sp{flex:1;min-width:140px}
@@ -341,9 +343,9 @@ input[type=range]{accent-color:var(--lime);width:100%}
 <div id="devLock"><label class="fld"><span>Password developer</span><input id="inDevPass" type="password" placeholder="••••••"></label><button id="btnDevUnlock" class="btn primary full" type="button">Buka panel</button></div>
 <div id="devBody" class="hidden">
 <div class="dev-stats" id="devStats"></div>
-<div class="dev-sec"><span class="sb-label">AKUN & BAN</span><button id="btnDevLoad" class="btn ghost full small" type="button">Muat daftar akun & status ban</button><div id="devList" style="margin-top:10px"></div></div>
-<div class="dev-sec"><span class="sb-label">LAPORAN MASUK</span><button id="btnDevReports" class="btn ghost full small" type="button">Muat laporan pengguna</button><div id="devRepList" style="margin-top:10px"></div></div>
-<div class="dev-sec"><span class="sb-label">MONITOR CHAT</span><button id="btnDevConvs" class="btn ghost full small" type="button">Muat daftar percakapan</button><div id="devConvList" style="margin-top:10px"></div></div>
+<div class="dev-sec"><span class="sb-label">AKUN & BAN</span><div class="dev-btnrow"><button id="btnDevLoad" class="btn ghost small" type="button">Muat daftar akun & status ban</button><button id="btnDevLoadX" class="icon-btn sm" type="button" title="Tutup daftar"></button></div><div id="devList" style="margin-top:10px"></div></div>
+<div class="dev-sec"><span class="sb-label">LAPORAN MASUK</span><div class="dev-btnrow"><button id="btnDevReports" class="btn ghost small" type="button">Muat laporan pengguna</button><button id="btnDevRepX" class="icon-btn sm" type="button" title="Tutup daftar"></button></div><div id="devRepList" style="margin-top:10px"></div></div>
+<div class="dev-sec"><span class="sb-label">MONITOR CHAT</span><div class="dev-btnrow"><button id="btnDevConvs" class="btn ghost small" type="button">Muat daftar percakapan</button><button id="btnDevConvX" class="icon-btn sm" type="button" title="Tutup daftar"></button></div><div id="devConvList" style="margin-top:10px"></div></div>
 <div class="dev-sec"><span class="sb-label">DATABASE PEMULIHAN (TERENKRIPSI)</span>
 <button id="btnDevDb" class="btn ghost full small" type="button"></button>
 <button id="btnDevCopy" class="btn ghost full small" type="button" style="margin-top:8px"></button>
@@ -386,6 +388,7 @@ function icon(n,s){return '<svg viewBox="0 0 24 24" width="'+(s||18)+'" height="
 function toast(msg){var w=el('toasts');if(!w)return;var e=document.createElement('div');e.className='toast';e.textContent=msg;w.appendChild(e);requestAnimationFrame(function(){e.classList.add('in');});setTimeout(function(){e.classList.remove('in');setTimeout(function(){e.remove();},260);},2400);}
 var uid=sessionStorage.getItem('qc-uid');if(!uid){uid=rand(10);sessionStorage.setItem('qc-uid',uid);}
 var lastLP=0;
+var lastSyncAll=0;
 var Sound={ctx:null,on:localStorage.getItem('qc-sound')!=='0',ensure:function(){var A=window.AudioContext||window.webkitAudioContext;if(!this.ctx&&A){try{this.ctx=new A();}catch(e){}}if(this.ctx&&this.ctx.state==='suspended')this.ctx.resume().catch(function(){});},play:function(k){if(!this.on)return;this.ensure();var c=this.ctx;if(!c)return;var t=c.currentTime;function b(f0,f1,d,v,ty){var o=c.createOscillator(),g=c.createGain();o.type=ty;o.frequency.setValueAtTime(f0,t);o.frequency.exponentialRampToValueAtTime(Math.max(f1,1),t+d);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+.012);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(c.destination);o.start(t);o.stop(t+d+.03);}if(k==='send')b(540,820,.1,.05,'sine');else if(k==='recv')b(700,430,.11,.045,'sine');else if(k==='react')b(950,1150,.06,.035,'triangle');else if(k==='call')b(880,880,.12,.04,'triangle');},toggle:function(){this.on=!this.on;localStorage.setItem('qc-sound',this.on?'1':'0');}};
 function syncHeight(){
 var vv=window.visualViewport;
@@ -433,12 +436,12 @@ return new Promise(function(res){whenConnected(8000).then(function(ok){if(!ok)re
 }
 function checkBan(u){return fetchRetained(banT(u),1500).then(function(b){return !!(b&&b.banned);});}
 var lastRestart=0;
-function reconnectAll(){var t=now();if(t-lastRestart<7000)return;lastRestart=t;clients.forEach(function(c){try{c.end(true);}catch(e){}});clients=[];connectAll();}
+function reconnectAll(){var t=now();if(t-lastRestart<5000)return;lastRestart=t;clients.forEach(function(c){try{c.end(true);}catch(e){}});clients=[];connectAll();}
 function connectAll(){
 if(typeof mqtt==='undefined'){if(libTries++<20)setTimeout(connectAll,500);renderNet();return;}
 var BR=['wss://broker.emqx.io:8084/mqtt','wss://broker.hivemq.com:8884/mqtt','wss://test.mosquitto.org:8081/mqtt','wss://mqtt.eclipseprojects.io:443/ws'];
 clients=BR.map(function(url,i){
-var c;try{c=mqtt.connect(url,{clientId:'qc_'+uid+'_'+i+'_'+rand(4),keepalive:25,reconnectPeriod:2500,connectTimeout:7000,clean:true});}catch(e){return null;}
+var c;try{c=mqtt.connect(url,{clientId:'qc_'+uid+'_'+i+'_'+rand(4),keepalive:20,reconnectPeriod:1500,connectTimeout:6000,clean:true});}catch(e){return null;}
 c.on('connect',function(){
 renderNet();subAll();flushOutbox();
 if(S.me){startPresence();var me=S.me;checkBan(me).then(function(b){if(b&&S.me===me){toast('Akun kamu dibanned oleh developer');logout();}});}
@@ -634,10 +637,13 @@ box.appendChild(d);
 });
 }
 function openPeek(p){
-S.peek={key:p.conv,name:p.type==='group'?p.name:('DM '+p.conv.slice(3).replace('~',' & '))};
+S.peek={key:p.conv,name:p.type==='group'?p.name:('DM '+p.conv.slice(3).replace('~',' & ')),seen:{}};
 el('peekFeed').innerHTML='';
+var local=loadMsgs(p.conv).slice(-200);
+if(local.length){local.forEach(peekLine);}
+else{peekNote('Belum ada riwayat lokal — menunggu kiriman dari perangkat anggota yang online…');}
 put('peekTitle','Monitor: '+S.peek.name);
-put('peekSub','Riwayat diminta; pesan live akan mengalir.');
+put('peekSub','Riwayat dimuat; pesan live akan mengalir.');
 openOv('peekModal');
 sub(convTopic(p.conv));
 publishTo(convTopic(p.conv),{k:'hist-req',from:S.me,conv:p.conv});
@@ -645,8 +651,20 @@ publishTo(convTopic(p.conv),{k:'hist-req',from:S.me,conv:p.conv});
 function closePeek(){
 if(S.peek){unsub(convTopic(S.peek.key));S.peek=null;}
 }
-function peekLine(m){
+function peekNote(t){
 var f=el('peekFeed');if(!f)return;
+var d=document.createElement('div');
+d.className='peek-line peek-note';
+d.style.opacity='.55';
+d.textContent=t;
+f.appendChild(d);
+}
+function peekLine(m){
+var f=el('peekFeed');if(!f||!S.peek)return;
+if(!S.peek.seen)S.peek.seen={};
+if(S.peek.seen[m.id])return;
+S.peek.seen[m.id]=1;
+var n=f.querySelector('.peek-note');if(n)n.remove();
 var d=document.createElement('div');
 d.className='peek-line'+(m.user===S.me?' own':'');
 var txt=m.type==='image'?'[Gambar]':m.type==='audio'?'[Suara '+fmtDur(m.dur)+']':(m.deleted?'[Dihapus]':(m.text||''));
@@ -845,6 +863,12 @@ S.unread[key]=n;
 }
 function requestSync(key){
 publishTo(convTopic(key),{k:'hist-req',from:S.me,conv:key});
+}
+function syncAllConvs(){
+var t=now();
+if(t-lastSyncAll<8000)return;
+lastSyncAll=t;
+S.convs.forEach(function(c){requestSync(c.key);});
 }
 function normRaw(raw){
 var out={};
@@ -1453,13 +1477,16 @@ put('btnDeleteGroup',icon('alert')+' Hapus grup (semua anggota)');
 put('btnDevDb',icon('download')+' Muat & simpan database ke perangkat ini');
 put('btnDevCopy',icon('copy')+' Salin database');
 put('btnDevLock',icon('lock')+' Kunci panel developer');
+put('btnDevLoadX',icon('x',14));
+put('btnDevRepX',icon('x',14));
+put('btnDevConvX',icon('x',14));
 put('devLogo',icon('dev',24));
 document.querySelectorAll('.d-close').forEach(function(b){b.innerHTML=icon('x');});
 document.addEventListener('gesturestart',function(e){e.preventDefault();});
 document.addEventListener('gesturechange',function(e){e.preventDefault();});
 document.addEventListener('gestureend',function(e){e.preventDefault();});
 document.addEventListener('wheel',function(e){if(e.ctrlKey)e.preventDefault();},{passive:false});
-setInterval(function(){if(typeof mqtt!=='undefined'&&!anyConnected())reconnectAll();},7000);
+setInterval(function(){if(typeof mqtt!=='undefined'&&!anyConnected())reconnectAll();},5000);
 setInterval(function(){
 if(!S.me)return;
 fetchRetained(userT(S.me),1500).then(function(rec){
@@ -1476,8 +1503,11 @@ on('devTap','click',devTap);on('devTap2','click',devTap);
 on('btnDevUnlock','click',devUnlock);
 on('inDevPass','keydown',function(e){if(e.key==='Enter')devUnlock();});
 on('btnDevLoad','click',devLoad);
+on('btnDevLoadX','click',function(){el('devList').innerHTML='';devCounts.acc=0;renderDevStats();});
 on('btnDevReports','click',devLoadReports);
+on('btnDevRepX','click',function(){el('devRepList').innerHTML='';devCounts.rep=0;renderDevStats();});
 on('btnDevConvs','click',devLoadConvs);
+on('btnDevConvX','click',function(){el('devConvList').innerHTML='';devCounts.conv=0;renderDevStats();});
 on('btnDevDb','click',devLoadDb);
 on('btnDevCopy','click',devCopyDb);
 on('btnDevLock','click',devLockNow);
@@ -1569,7 +1599,7 @@ S.reactTarget=null;
 if(!e.target.closest('.m-tools'))closeAllTools();
 });
 document.querySelectorAll('[data-close]').forEach(function(x){x.addEventListener('click',function(){closeOv(x.dataset.close);});});
-window.addEventListener('online',function(){renderNet();reconnectAll();});
+window.addEventListener('online',function(){renderNet();reconnectAll();syncAllConvs();});
 window.addEventListener('offline',function(){renderNet();});
 document.addEventListener('visibilitychange',function(){
 if(!S.me)return;
@@ -1578,6 +1608,7 @@ publishRetained(presT(S.me),{k:'pres',from:S.me,seen:now(),online:false});
 }else{
 publishPresence();
 renderNet();
+syncAllConvs();
 }
 });
 window.addEventListener('beforeunload',function(){if(S.me)publishRetained(presT(S.me),{k:'pres',from:S.me,seen:now(),online:false});});
@@ -1609,4 +1640,4 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 <script src="media.js?v=21"></script>
 </body>
 </html>
-<!-- END index.html v36 -->
+<!-- END index.html v37 -->
