@@ -47,7 +47,8 @@ input[type=range]{accent-color:var(--lime);width:100%}
 .mini-btn svg{width:14px;height:14px}
 .fld{display:block;margin-bottom:14px}
 .fld>span{display:block;margin-bottom:7px;color:var(--muted);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
-.fld input,.fld select{width:100%;border:1px solid var(--line);border-radius:12px;background:rgba(8,12,22,.66);padding:12px 14px;color:var(--text);font-size:15px}
+.fld input,.fld select,.fld textarea{width:100%;border:1px solid var(--line);border-radius:12px;background:rgba(8,12,22,.66);padding:12px 14px;color:var(--text);font-size:15px}
+.fld textarea{resize:vertical;min-height:70px}
 .fld .err{display:none;margin-top:6px;color:#ff9090;font-size:12px}
 .fld.invalid input{border-color:rgba(255,107,107,.6)}.fld.invalid .err{display:block}
 .net-chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:99px;background:var(--glass);padding:5px 10px;color:var(--muted);font:700 10.5px var(--mono)}
@@ -199,6 +200,10 @@ input[type=range]{accent-color:var(--lime);width:100%}
 .wall-preview{height:300px;aspect-ratio:9/16;margin:0 auto 14px;border-radius:14px;border:1px solid var(--line);background-color:#06080d;background-position:center;background-repeat:no-repeat}
 .devrow{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:7px 9px;border:1px solid var(--line);border-radius:10px;margin-bottom:6px;font:11.5px var(--mono);color:var(--muted)}
 .devrow b{color:var(--lime)}
+.dev-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 12px}
+.dev-tabs button{flex:1;min-width:70px;padding:9px 6px;border:1px solid var(--line);border-radius:10px;background:var(--glass);color:var(--muted);font:700 10.5px var(--mono);cursor:pointer}
+.dev-tabs button.on{color:var(--lime);border-color:rgba(200,240,75,.4);background:rgba(200,240,75,.08)}
+#monFeed{max-height:240px;overflow-y:auto;display:flex;flex-direction:column;gap:6px;margin-top:10px}
 .toasts{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:400;display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none;width:max-content;max-width:calc(100vw - 30px)}
 .toast{border:1px solid var(--line);border-left:3px solid var(--lime);border-radius:99px;background:rgba(10,14,24,.92);backdrop-filter:blur(10px);padding:9px 18px;font-size:12.5px;font-weight:600;color:var(--text);opacity:0;transform:translateY(10px);transition:.25s;pointer-events:none;max-width:calc(100vw - 40px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .toast.in{opacity:1;transform:none}
@@ -289,6 +294,7 @@ input[type=range]{accent-color:var(--lime);width:100%}
     <button id="btnWallpaper" class="btn ghost small full" type="button"></button>
     <button id="btnWallClear" class="btn ghost small full" type="button"></button>
     <input id="wallInput" type="file" accept="image/*" hidden>
+    <button id="btnReport" class="btn danger small full" type="button"></button>
     <button id="btnClearMsgs" class="btn ghost small full" type="button"></button>
     <button id="btnDeleteConv" class="btn danger small full" type="button"></button>
     <button id="btnLeaveGroup" class="btn danger small full" type="button"></button>
@@ -305,10 +311,15 @@ input[type=range]{accent-color:var(--lime);width:100%}
 <label class="fld"><span>Ukuran gambar — <b id="wallZoomVal" style="color:var(--lime)">140%</b></span><input id="wallZoom" type="range" min="100" max="300" step="5" value="140"></label>
 <button id="btnWallSave" class="btn primary full" type="button">Simpan wallpaper</button>
 </div></div>
-<div id="profModal" class="modal hidden"><div class="m-scrim" data-close="profModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="profModal" type="button"></button><h3>Profil & pengaturan akun</h3><p class="sub">Foto dari galeri atau kamera. Tanpa foto = ikon orang standar.</p><div class="profile-top"><div class="avatar-preview" id="avatarPreview"></div><div style="flex:1"><div id="profName" style="font-weight:700">—</div><div style="color:var(--muted);font-size:12px;margin-top:2px">Avatar tampil di chat & kontak</div></div><div style="display:flex;flex-direction:column;gap:6px"><button id="btnUploadAvatar" class="mini-btn" type="button"></button><button id="btnCamAvatar" class="mini-btn" type="button"></button><button id="btnRandomAvatar" class="mini-btn" type="button"></button></div><input id="avatarInput" type="file" accept="image/*" hidden><input id="avatarCam" type="file" accept="image/*" capture="environment" hidden></div>
+<div id="repModal" class="modal hidden"><div class="m-scrim" data-close="repModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="repModal" type="button"></button><h3>Laporkan pengguna</h3><p class="sub" id="repWho">—</p>
+<label class="fld"><span>Alasan</span><select id="repReason"></select></label>
+<label class="fld"><span>Catatan (opsional)</span><textarea id="repNote" maxlength="200" placeholder="jelaskan singkat…"></textarea></label>
+<button id="btnRepSend" class="btn danger full" type="button">Kirim laporan</button>
+</div></div>
+<div id="profModal" class="modal hidden"><div class="m-scrim" data-close="profModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="profModal" type="button"></button><h3>Profil & pengaturan akun</h3><p class="sub">Atur foto & nama tampilanmu.</p><div class="profile-top"><div class="avatar-preview" id="avatarPreview"></div><div style="flex:1"><div id="profName" style="font-weight:700">—</div><div style="color:var(--muted);font-size:12px;margin-top:2px">Avatar tampil di chat & kontak</div></div><div style="display:flex;flex-direction:column;gap:6px"><button id="btnUploadAvatar" class="mini-btn" type="button"></button><button id="btnCamAvatar" class="mini-btn" type="button"></button><button id="btnRandomAvatar" class="mini-btn" type="button"></button></div><input id="avatarInput" type="file" accept="image/*" hidden><input id="avatarCam" type="file" accept="image/*" capture="environment" hidden></div>
 <label class="fld"><span>Nama tampilan</span><input id="inpDisplayName" maxlength="24"></label>
 <div class="color-row" id="colorRow"></div><button id="btnSaveProf" class="btn primary full" type="button">Simpan profil</button>
-<div style="margin-top:14px;border-top:1px solid var(--line);padding-top:14px"><span class="sb-label">PENGATURAN AKUN</span><button id="btnDelAcc" class="btn danger full small" type="button"></button><p class="sub" style="margin:8px 0 0;font-size:11px">Akun, profil, dan salinan di database developer ikut terhapus. Username bisa dipakai daftar lagi nanti.</p></div>
+<div style="margin-top:14px;border-top:1px solid var(--line);padding-top:14px"><span class="sb-label">PENGATURAN AKUN</span><button id="btnDelAcc" class="btn danger full small" type="button"></button></div>
 </div></div>
 <div id="recModal" class="modal hidden"><div class="m-scrim" data-close="recModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="recModal" type="button"></button><h3>Pulihkan akun</h3><p class="sub">Reset password lewat pertanyaan keamanan.</p>
 <div id="recStep1"><label class="fld"><span>Username</span><input id="recUser" maxlength="16"></label><button id="btnRec1" class="btn primary full" type="button">Cari akun</button></div>
@@ -318,12 +329,37 @@ input[type=range]{accent-color:var(--lime);width:100%}
 <div id="devModal" class="modal hidden"><div class="m-scrim" data-close="devModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="devModal" type="button"></button><h3>Panel developer</h3><p class="sub">Area terbatas pemilik aplikasi.</p>
 <div id="devLock"><label class="fld"><span>Password developer</span><input id="inDevPass" type="password" placeholder="••••••"></label><button id="btnDevUnlock" class="btn primary full" type="button">Buka panel</button></div>
 <div id="devBody" class="hidden">
-<p class="sub" style="margin-bottom:10px">Pantau akun, ban pengguna, dan kelola database pemulihan terenkripsi.</p>
-<button id="btnDevLoad" class="btn ghost full small" type="button">Muat daftar akun & status ban</button><div id="devList" style="margin-top:10px"></div>
-<div style="margin-top:12px;border-top:1px solid var(--line);padding-top:12px"><span class="sb-label">DATABASE USERNAME & PASSWORD</span>
+<div class="sb-card" style="border-color:rgba(200,240,75,.35);background:linear-gradient(135deg,rgba(200,240,75,.12),rgba(83,216,255,.08))">
+<b style="color:var(--lime);font-family:var(--mono);font-size:12px">MODE DEVELOPER AKTIF</b>
+<div style="color:var(--muted);font-size:11px;margin-top:4px">Monitor chat lintas perangkat, laporan pengguna, ban & hapus akun.</div>
+</div>
+<div class="dev-tabs" id="devTabs">
+<button type="button" data-dt="acc" class="on">Akun & Ban</button>
+<button type="button" data-dt="rep">Laporan</button>
+<button type="button" data-dt="mon">Monitor</button>
+<button type="button" data-dt="db">Database</button>
+</div>
+<div id="devPaneAcc">
+<button id="btnDevLoad" class="btn ghost full small" type="button">Muat daftar akun & status ban</button>
+<div id="devList" style="margin-top:10px"></div>
+</div>
+<div id="devPaneRep" class="hidden">
+<button id="btnDevReports" class="btn ghost full small" type="button">Muat laporan masuk</button>
+<div id="devRepList" style="margin-top:10px"></div>
+</div>
+<div id="devPaneMon" class="hidden">
+<div style="display:flex;gap:8px">
+<button id="btnMonStart" class="btn ghost small" type="button" style="flex:1">Mulai monitor</button>
+<button id="btnMonStop" class="btn ghost small" type="button" style="flex:1">Stop</button>
+</div>
+<button id="btnMonClear" class="btn ghost small full" type="button" style="margin-top:8px">Bersihkan layar</button>
+<div id="monFeed"></div>
+</div>
+<div id="devPaneDb" class="hidden">
 <button id="btnDevDb" class="btn ghost full small" type="button"></button>
 <button id="btnDevCopy" class="btn ghost full small" type="button" style="margin-top:8px"></button>
-<div id="devDbList" style="margin-top:10px"></div></div>
+<div id="devDbList" style="margin-top:10px"></div>
+</div>
 <button id="btnDevLock" class="btn danger full small" type="button" style="margin-top:12px"></button>
 </div></div></div>
 <div id="mediaModal" class="modal hidden" style="z-index:250;background:rgba(0,0,0,.94)"><button id="mmClose" class="icon-btn" type="button" style="position:absolute;top:14px;right:14px;z-index:2"></button><img id="mmImg" alt="" style="max-width:92vw;max-height:92vh;border-radius:10px"></div>
@@ -356,11 +392,12 @@ function isTouch(){return matchMedia('(hover:none)').matches;}
 function sha256(s){return crypto.subtle.digest('SHA-256',new TextEncoder().encode(s)).then(function(b){return Array.prototype.map.call(new Uint8Array(b),function(x){return x.toString(16).padStart(2,'0');}).join('');});}
 function b64buf(buf){var b=new Uint8Array(buf),s='';for(var i=0;i<b.length;i++)s+=String.fromCharCode(b[i]);return btoa(s);}
 function bufb64(str){var bin=atob(str),a=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i);return a.buffer;}
-var IC={x:'<path d="M18 6L6 18"/><path d="M6 6l12 12"/>',plus:'<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>',menu:'<line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>',back:'<path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/>',logout:'<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/>',users:'<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',userPlus:'<path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="17" y1="11" x2="23" y2="11"/>',userX:'<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="17" y1="9" x2="23" y2="15"/><line x1="23" y1="9" x2="17" y2="15"/>',person:'<path d="M12 12a4.5 4.5 0 1 0-4.5-4.5A4.5 4.5 0 0 0 12 12z"/><path d="M3.5 21a8.5 8.5 0 0 1 17 0"/>',key:'<circle cx="7.5" cy="15.5" r="4.5"/><path d="M10.7 12.3L21 2"/><path d="M18 5l3 3"/><path d="M15 8l2 2"/>',download:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/>',lock:'<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',ban:'<circle cx="12" cy="12" r="10"/><path d="M4.9 4.9l14.2 14.2"/>',alert:'<path d="M10.3 3.8L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.8a2 2 0 0 0-3.4 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>',eraser:'<path d="M20 20H8.5l-5-5a2 2 0 0 1 0-2.8l8.2-8.2a2 2 0 0 1 2.8 0l5 5a2 2 0 0 1 0 2.8L13 18.3"/><path d="M6.5 10.5l7 7"/>',smile:'<circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/>',send:'<path d="M22 2L11 13"/><path d="M22 2L15 22l-4-9-9-4 20-7z"/>',attach:'<path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>',mic:'<path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/>',camera:'<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>',image:'<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/>',play:'<polygon points="5 3 19 12 5 21 5 3" fill="currentColor" stroke="none"/>',pause:'<rect x="6" y="4" width="4" height="16" fill="currentColor" stroke="none"/><rect x="14" y="4" width="4" height="16" fill="currentColor" stroke="none"/>',edit:'<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>',trash:'<path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>',copy:'<rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',link:'<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>',video:'<polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/>',phone:'<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>',phoneOff:'<path d="M10.68 13.31a16 16 0 0 0 3.41 2.6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7 2 2 0 0 1 1.72 2v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.42 19.42 0 0 1-3.33-2.67m-2.67-3.34a19.79 19.79 0 0 1-3.07-8.63A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91"/><line x1="1" y1="1" x2="23" y2="23"/>',dice:'<rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8" cy="8" r="1.4" fill="currentColor" stroke="none"/><circle cx="16" cy="16" r="1.4" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/>',check:'<path d="M20 6L9 17l-5-5"/>',info:'<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>'};
+var IC={x:'<path d="M18 6L6 18"/><path d="M6 6l12 12"/>',plus:'<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>',menu:'<line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>',back:'<path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/>',logout:'<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/>',users:'<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',userPlus:'<path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="17" y1="11" x2="23" y2="11"/>',userX:'<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="17" y1="9" x2="23" y2="15"/><line x1="23" y1="9" x2="17" y2="15"/>',person:'<path d="M12 12a4.5 4.5 0 1 0-4.5-4.5A4.5 4.5 0 0 0 12 12z"/><path d="M3.5 21a8.5 8.5 0 0 1 17 0"/>',key:'<circle cx="7.5" cy="15.5" r="4.5"/><path d="M10.7 12.3L21 2"/><path d="M18 5l3 3"/><path d="M15 8l2 2"/>',download:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/>',lock:'<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',ban:'<circle cx="12" cy="12" r="10"/><path d="M4.9 4.9l14.2 14.2"/>',alert:'<path d="M10.3 3.8L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.8a2 2 0 0 0-3.4 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>',eraser:'<path d="M20 20H8.5l-5-5a2 2 0 0 1 0-2.8l8.2-8.2a2 2 0 0 1 2.8 0l5 5a2 2 0 0 1 0 2.8L13 18.3"/><path d="M6.5 10.5l7 7"/>',smile:'<circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/>',send:'<path d="M22 2L11 13"/><path d="M22 2L15 22l-4-9-9-4 20-7z"/>',attach:'<path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>',mic:'<path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/>',camera:'<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>',image:'<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/>',play:'<polygon points="5 3 19 12 5 21 5 3" fill="currentColor" stroke="none"/>',pause:'<rect x="6" y="4" width="4" height="16" fill="currentColor" stroke="none"/><rect x="14" y="4" width="4" height="16" fill="currentColor" stroke="none"/>',edit:'<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>',trash:'<path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>',copy:'<rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',link:'<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>',video:'<polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/>',phone:'<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>',phoneOff:'<path d="M10.68 13.31a16 16 0 0 0 3.41 2.6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7 2 2 0 0 1 1.72 2v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.42 19.42 0 0 1-3.33-2.67m-2.67-3.34a19.79 19.79 0 0 1-3.07-8.63A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91"/><line x1="1" y1="1" x2="23" y2="23"/>',dice:'<rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8" cy="8" r="1.4" fill="currentColor" stroke="none"/><circle cx="16" cy="16" r="1.4" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/>',check:'<path d="M20 6L9 17l-5-5"/>',info:'<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>',flag:'<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/>',eye:'<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>'};
 function icon(n,s){return '<svg viewBox="0 0 24 24" width="'+(s||18)+'" height="'+(s||18)+'" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+(IC[n]||'')+'</svg>';}
 function toast(msg){var w=el('toasts');if(!w)return;var e=document.createElement('div');e.className='toast';e.textContent=msg;w.appendChild(e);requestAnimationFrame(function(){e.classList.add('in');});setTimeout(function(){e.classList.remove('in');setTimeout(function(){e.remove();},260);},2400);}
 var uid=sessionStorage.getItem('qc-uid');if(!uid){uid=rand(10);sessionStorage.setItem('qc-uid',uid);}
 var lastLP=0;
+var monOn=false;
 var Sound={ctx:null,on:localStorage.getItem('qc-sound')!=='0',ensure:function(){var A=window.AudioContext||window.webkitAudioContext;if(!this.ctx&&A){try{this.ctx=new A();}catch(e){}}if(this.ctx&&this.ctx.state==='suspended')this.ctx.resume().catch(function(){});},play:function(k){if(!this.on)return;this.ensure();var c=this.ctx;if(!c)return;var t=c.currentTime;function b(f0,f1,d,v,ty){var o=c.createOscillator(),g=c.createGain();o.type=ty;o.frequency.setValueAtTime(f0,t);o.frequency.exponentialRampToValueAtTime(Math.max(f1,1),t+d);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+.012);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(c.destination);o.start(t);o.stop(t+d+.03);}if(k==='send')b(540,820,.1,.05,'sine');else if(k==='recv')b(700,430,.11,.045,'sine');else if(k==='react')b(950,1150,.06,.035,'triangle');else if(k==='call')b(880,880,.12,.04,'triangle');},toggle:function(){this.on=!this.on;localStorage.setItem('qc-sound',this.on?'1':'0');}};
 function syncHeight(){
 var vv=window.visualViewport;
@@ -373,6 +410,8 @@ function userT(u){return NS+'user/'+u;}
 function profT(u){return NS+'prof/'+u;}
 function presT(u){return NS+'pres/'+u;}
 function banT(u){return NS+'ban/'+u;}
+function kickT(u){return NS+'kick/'+u;}
+function repT(id){return NS+'report/'+id;}
 function inT(u,conv){return NS+'in/'+u+'/'+conv;}
 function inWild(u){return NS+'in/'+u+'/+';}
 function dmKey(a,b){return 'dm:'+([a,b].sort().join('~'));}
@@ -420,11 +459,14 @@ return c;
 }
 function route(t,d){
 if(!S.me)return;
+if(t===kickT(S.me)){toast('Akun ini dihapus oleh developer');logout();return;}
 if(t.indexOf(NS+'call/')===0){if(window.QC&&QC.onCallSignal&&d.to===S.me)QC.onCallSignal(d);return;}
 if(t.indexOf(NS+'in/'+S.me+'/')===0){onPointer(d);return;}
 if(t.indexOf(NS+'pres/')===0){onPresence(d);return;}
 var key=topicToKey(t);
 if(!key)return;
+if(monOn&&d&&d.k==='msg'&&d.data)monPush(t,d.data);
+if(!getConv(key))return;
 if(S.conv&&S.conv.key===key)onConvMsg(d);
 else onBackground(key,d);
 }
@@ -514,6 +556,14 @@ else publishRetained(banT(u),{u:u,banned:true,t:now()});
 toast(wasBanned?('Ban dicabut: '+u):('Pengguna dibanned: '+u));
 setTimeout(devLoad,900);
 }
+function devDeleteAccount(u){
+publishRetained(userT(u),{u:u,deleted:true,t:now()});
+publishRetained(vaultT(u),{u:u,del:true,t:now()});
+publishRetained(profT(u),{u:u,deleted:true});
+publishRetained(kickT(u),{u:u,t:now()});
+toast('Akun '+u+' dihapus oleh developer');
+setTimeout(devLoad,900);
+}
 function devLoad(){
 var box=el('devList');box.innerHTML='<div class="devrow">Memuat…</div>';
 Promise.all([fetchWild(NS+'user/',2600),fetchWild(NS+'ban/',2600)]).then(function(res){
@@ -528,14 +578,74 @@ var d=document.createElement('div');d.className='devrow';
 var sp=document.createElement('span');sp.style.flex='1';
 sp.innerHTML='<b>'+esc(r.u)+'</b> · '+new Date(r.created||now()).toLocaleDateString('id-ID')+(banned?' · <span style="color:var(--red)">DIBANNED</span>':'')+'<br><span style="opacity:.7">Q: '+esc(QUESTIONS[r.q||0])+'</span>';
 d.appendChild(sp);
+var row=document.createElement('div');row.style.display='flex';row.style.gap='6px';
 var b=document.createElement('button');b.className='mini-btn';b.type='button';
-b.innerHTML=banned?icon('check',12)+' Cabut ban':icon('ban',12)+' Ban';
+b.innerHTML=banned?icon('check',12)+' Cabut':icon('ban',12)+' Ban';
 b.style.borderColor=banned?'rgba(74,222,128,.4)':'rgba(255,107,107,.4)';
 b.style.color=banned?'var(--green)':'#ff9090';
 b.onclick=function(){devToggleBan(r.u,banned);};
-d.appendChild(b);box.appendChild(d);
+var b2=document.createElement('button');b2.className='mini-btn';b2.type='button';
+b2.innerHTML=icon('trash',12)+' Hapus';
+b2.style.borderColor='rgba(255,107,107,.4)';b2.style.color='#ff9090';
+b2.onclick=function(){if(confirm('Hapus akun '+r.u+' permanen?'))devDeleteAccount(r.u);};
+row.appendChild(b);row.appendChild(b2);
+d.appendChild(row);box.appendChild(d);
 });
 });
+}
+function devLoadReports(){
+var box=el('devRepList');box.innerHTML='<div class="devrow">Memuat laporan…</div>';
+fetchWild(NS+'report/',3000).then(function(rs){
+rs=(rs||[]).filter(function(r){return r&&r.id;});
+rs.sort(function(a,b){return (b.time||0)-(a.time||0);});
+box.innerHTML='';
+if(!rs.length){box.innerHTML='<div class="devrow">Belum ada laporan masuk.</div>';return;}
+rs.forEach(function(r){
+var d=document.createElement('div');d.className='devrow';d.style.alignItems='flex-start';
+var sp=document.createElement('span');sp.style.flex='1';
+sp.innerHTML='<b>'+esc(r.target)+'</b> dilaporkan '+esc(r.from)+'<br>'+esc(r.reason||'')+(r.note?' — "'+esc(r.note)+'"':'')+'<br><i>'+new Date(r.time||0).toLocaleString('id-ID')+'</i>';
+d.appendChild(sp);
+var row=document.createElement('div');row.style.display='flex';row.style.flexDirection='column';row.style.gap='6px';
+var b1=document.createElement('button');b1.className='mini-btn';b1.type='button';
+b1.innerHTML=icon('ban',12)+' Ban';
+b1.onclick=function(){devToggleBan(r.target,false);};
+var b2=document.createElement('button');b2.className='mini-btn';b2.type='button';
+b2.innerHTML=icon('trash',12)+' Hapus';
+b2.style.borderColor='rgba(255,107,107,.4)';b2.style.color='#ff9090';
+b2.onclick=function(){if(confirm('Hapus akun '+r.target+'?'))devDeleteAccount(r.target);};
+row.appendChild(b1);row.appendChild(b2);
+d.appendChild(row);box.appendChild(d);
+});
+}
+function monPush(topic,m){
+var feed=el('monFeed');if(!feed)return;
+var label=topic.replace(NS,'');
+var txt=m.type==='image'?'[gambar]':m.type==='audio'?'[suara]':(m.text||'');
+var d=document.createElement('div');d.className='devrow';d.style.display='block';
+d.innerHTML='<span>'+fmtTime(m.time||now())+' <b>'+esc(m.user||'?')+'</b> → '+esc(label)+'<br>'+esc(String(txt).slice(0,140))+'</span>';
+feed.appendChild(d);
+while(feed.children.length>200)feed.removeChild(feed.firstChild);
+feed.scrollTop=feed.scrollHeight;
+}
+function monStart(){
+if(monOn){toast('Monitor sudah aktif');return;}
+monOn=true;
+sub(NS+'dm/#');
+sub(NS+'grp/#');
+toast('Monitor chat aktif');
+}
+function monStop(){
+if(!monOn)return;
+monOn=false;
+unsub(NS+'dm/#');
+unsub(NS+'grp/#');
+toast('Monitor chat berhenti');
+}
+function devTab(name){
+var map={acc:'devPaneAcc',rep:'devPaneRep',mon:'devPaneMon',db:'devPaneDb'};
+for(var k in map)el(map[k]).classList.toggle('hidden',k!==name);
+var bs=document.querySelectorAll('#devTabs button');
+for(var i=0;i<bs.length;i++)bs[i].classList.toggle('on',bs[i].dataset.dt===name);
 }
 var devTaps=0,devT=null;
 function devTap(){devTaps++;clearTimeout(devT);devT=setTimeout(function(){devTaps=0;},2500);if(devTaps>=5){devTaps=0;openDev();}}
@@ -549,7 +659,23 @@ function devUnlock(){
 if(el('inDevPass').value===DEV_PASS){sessionStorage.setItem('qc-devunlocked','1');el('inDevPass').value='';openDev();toast('Panel developer terbuka');}
 else toast('Password developer salah');
 }
-function devLockNow(){closeOv('devModal');sessionStorage.removeItem('qc-devunlocked');toast('Panel developer dikunci');}
+function devLockNow(){closeOv('devModal');monStop();sessionStorage.removeItem('qc-devunlocked');toast('Panel developer dikunci');}
+
+var repTarget=null;
+function openReport(){
+if(!S.conv||S.conv.type!=='dm'){toast('Laporan tersedia untuk chat pribadi');return;}
+repTarget=S.conv.peer;
+put('repWho','Melaporkan pengguna: @'+esc(repTarget));
+el('repNote').value='';
+openOv('repModal');
+}
+function sendReport(){
+if(!repTarget)return;
+var id=rand(8);
+publishRetained(repT(id),{id:id,from:S.me,target:repTarget,reason:el('repReason').value,note:(el('repNote').value||'').trim().slice(0,200),time:now()});
+closeOv('repModal');
+toast('Laporan terkirim ke developer');
+}
 
 var authMode='login';
 function setAuthMode(m){authMode=m;var tb=el('authTabs');if(tb)tb.classList.toggle('reg',m==='reg');el('tabLogin').classList.toggle('on',m==='login');el('tabReg').classList.toggle('on',m==='reg');var reg=m==='reg';el('fldPass2').classList.toggle('hidden',!reg);el('fldQ').classList.toggle('hidden',!reg);el('fldAns').classList.toggle('hidden',!reg);put('authTitle',reg?'Daftar akun':'Masuk');var b=el('btnAuth');if(b){b.textContent=reg?'Daftar':'Masuk';b.disabled=false;}}
@@ -851,7 +977,7 @@ var s=el('msgScroll');
 if(s&&S.conv)s.scrollTop=s.scrollHeight;
 }
 
-function setupHomeSubs(){sub(inWild(S.me));sub(NS+'call/#');sub(presT(S.me));S.convs.forEach(subscribeConvPassive);}
+function setupHomeSubs(){sub(inWild(S.me));sub(NS+'call/#');sub(presT(S.me));sub(kickT(S.me));S.convs.forEach(subscribeConvPassive);}
 function subscribeConvPassive(c){
 if(c.type==='dm'){sub(presT(c.peer));sub(convTopic(c.key));ensureProfile(c.peer);}
 else{sub(convTopic(c.key));}
@@ -946,6 +1072,7 @@ el('btnDeleteConv').style.display=isG?'none':'';
 el('btnLeaveGroup').style.display=isG?'':'none';
 el('btnDeleteGroup').style.display=(isG&&c.owner===S.me)?'':'none';
 el('btnWallClear').style.display=getWall()?'':'none';
+el('btnReport').style.display=isG?'none':'';
 var ul=el('peopleList');ul.innerHTML='';
 var names=isG?(c.members||[S.me]):[S.me,c.peer];
 names.forEach(function(n){
@@ -1291,6 +1418,7 @@ function init(){
 var IS_IOS=/iP(hone|ad|od)|Macintosh/i.test(navigator.userAgent)&&('ontouchend' in window);
 if(IS_IOS)document.body.classList.add('ios');
 var qs=el('inQ');if(qs){qs.innerHTML='';QUESTIONS.forEach(function(q,i){var o=document.createElement('option');o.value=i;o.textContent=q;qs.appendChild(o);});}
+var rr=el('repReason');if(rr){rr.innerHTML='';['Spam','Penipuan','Pelecehan','Konten tidak pantas','Ancaman','Lainnya'].forEach(function(x){var o=document.createElement('option');o.value=x;o.textContent=x;rr.appendChild(o);});}
 put('btnMenu',icon('menu'));put('btnCloseAcc',icon('x'));put('btnCloseSb',icon('x'));
 put('btnAccSettings',icon('person')+' Pengaturan akun');
 put('btnAccLogout',icon('logout')+' Keluar');
@@ -1302,6 +1430,7 @@ put('btnUploadAvatar',icon('image')+' Foto');put('btnCamAvatar',icon('camera')+'
 put('btnDelAcc',icon('userX')+' Hapus akun permanen');
 put('btnWallpaper',icon('image')+' Wallpaper chat');
 put('btnWallClear',icon('trash')+' Hapus wallpaper');
+put('btnReport',icon('flag')+' Laporkan pengguna');
 put('btnClearMsgs',icon('eraser')+' Bersihkan pesan');
 put('btnDeleteConv',icon('trash')+' Hapus chat ini');
 put('btnLeaveGroup',icon('logout')+' Keluar grup');
@@ -1325,9 +1454,16 @@ on('devTap','click',devTap);on('devTap2','click',devTap);
 on('btnDevUnlock','click',devUnlock);
 on('inDevPass','keydown',function(e){if(e.key==='Enter')devUnlock();});
 on('btnDevLoad','click',devLoad);
+on('btnDevReports','click',devLoadReports);
 on('btnDevDb','click',devLoadDb);
 on('btnDevCopy','click',devCopyDb);
 on('btnDevLock','click',devLockNow);
+on('devTabs','click',function(e){var b=e.target.closest('button');if(!b)return;devTab(b.dataset.dt);});
+on('btnMonStart','click',monStart);
+on('btnMonStop','click',monStop);
+on('btnMonClear','click',function(){el('monFeed').innerHTML='';});
+on('btnReport','click',openReport);
+on('btnRepSend','click',sendReport);
 on('btnDelAcc','click',armDelete);
 on('btnMenu','click',function(){renderAcc();openOv('accSidebar');});
 on('btnCloseAcc','click',function(){closeOv('accSidebar');});
@@ -1449,4 +1585,4 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 <script src="media.js?v=21"></script>
 </body>
 </html>
-<!-- END index.html v33 -->
+<!-- END index.html v34 -->
