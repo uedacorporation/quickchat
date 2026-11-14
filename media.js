@@ -1,10 +1,17 @@
-/* media.js v15 — modul media QuickChat */
+/* media.js v17 — emoji, gambar, suara, call video+suara (STUN+TURN) */
 (function(){
 'use strict';
 if(!window.QC)return;
 var QC=window.QC,S=QC.S;
 var icon=QC.icon,toast=QC.toast;
 function gid(i){return document.getElementById(i);}
+function badEm(em){
+if(!em)return true;
+if(em==='\uFE0F'||em==='\u200D')return true;
+var cp=em.codePointAt(0);
+if(cp>=0x1F1E6&&cp<=0x1F1FF&&em.length<4)return true;
+return false;
+}
 try{
 var C='';
 C+='.emoji-pop{display:flex;flex-direction:column;';
@@ -115,109 +122,110 @@ return o.l;
 }
 var L;
 L=cat('Smileys','😀');
-L.push('😀 😃 😄 😁  😅 🤣 😂 🙂 🙃');
-L.push('😉 😊 😇 🥰 😍  😜 🤪 😎 🥳');
-L.push('🤩  😭 😤  🤫 🤯 😱 😨 😰');
-L.push('😥 😢 😣 😩 😫 🥱 😡 😠 🤬 ');
-L.push(' 💀 💩  👹 👺 👻 👽 👾 🤖');
+L.push('😀 😃 😄  😆 😅  😂 🙂 🙃');
+L.push('😉 😊 😇 🥰 😍 😘  🤪 😎 🥳');
+L.push('🤩  😭 🤔 🤫 🤯 😱 😨 😰 😥');
+L.push('😢 😣 😩 😫 🥱 😤 😡 😠 🤬 😈');
+L.push('👿 💀 💩 🤡  👺 👻 👽 👾 🤖');
 L=cat('Gestur','👋');
-L.push('👋 🤚 🖐 ✋ 🖖  🤌  ✌️ ');
-L.push('🫰 🤟 🤘 🤙 👈 👉 👆 🖕 👇 ️');
-L.push(' 👍 👎 ✊ 👊  🤜 👏 🙌 ');
-L.push('👐 🤲 🤝 🙏 ️ 💅  💪  🦵');
-L.push('🦶 👂 🦻 👃 🧠 🫀 🫁 🦷 🦴 👀');
+L.push('👋 🤚 🖐 ✋  👌  🤏 ✌️ 🤞');
+L.push('🫰 🤟 🤘 🤙 👈 👉  🖕 👇 ️');
+L.push(' 👍 👎 ✊ 👊  🤜 👏 🙌 🫶');
+L.push('👐 🤲 🤝 🙏 ✍️ 💅 🤳 💪 🦾 🦵');
+L.push('🦶 👂 🦻 👃 🧠  🫁 🦷 🦴 👀');
 L.push('👁 👅 👄');
 L=cat('Hewan','🐶');
-L.push('🐶  🐭 🐹 🐰 🦊 🐻 🐼 🐨 🐯');
+L.push('🐶 🐱 🐭 🐹 🐰 🦊 🐻 🐼 🐨 🐯');
 L.push('🦁 🐮 🐷 🐸 🐵 🙈 🙉 🙊 🐒 🐔');
 L.push('🐧 🐦 🐤 🐣 🐥 🦆 🦅 🦉 🦇 🐺');
 L.push('🐗 🐴 🦄 🐝 🐛 🦋 🐌 🐞 🐜 🐢');
 L.push('🐍 🦎 🦖 🦕 🐙 🦑 🦐 🦞 🦀 🐡');
 L.push('🐠  🐬 🐳 🐋 🦈 🐊 🐅 🐆 🦓');
-L.push('🦍 🦧 🐘 🦛 🦏 🐪 🐫  🦘 ');
-L.push(' 🐄 🐎 🐖 🐏 🐑 🦙 🐐 🦌 🐕');
+L.push('🦍 🦧 🐘 🦛 🦏 🐪 🐫 🦒 🦘 🐃');
+L.push('🐂 🐄 🐎 🐖 🐏 🐑 🦙 🐐  🐕');
 L.push('🐩 🐈 🐇 🦝 🦨 🦡 🦫 🦦 🦥 🐁');
 L.push('🐀 🐿 🦔');
 L=cat('Makanan','🍎');
 L.push('🍏 🍎 🍐 🍊 🍋 🍌 🍉 🍇 🍓 🫐');
 L.push('🍈 🍒 🍑 🥭 🍍 🥥 🥝 🍅 🍆 🥑');
 L.push('🥦 🥬 🥒 🌶 🫑 🌽 🥕 🫒 🧄 🧅');
-L.push('🥔  🥐  🍞  🧀  🍳 ');
-L.push(' 🧇  🥩  🍖 🍔 🍟 🍕 🫓');
-L.push('🥪 🥙 🧆 🌮 🌯  🫕 🍝 🍜 🍲');
-L.push('🍛  🍱 🥟 🦪  🍙  🍘 ');
-L.push(' 🥮  🍡  🍨 🍦 🥧 🧁 🍰');
-L.push('🎂 🍮 🍭 🍬 🍫 🍿 🍩 🍪 🌰 🥜');
-L.push('🍯 🥛 🍼  ☕ 🍵 🧃 🥤 🧋 🍶');
-L.push('🍺 🍻  🍷  🍸  🧉  🧊');
-L.push('🥄 🍴 🍽 🥣 🥡 🥢 🧂');
+L.push('🥔 🍠 🥐  🍞 🥖 🧀  🍳 🧈');
+L.push('🥞 🧇  🥩  🍖 🍔 🍟 🍕 🫓');
+L.push('🥪 🥙 🧆 🌮 🌯  🫕  🍜 🍲');
+L.push('🍛 🍣 🍱 🥟 🦪 🍤 🍙 🍚 🍘 🍥');
+L.push('🥠 🥮 🍢 🍡 🍧 🍨  🥧 🧁 🍰');
+L.push('🎂  🍭 🍬 🍫 🍿 🍩  🌰 ');
+L.push(' 🥛 🍼  ☕  🧃 🥤 🧋 🍶');
+L.push('🍺 🍻 🥂 🍷 🥃 🍸 🍹 🧉 🍾 🧊');
+L.push('🥄  🍽  🥡 🥢 🧂');
 L=cat('Aktivitas','⚽');
-L.push('⚽ 🏀 🏈 ⚾  🎾  🏉  🎱');
-L.push('🪀 🏓 🏸 🏒 🏑 🥍 🏏  🥅 ⛳');
-L.push('🪁 🏹  🤿  🥋  🛹 🛼 🛷');
-L.push('⛸  🎿  🏂  🏋️  🤸 ');
-L.push(' 🧘  🏊  🚣  🚵  🏆');
-L.push('🥇  🥉 🏅 🎖 🏵 🎗 🎫 🎟 🎪');
-L.push('🤹  🩰 🎨 🎬 🎤 🎧 🎼 🎹 🥁');
-L.push('🪘 🎷 🎺 🪗 🎸 🪕 🎻 🎲 ♟ 🎯');
+L.push('⚽ 🏀 🏈 ⚾ 🥎 🎾 🏐 🏉 🥏 🎱');
+L.push('🪀 🏓 🏸 🏒 🏑 🥍 🏏 🪃 🥅 ⛳');
+L.push('🪁  🎣  🥊 🥋 🎽 🛹 🛼 🛷');
+L.push('⛸  🎿 ⛷ 🏂 🪂 🏋️  🤸 🤺');
+L.push('🏇 🧘 🏄 🏊 🤽 🚣 🧗 🚵 🚴 🏆');
+L.push('🥇 🥈 🥉 🏅 🎖 🏵 🎗 🎫 🎟 🎪');
+L.push('🤹 🎭 🩰 🎨 🎬 🎤 🎧 🎼 🎹 🥁');
+L.push('🪘  🎺 🪗 🎸 🪕 🎻 🎲 ♟ 🎯');
 L.push('🎳 🎮 🎰 🧩');
 L=cat('Travel','🚗');
 L.push('🚗 🚕 🚙 🚌 🚎  🚓  🚒 ');
-L.push('🛻 🚚 🚛 🚜 🏍  🚲  🛺 ');
-L.push('🚍 🚘 🚖 ✈️ 🛫 🛬 🛩 💺  🚀');
+L.push(' 🚚 🚛 🚜 🏍 🛵 🚲 🛴 🛺 🚔');
+L.push('🚍 🚘 🚖 ✈️ 🛫 🛬 🛩 💺 🛰 🚀');
 L.push('🛸  🛶  🚤  🛳  🚢 ');
 L.push(' ⛽  🚥 🚦 🗺 🗿 🗽 🗼 🏰');
-L.push('🏯 🏟 🎡 🎢  ⛲  🏖  🏜');
+L.push('🏯 🏟 🎡 🎢 🎠 ⛲  🏖  🏜');
 L.push('🌋 ⛰ 🏔 🗻 🏕 ⛺ 🛖 🏠 🏡 🏘');
-L.push('🏚 🏗  🏢 🏬 🏣 🏤 🏥 🏦 🏨');
-L.push('🏪 🏫 🏩 💒  ⛪ 🕌 🕍  🕋');
-L.push('⛩ 🛤 🛣 🗾 🎑 🏞 🌅 🌄 🌠 🎇');
-L.push('🎆  🌆  🌃 🌌  🌁');
+L.push('🏚 🏗 🏭 🏢 🏬 🏣 🏤 🏥 🏦 🏨');
+L.push('🏪 🏫 🏩 💒  ⛪ 🕌 🕍 🛕 🕋');
+L.push('⛩ 🛤 🛣 🗾 🎑 🏞 🌅 🌄 🌠 ');
+L.push(' 🌇 🌆 🏙 🌃 🌌 🌉 🌁');
 L=cat('Objek','⌚');
 L.push('⌚ 📱 💻 ️ 🖥 🖨 🖱 🖲 🕹 🗜');
 L.push('💽 💾 💿 📀 📼 📷 📸 📹 🎥 📽');
-L.push('🎞  ☎️  📠 📺 📻 🎙 🎚 🎛');
-L.push('🧭 ⏱ ⏲ ⏰ 🕰  ⏳  🔋 🔌');
-L.push('💡 🔦 🕯 🪔 🧯  💸 💵 💴 💶');
-L.push('💷 🪙 💰 💳 💎 ⚖️  🧰  🔧');
+L.push('🎞  ☎️ 📟 📠 📺  🎙  🎛');
+L.push('🧭 ⏱ ⏲ ⏰ 🕰 ⌛  📡 🔋 🔌');
+L.push('💡  🕯 🪔 🧯 🛢 💸 💵 💴 💶');
+L.push('💷 🪙 💰 💳 💎 ⚖️  🧰 🪛 🔧');
 L.push('🔨 ⚒ 🛠 ⛏ 🪚 🔩 ⚙️  🧱 ');
-L.push('🧲 🔫 💣 🧨 🪓 🔪 🗡 ⚔️ 🛡 🚬');
-L.push('⚰️  ⚱️  🔮 📿 🧿 💈 ️ 🔭');
+L.push('🧲 🔫 💣 🧨 🪓 🔪 🗡 ⚔️  🚬');
+L.push('⚰️  ⚱️  🔮  🧿 💈 ⚗️ 🔭');
 L.push('🔬 🕳 🩹 🩺 💊 💉 🩸 🧬 🦠 🧫');
-L.push('🧪  🧹  🧺  🚽  🚿 🛁');
-L.push('🛀 🧼 🪥 🪒 🧽 🪣 🧴 🛎 🔑 ');
-L.push('🚪 🪑 🛋 🛏 🛌 🧸 🪆 🖼 🪞 🪟');
+L.push('🧪  🧹  🧺  🚽 🚰 🚿 🛁');
+L.push('🛀 🧼 🪥 🪒 🧽 🪣 🧴 🛎 🔑 🗝');
+L.push('🚪 🪑  🛏 🛌 🧸  🖼  🪟');
 L.push('🛍 🛒 🎁 🎈 🎏 🎀 🪄 🪅 🎊 🎉');
-L.push('🎎  🎐 🧧 ✉️ 📩 📨 📧 💌');
-L.push('📥 📤 📦 🏷 🪧 📪  📬 📭 📮');
-L.push('📯  📃  📑  📊  📉 🗒');
-L.push('🗓  📅 🗑 📇 🗃 🗳 🗄 📋 📁');
-L.push('📂  🗞  📓 📔 📒 📕  📘');
-L.push('📙  📖  🧷 🔗 📎  📐 ');
-L.push(' 📌  ✂️  🖋 ✒️ 🖌 🖍 📝');
+L.push('🎎 🏮 🎐 🧧 ✉️ 📩 📨  💌');
+L.push('📥 📤 📦 🏷 🪧  📫  📭 ');
+L.push(' 📜 📃 📄 📑 🧾 📊 📈 📉 🗒');
+L.push('🗓 📆 📅 🗑 📇 🗃 🗳 🗄 📋 📁');
+L.push('📂  🗞  📓 📔 📒 📕 📗 📘');
+L.push('📙  📖 🔖 🧷 🔗 📎 🖇 📐 📏');
+L.push('🧮 📌 📍 ✂️ 🖊 🖋 ✒️ 🖌 🖍 📝');
 L.push('✏️ 🔍 🔎 🔏 🔐 🔒 🔓');
 L=cat('Simbol','❤️');
 L.push('❤️ 🧡 💛 💚 💙 💜 🖤 🤍 🤎 💔');
 L.push('❣️ 💕 💞 💓 💗 💖 💘 💝 💟 ✨');
 L.push('⭐ 🌟 💫 ⚡ 🔥  💥 💦  🎶');
 L.push('✅ ❌  ⛔  ❗ ❕ ❓ ❔ ‼️');
-L.push('⁉️ 🔔 🔕 📣 📢 💬 💭 💤 🌐 ♻️');
-L.push('🆗  🆕 🆙 🆓 🆖 🔢  ▶️ ⏸');
+L.push('⁉️ 🔔 🔕  📢 💬 💭 💤 🌐 ♻️');
+L.push('🆗 🆒 🆕 🆙 🆓 🆖 🔢 🔟 ▶️ ⏸');
+L.push('0️⃣ 1️⃣ 2️⃣ 3️⃣ 4️⃣ 5️⃣ 6️⃣ 7️⃣ 8️⃣ 9️⃣');
 L.push('⏹ ⏺ ⏭ ⏮ ⏩ ⏪ 🔼 🔽 ➡️ ⬅️');
 L.push('⬆️ ️ ↗️ ↘️ ↙️ ↖️ ↕️ ↔️ 🔄 ');
 L.push(' 🔀 ➕ ➖ ➗ ✖️ ♾ 💲 💱 ™️');
-L.push('©️ ®️ 〰️ ➰ ➿  🔙 🔛 🔝 🔜');
-L.push('✔️ ☑️ 🔘 🔴 🟠 🟡 🟢 🔵 🟣 ⚫');
-L.push('⚪  🔺 🔻 🔸 🔹 🔶 🔷 🔳 🔲');
-L.push('▪️ ▫️ ◾ ◽ ◼️ ◻️  🟧 🟨 🟩');
-L.push('🟦 🟪 ⬛ ⬜ 🟫');
+L.push('©️ ®️ 〰️ ➰ ➿ 🔚 🔙 🔛 🔝 🔜');
+L.push('✔️ ☑️ 🔘 🔴  🟡 🟢 🔵 🟣 ⚫');
+L.push('⚪ 🟤 🔺 🔻 🔸 🔹 🔶 🔷 🔳 🔲');
+L.push('▪️ ▫️ ◾ ◽ ◼️ ◻️ 🟥 🟧 🟨 🟩');
+L.push('🟦 🟪 ⬛  🟫');
 L=cat('Bendera','🏁');
-L.push('🏁 🚩 🎌 🏴 🏳 🏳️🌈 ‍☠️ 🇩 🇲🇾 🇸🇬');
+L.push('🏁 🚩 🎌 🏴 🏳 🏳️🌈 🏴☠️ 🇩 🇲🇾 🇸🇬');
 L.push('🇧🇳 🇹🇱 🇯🇵 🇰🇷 🇨🇳 🇹🇼 🇭🇰 🇮🇳 🇹🇭 🇻🇳');
-L.push('🇵🇭 🇦🇺 🇳 🇺🇸 🇨🇦 🇲🇽 🇧🇷 🇦🇷 🇨🇱 🇨🇴');
-L.push('🇵🇪 🇬🇧 🇫🇷 🇩🇪 🇮 🇪 🇵🇹 🇳🇱 🇧🇪 🇨🇭');
-L.push('🇦🇹 🇸🇪 🇳🇴 🇩🇰 🇫🇮 🇮🇪 🇵🇱 🇷🇺 🇹🇷 🇬🇷');
-L.push('🇪🇬 🇿🇦 🇳🇬 🇰🇪 🇲🇦 🇦 🇦 🇮🇷 🇮🇱 🇵🇰');
+L.push('🇵🇭 🇦🇺 🇳🇿 🇺🇸 🇨🇦 🇲🇽 🇧🇷 🇦🇷 🇨🇱 🇨🇴');
+L.push('🇵 🇬🇧 🇫🇷 🇩🇪 🇮🇹 🇪🇸 🇵🇹 🇳🇱 🇧🇪 🇨🇭');
+L.push('🇦🇹 🇸🇪 🇳🇴 🇩🇰 🇫🇮 🇮🇪 🇵🇱 🇷 🇹🇷 🇬🇷');
+L.push('🇪🇬 🇿🇦 🇳🇬 🇰🇪 🇲🇦 🇸🇦 🇦🇪 🇮🇷 🇮🇱 🇵🇰');
 L.push('🇧🇩 🇶🇦 🇰🇼 🇺🇦 🇰🇿');
 CATS.forEach(function(c){
 c.l=c.l.join(' ').split(' ');
@@ -272,7 +280,7 @@ cw.appendChild(b);
 });
 }
 function addEm(g,em){
-if(!em)return;
+if(badEm(em))return;
 var b=document.createElement('button');
 b.type='button';
 b.textContent=em;
@@ -530,7 +538,7 @@ credential:'openrelayproject'},
 username:'openrelayproject',
 credential:'openrelayproject'}
 ]};
-function nm(u){
+function nm2(u){
 return QC.displayName?QC.displayName(u):u;
 }
 function setAvByName(node,name,size){
@@ -574,8 +582,8 @@ function openUI(name,ans,mode){
 callMode=mode||'video';
 gid('callModal').classList.remove('hidden');
 setAvByName(gid('callBigAv'),name,56);
-gid('callBigName').textContent=nm(name);
-gid('callName').textContent=nm(name);
+gid('callBigName').textContent=nm2(name);
+gid('callName').textContent=nm2(name);
 gid('callModeTxt').textContent=
 callMode==='audio'?'Panggilan suara':'Panggilan video';
 gid('callPh').style.display='';
@@ -751,7 +759,7 @@ return;
 }
 incoming={from:d.from,offer:d.sdp,mode:d.mode||'video'};
 setAvByName(gid('icAv'),d.from,22);
-gid('icName').textContent=nm(d.from);
+gid('icName').textContent=nm2(d.from);
 gid('icMode').textContent=
 incoming.mode==='audio'
 ?'Panggilan suara masuk…'
@@ -807,4 +815,4 @@ try{QC.toast('Modul media gagal: '+e.message);}catch(x){}
 if(window.console)console.error(e);
 }
 })();
-/* END media.js v15 */
+/* END media.js v17 */
