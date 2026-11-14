@@ -99,6 +99,7 @@ input[type=range]{accent-color:var(--lime);width:100%}
 .msg-list{max-width:780px;margin:0 auto}
 .day-div{text-align:center;margin:18px 0 12px}
 .day-div span{border:1px solid var(--line);border-radius:99px;background:var(--glass);padding:4px 12px;color:var(--muted);font:700 10px var(--mono);text-transform:uppercase}
+.user-div{height:1px;background:linear-gradient(90deg,transparent,var(--line),transparent);margin:14px 0 10px}
 .sys-pill{text-align:center;margin:10px 0}
 .sys-pill span{border:1px solid var(--line);border-radius:99px;background:var(--glass);padding:4px 12px;color:var(--muted);font-size:11.5px}
 .msg{position:relative;display:flex;gap:10px;margin-top:12px}
@@ -135,7 +136,8 @@ input[type=range]{accent-color:var(--lime);width:100%}
 .r-pill b{color:var(--muted);font:700 10px var(--mono)}
 .m-tools{position:absolute;top:-30px;left:40px;z-index:6;display:flex;gap:3px;border:1px solid var(--line);border-radius:10px;background:rgba(12,19,34,.96);padding:4px;opacity:0;pointer-events:none}
 .msg.own .m-tools{left:auto;right:0}
-.msg:hover .m-tools,.msg.tools-open .m-tools{opacity:1;pointer-events:auto}
+.msg.tools-open .m-tools{opacity:1;pointer-events:auto}
+@media(hover:hover){.msg:hover .m-tools{opacity:1;pointer-events:auto}}
 .m-tools button{width:26px;height:26px;display:grid;place-items:center;border:0;border-radius:7px;background:none;color:var(--muted);font-size:13px;cursor:pointer}
 .m-tools button svg{width:13px;height:13px}
 .typing-row{flex:none;min-height:22px;padding:0 clamp(14px,4vw,32px);color:var(--muted);font-size:12px;visibility:hidden}
@@ -189,7 +191,7 @@ input[type=range]{accent-color:var(--lime);width:100%}
 .profile-top{display:flex;align-items:center;gap:12px;margin-bottom:14px}
 .avatar-preview{position:relative;width:64px;height:64px;flex:none;border-radius:20px;display:grid;place-items:center;color:#081018}
 .avatar-preview svg{width:34px;height:34px}
-.wall-preview{height:190px;border-radius:14px;border:1px solid var(--line);margin-bottom:14px;background-color:#06080d;background-position:center;background-repeat:no-repeat}
+.wall-preview{height:300px;aspect-ratio:9/16;margin:0 auto 14px;border-radius:14px;border:1px solid var(--line);background-color:#06080d;background-position:center;background-repeat:no-repeat}
 .devrow{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:7px 9px;border:1px solid var(--line);border-radius:10px;margin-bottom:6px;font:11.5px var(--mono);color:var(--muted)}
 .devrow b{color:var(--lime)}
 .toasts{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:400;display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none;width:max-content;max-width:calc(100vw - 30px)}
@@ -204,7 +206,7 @@ input[type=range]{accent-color:var(--lime);width:100%}
 <div class="bg"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div><div class="gridlines"></div></div>
 
 <main id="authView" class="view">
-  <div class="top"><div class="brand"><svg viewBox="0 0 48 48"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#C8F04B"/><stop offset="1" stop-color="#53D8FF"/></linearGradient></defs><rect x="2" y="2" width="44" height="44" rx="13" fill="url(#lg)"/><path d="M14 11h20a7 7 0 0 1 7 7v9a7 7 0 0 1-7 7h-9l-8 7v-7h-3a7 7 0 0 1-7-7v-9a7 7 0 0 1 7-7z" fill="%2306090F"/><path d="M27 15l-8 11h5l-2 8 8-11h-5l2-8z" fill="#C8F04B"/></svg><div><div class="wordmark">Quick<b>Chat</b></div><div class="brand-dev" id="devTap">Developer: Ryo XD</div></div></div><span id="netChipAuth" class="net-chip wait"><i></i>Menyambung</span></div>
+  <div class="top"><div class="brand"><svg viewBox="0 0 48 48"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#C8F04B"/><stop offset="1" stop-color="#53D8FF"/></linearGradient></defs><rect x="2" y="2" width="44" height="44" rx="13" fill="url(#lg)"/><path d="M14 11h20a7 7 0 0 1 7 7v9a7 7 0 0 1-7 7h-9l-8 7v-7h-3a7 7 0 0 1-7-7v-9a7 7 0 0 1 7-7z" fill="#06090F"/><path d="M27 15l-8 11h5l-2 8 8-11h-5l2-8z" fill="#C8F04B"/></svg><div><div class="wordmark">Quick<b>Chat</b></div><div class="brand-dev" id="devTap">Developer: Ryo XD</div></div></div><span id="netChipAuth" class="net-chip wait"><i></i>Menyambung</span></div>
   <div class="auth-wrap">
     <div class="auth-card">
       <h1 id="authTitle">Masuk</h1>
@@ -292,7 +294,7 @@ input[type=range]{accent-color:var(--lime);width:100%}
 
 <div id="dmModal" class="modal hidden"><div class="m-scrim" data-close="dmModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="dmModal" type="button"></button><h3>Chat pribadi baru</h3><p class="sub">Masukkan nama pengguna tujuan yang sudah terdaftar.</p><label class="fld"><span>Username</span><input id="inDM" maxlength="16" placeholder="username teman"></label><button id="btnDM" class="btn primary full" type="button">Mulai chat</button></div></div>
 <div id="grpModal" class="modal hidden"><div class="m-scrim" data-close="grpModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="grpModal" type="button"></button><h3>Buat / gabung grup</h3><p class="sub">Buat grup baru atau masuk pakai kode undangan.</p><label class="fld"><span>Nama grup baru</span><input id="inGrp" maxlength="24" placeholder="contoh: Tim Kelas"></label><button id="btnGrp" class="btn primary full" type="button">Buat grup</button><div style="margin:12px 0;text-align:center;color:var(--muted);font-size:12px">— atau —</div><label class="fld"><span>Kode undangan grup</span><input id="inGrpCode" maxlength="32" placeholder="XXX-XXX-XXX"></label><button id="btnGrpJoin" class="btn ghost full" type="button">Gabung grup</button></div></div>
-<div id="wallModal" class="modal hidden"><div class="m-scrim" data-close="wallModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="wallModal" type="button"></button><h3>Edit wallpaper</h3><p class="sub">Atur kegelapan & besar-kecil gambar, lihat preview lurus.</p>
+<div id="wallModal" class="modal hidden"><div class="m-scrim" data-close="wallModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="wallModal" type="button"></button><h3>Edit wallpaper</h3><p class="sub">Atur kegelapan & besar-kecil gambar, preview vertikal seperti layar chat.</p>
 <div id="wallPreview" class="wall-preview"></div>
 <label class="fld"><span>Kegelapan — <b id="wallDarkVal" style="color:var(--lime)">65%</b></span><input id="wallDark" type="range" min="0" max="90" step="1" value="65"></label>
 <label class="fld"><span>Ukuran gambar — <b id="wallZoomVal" style="color:var(--lime)">140%</b></span><input id="wallZoom" type="range" min="100" max="300" step="5" value="140"></label>
@@ -442,6 +444,9 @@ if(id==='sidebar'){var sc2=el('sbScrim');if(sc2)sc2.classList.add('hidden');}
 }
 function closeOv(id){var top=ovStack[ovStack.length-1];if(top===id){history.back();}else{hideOv(id);var i=ovStack.lastIndexOf(id);if(i>=0)ovStack.splice(i,1);}}
 window.addEventListener('popstate',function(){var id=ovStack.pop();if(id)hideOv(id);});
+function closeAllTools(){
+document.querySelectorAll('.msg.tools-open').forEach(function(x){x.classList.remove('tools-open');});
+}
 
 function rememberPass(u,p){try{sessionStorage.setItem('qc-pp-'+u,p);}catch(e){}}
 function vaultKey(){
@@ -1029,8 +1034,16 @@ if(c.type==='dm')publishRetained(inT(S.me,c.key),obj);
 function renderMsgs(){
 var list=el('msgList');if(!list)return;list.innerHTML='';
 var prev=null;
+var afterDay=false;
 S.msgs.forEach(function(m){
-if(m.type!=='system'&&(!prev||dayKey(prev.time)!==dayKey(m.time))){var d=document.createElement('div');d.className='day-div';d.innerHTML='<span>'+dayLabel(m.time)+'</span>';list.appendChild(d);}
+afterDay=false;
+if(m.type!=='system'&&(!prev||dayKey(prev.time)!==dayKey(m.time))){
+var d=document.createElement('div');d.className='day-div';d.innerHTML='<span>'+dayLabel(m.time)+'</span>';list.appendChild(d);
+afterDay=true;
+}
+if(prev&&prev.type!=='system'&&m.type!=='system'&&prev.user!==m.user&&!afterDay){
+var dv=document.createElement('div');dv.className='user-div';list.appendChild(dv);
+}
 list.appendChild(buildMsg(m,prev&&prev.type==='message'&&m.type==='message'&&prev.user===m.user&&m.time-prev.time<120000));
 prev=m;
 });
@@ -1055,7 +1068,7 @@ var lpT=null,lpFired=false;
 function lpOpen(){
 lpFired=true;
 lastLP=now();
-document.querySelectorAll('.msg.tools-open').forEach(function(x){x.classList.remove('tools-open');});
+closeAllTools();
 e.classList.add('tools-open');
 if(navigator.vibrate){try{navigator.vibrate(25);}catch(v){}}
 }
@@ -1085,10 +1098,10 @@ var ed=e.querySelector('.edited');if(ed)ed.classList.toggle('hidden',!m.editedAt
 }
 function fillTools(e,m){
 var t=e.querySelector('.m-tools');if(!t)return;if(m.deleted||m.type!=='message'){t.remove();return;}t.innerHTML='';
-['❤️','😂','🔥',''].forEach(function(em){var b=document.createElement('button');b.type='button';b.textContent=em;b.onclick=function(ev){ev.stopPropagation();toggleReaction(m.id,em);};t.appendChild(b);});
+['❤️','😂','',''].forEach(function(em){var b=document.createElement('button');b.type='button';b.textContent=em;b.onclick=function(ev){ev.stopPropagation();toggleReaction(m.id,em);};t.appendChild(b);});
 if(m.user===S.me){
-var be=document.createElement('button');be.type='button';be.innerHTML=icon('edit',13);be.onclick=function(ev){ev.stopPropagation();S.editId=m.id;el('editBar').classList.add('on');el('input').value=m.text;updateSendBtn();e.classList.remove('tools-open');};t.appendChild(be);
-var bd=document.createElement('button');bd.type='button';bd.innerHTML=icon('trash',13);bd.onclick=function(ev){ev.stopPropagation();var mm=findMsg(m.id);if(mm){mm.deleted=true;mm.editedAt=now();saveMsgs(S.conv.key,S.msgs);updateMsgDOM(mm);publishTo(convTopic(S.conv.key),{k:'msg',conv:S.conv.key,from:S.me,data:mm});toast('Pesan dihapus');}e.classList.remove('tools-open');};t.appendChild(bd);
+var be=document.createElement('button');be.type='button';be.innerHTML=icon('edit',13);be.onclick=function(ev){ev.stopPropagation();S.editId=m.id;el('editBar').classList.add('on');el('input').value=m.text;updateSendBtn();closeAllTools();};t.appendChild(be);
+var bd=document.createElement('button');bd.type='button';bd.innerHTML=icon('trash',13);bd.onclick=function(ev){ev.stopPropagation();var mm=findMsg(m.id);if(mm){mm.deleted=true;mm.editedAt=now();saveMsgs(S.conv.key,S.msgs);updateMsgDOM(mm);publishTo(convTopic(S.conv.key),{k:'msg',conv:S.conv.key,from:S.me,data:mm});toast('Pesan dihapus');}closeAllTools();};t.appendChild(bd);
 }
 }
 function updateMsgDOM(m){var l=el('msgList');if(!l)return;var e=l.querySelector('[data-id="'+CSS.escape(m.id)+'"]');if(!e)return;fillBubble(e,m);renderReactions(m.id,e);}
@@ -1101,7 +1114,7 @@ patchRaw(mid,k,v);
 renderReactions(mid);
 Sound.play('react');
 publishTo(convTopic(S.conv.key),{k:'react',conv:S.conv.key,from:S.me,mid:mid,rk:k,val:v});
-document.querySelectorAll('.msg.tools-open').forEach(function(x){x.classList.remove('tools-open');});
+closeAllTools();
 }
 function renderReactions(mid,e){
 e=e||(el('msgList')?el('msgList').querySelector('[data-id="'+CSS.escape(mid)+'"]'):null);if(!e)return;
@@ -1295,6 +1308,8 @@ ta.addEventListener('input',function(){autoGrow();updateSendBtn();if(S.conv)publ
 ta.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}});
 ta.addEventListener('focus',function(){setTimeout(pinChat,200);setTimeout(pinChat,500);});
 }
+var ms=el('msgScroll');
+if(ms){ms.addEventListener('scroll',function(){closeAllTools();},{passive:true});}
 if(window.visualViewport){
 visualViewport.addEventListener('resize',function(){if(S.view==='chat')pinChat();});
 }
@@ -1302,9 +1317,7 @@ on('btnEmoji','click',function(e){e.stopPropagation();el('emojiPop').classList.t
 document.addEventListener('click',function(e){
 if(now()-lastLP<700)return;
 if(!e.target.closest('#emojiPop')&&!e.target.closest('#btnEmoji'))el('emojiPop').classList.add('hidden');
-if(!e.target.closest('.m-tools')){
-document.querySelectorAll('.msg.tools-open').forEach(function(x){x.classList.remove('tools-open');});
-}
+if(!e.target.closest('.m-tools'))closeAllTools();
 });
 document.querySelectorAll('[data-close]').forEach(function(x){x.addEventListener('click',function(){closeOv(x.dataset.close);});});
 window.addEventListener('online',function(){renderNet();reconnectAll();});
@@ -1346,4 +1359,4 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 <script src="media.js?v=22"></script>
 </body>
 </html>
-<!-- END index.html v25 -->
+<!-- END index.html v26 -->
