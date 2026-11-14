@@ -309,7 +309,7 @@ input[type=range]{accent-color:var(--lime);width:100%}
     <button id="btnAccSettings" class="btn ghost small full" type="button"></button>
     <button id="btnAccLogout" class="btn danger small full" type="button"></button>
   </div>
-  <div class="sb-card" style="text-align:center;color:var(--muted);font-size:11.5px"><span class="brand-dev" id="devTap2">Developer: Ryo XD</span></div>
+  <div class="sb-card" style="text-align:center;color:var(--muted);font-size:11.5px"><span class="brand-dev" id="devTap2">Versi aplikasi: BETA · v39</span></div>
 </aside>
 <div id="accScrim" class="scrim hidden"></div>
 
@@ -440,6 +440,7 @@ var S={me:null,hash:null,view:'auth',conv:null,convs:[],msgs:[],reactRaw:{},pres
 var pendingReport=null;
 var devCounts={acc:0,rep:0,conv:0};
 var clients=[],libTries=0,subs={};
+function curUser(){return S.me||localStorage.getItem('qc-lastuser')||null;}
 function anyConnected(){for(var i=0;i<clients.length;i++)if(clients[i]&&clients[i].connected)return true;return false;}
 function whenConnected(ms){return new Promise(function(res){if(anyConnected())return res(true);var done=false;function off(){clearTimeout(t);clients.forEach(function(c){if(c)c.removeListener('connect',h);});}function h(){if(done)return;done=true;off();res(true);}var t=setTimeout(function(){if(done)return;done=true;off();res(anyConnected());},ms||8000);clients.forEach(function(c){if(c)c.on('connect',h);});});}
 function outboxPush(topic,obj,ret){try{var ob=JSON.parse(localStorage.getItem('qc-ob')||'[]');ob.push({t:topic,o:obj,r:!!ret});if(ob.length>300)ob=ob.slice(-300);localStorage.setItem('qc-ob',JSON.stringify(ob));}catch(e){}}
@@ -472,7 +473,19 @@ return c;
 });
 }
 function route(t,d){
-if(!S.me)return;
+if(!S.me){
+if(S.peek&&d){
+var pk=topicToKey(t);
+if(pk&&pk===S.peek.key){
+if(d.k==='msg'&&d.data)peekLine(d.data);
+else if(d.k==='hist-res'&&d.to===S.peek.user){
+var mx=(d.msgs||[]).slice().sort(function(a,b){return a.time-b.time;});
+mx.forEach(peekLine);
+}
+}
+}
+return;
+}
 if(t.indexOf(NS+'call/')===0){if(window.QC&&QC.onCallSignal&&d.to===S.me)QC.onCallSignal(d);return;}
 if(t.indexOf(NS+'in/'+S.me+'/')===0){onPointer(d);return;}
 if(t.indexOf(NS+'pres/')===0){onPresence(d);return;}
@@ -681,19 +694,20 @@ ch.style.display=(!q||ch.dataset.q.indexOf(q)>=0)?'':'none';
 });
 }
 function openPeek(p){
-S.peek={key:p.conv,name:p.type==='group'?p.name:('DM '+p.conv.slice(3).replace('~',' & ')),seen:{},timer:null};
+var u=curUser();
+S.peek={key:p.conv,name:p.type==='group'?p.name:('DM '+p.conv.slice(3).replace('~',' & ')),seen:{},timer:null,user:u};
 el('peekFeed').innerHTML='';
-var local=loadMsgs(p.conv).slice(-200);
+var local=u?loadMsgsFor(u,p.conv).slice(-200):[];
 if(local.length){local.forEach(peekLine);}
-else{peekNote('Belum ada riwayat lokal — menunggu perangkat anggota online (otomatis dimuat saat masuk)…');}
+else{peekNote('Belum ada riwayat lokal — menunggu kiriman perangkat anggota (otomatis dimuat saat masuk)…');}
 put('peekTitle','Monitor: '+S.peek.name);
 put('peekSub','Riwayat dimuat; pesan live akan mengalir.');
 openOv('peekModal');
 sub(convTopic(p.conv));
-publishTo(convTopic(p.conv),{k:'hist-req',from:S.me,conv:p.conv});
+if(u)publishTo(convTopic(p.conv),{k:'hist-req',from:u,conv:p.conv});
 S.peek.timer=setInterval(function(){
-if(S.peek&&S.peek.key===p.conv){
-publishTo(convTopic(p.conv),{k:'hist-req',from:S.me,conv:p.conv});
+if(S.peek&&S.peek.key===p.conv&&u){
+publishTo(convTopic(p.conv),{k:'hist-req',from:u,conv:p.conv});
 }
 },10000);
 }
@@ -719,7 +733,8 @@ if(S.peek.seen[m.id])return;
 S.peek.seen[m.id]=1;
 var n=f.querySelector('.peek-note');if(n)n.remove();
 var d=document.createElement('div');
-d.className='peek-line'+(m.user===S.me?' own':'');
+var pu=S.peek.user||S.me;
+d.className='peek-line'+(m.user===pu?' own':'');
 var txt=m.type==='image'?'[Gambar]':m.type==='audio'?'[Suara '+fmtDur(m.dur)+']':(m.deleted?'[Dihapus]':(m.text||''));
 d.textContent=fmtTime(m.time)+' '+displayName(m.user)+': '+txt;
 f.appendChild(d);
@@ -806,6 +821,7 @@ if(ch)localStorage.setItem('qc-convs-'+S.me,JSON.stringify(cs));
 function enterSession(u,h){
 S.me=u;S.hash=h;
 localStorage.setItem('qc-session',JSON.stringify({u:u,h:h}));
+localStorage.setItem('qc-lastuser',u);
 var pp=null;try{pp=sessionStorage.getItem('qc-pp-'+u);}catch(e){}
 if(pp)vaultSave(u,pp);
 migrateConvs();
@@ -899,6 +915,7 @@ function getConv(key){for(var i=0;i<S.convs.length;i++)if(S.convs[i].key===key)r
 function upsertConv(meta){var c=getConv(meta.key);if(!c){c=meta;S.convs.push(c);}else{if(meta.name)c.name=meta.name;if(meta.members)c.members=meta.members;if(meta.type)c.type=meta.type;if(meta.owner)c.owner=meta.owner;}saveConvs();return c;}
 function msgsKey(key){return 'qc-msgs-'+S.me+'-'+key;}
 function loadMsgs(key){return JSON.parse(localStorage.getItem(msgsKey(key))||'[]');}
+function loadMsgsFor(u,key){return JSON.parse(localStorage.getItem('qc-msgs-'+u+'-'+key)||'[]');}
 function saveMsgs(key,arr){localStorage.setItem(msgsKey(key),JSON.stringify(arr.slice(-300)));}
 function removeConv(key){unsub(convTopic(key));if(key.indexOf('dm:')===0)unsub(callT(key));S.convs=S.convs.filter(function(c){return c.key!==key;});delete S.unread[key];delete S.lastRead[key];saveConvs();localStorage.removeItem(msgsKey(key));localStorage.removeItem('qc-react-'+S.me+'-'+key);}
 function peerRead(key){return +(localStorage.getItem('qc-prt-'+S.me+'-'+key)||0);}
@@ -913,6 +930,17 @@ var m=arr[i];
 if(m.from!==S.me&&m.type!=='system'&&m.time>lr)n++;
 }
 S.unread[key]=n;
+}
+function markRead(key){
+var arr=loadMsgs(key);
+var mx=now();
+for(var i=0;i<arr.length;i++){
+var m=arr[i];
+if(m&&m.from!==S.me&&m.type!=='system'&&m.time>mx)mx=m.time;
+}
+S.lastRead[key]=mx;
+recalcUnread(key);
+saveConvs();
 }
 function requestSync(key){
 publishTo(convTopic(key),{k:'hist-req',from:S.me,conv:key});
@@ -1113,7 +1141,7 @@ var c=getConv(key);if(!c)return;
 S.conv=c;S.msgs=loadMsgs(key);
 S.reactRaw=normRaw(JSON.parse(localStorage.getItem('qc-react-'+S.me+'-'+key)||'{}'));
 localStorage.setItem('qc-react-'+S.me+'-'+key,JSON.stringify(S.reactRaw));
-S.unread[key]=0;S.lastRead[key]=now();saveConvs();
+S.unread[key]=0;markRead(key);
 showView('chat');
 applyWall();
 sub(convTopic(key));
@@ -1184,9 +1212,7 @@ if(ch){
 S.msgs.sort(function(a,b){return a.time-b.time;});
 saveMsgs(S.conv.key,S.msgs);
 renderMsgs();updateTicks();
-S.lastRead[S.conv.key]=now();
-recalcUnread(S.conv.key);
-saveConvs();sendRead(S.conv.key);
+markRead(S.conv.key);sendRead(S.conv.key);
 }
 }
 else if(d.k==='grp-del'){toast('Grup dihapus oleh pemilik');var k=S.conv?S.conv.key:null;removeConv(d.conv);if(k===d.conv)backHome();else renderHome();}
@@ -1194,7 +1220,7 @@ else if(d.k==='grp-del'){toast('Grup dihapus oleh pemilik');var k=S.conv?S.conv.
 function onBackground(key,d){
 if(S.peek&&S.peek.key===key){
 if(d.k==='msg'&&d.data)peekLine(d.data);
-else if(d.k==='hist-res'&&d.to===S.me){
+else if(d.k==='hist-res'&&d.to===(S.peek.user||S.me)){
 var ms=(d.msgs||[]).slice().sort(function(a,b){return a.time-b.time;});
 ms.forEach(peekLine);
 }
@@ -1234,9 +1260,7 @@ S.msgs.push(m);saveMsgs(S.conv.key,S.msgs);renderMsgs();updateTicks();
 if(m.from!==S.me&&m.type!=='system')Sound.play('recv');
 if(m.from!==S.me&&S.conv){
 S.conv.last={text:m.type==='image'?'Gambar':m.type==='audio'?'Suara':m.text,time:m.time,from:m.from};
-S.lastRead[S.conv.key]=now();
-recalcUnread(S.conv.key);
-saveConvs();
+markRead(S.conv.key);
 sendRead(S.conv.key);
 }
 }
@@ -1694,4 +1718,4 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 <script src="media.js?v=21"></script>
 </body>
 </html>
-<!-- END index.html v38 -->
+<!-- END index.html v39 -->
