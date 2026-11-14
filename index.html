@@ -13,6 +13,11 @@
 html{height:100%}
 body{height:100dvh;overflow:hidden;background:var(--ink0);color:var(--text);font-family:var(--body);touch-action:manipulation;-webkit-text-size-adjust:100%;text-size-adjust:100%}
 button,input,textarea,select{font:inherit;color:inherit}
+button{-webkit-tap-highlight-color:transparent}
+button:focus{outline:none}
+button:focus-visible{outline:none}
+a{-webkit-tap-highlight-color:transparent}
+input[type=range]{accent-color:var(--lime);width:100%}
 .hidden{display:none!important}
 .bg{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
 .blob{position:absolute;border-radius:50%;filter:blur(90px)}
@@ -88,7 +93,7 @@ button,input,textarea,select{font:inherit;color:inherit}
 .chat-meta{flex:1;min-width:0}
 .chat-title{font:700 14.5px var(--mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .chat-sub{color:var(--muted);font-size:11.5px;margin-top:2px}
-.msg-scroll{flex:1;overflow-y:auto;padding:22px clamp(12px,4vw,32px) 8px;background-size:cover;background-position:center;background-repeat:no-repeat}
+.msg-scroll{flex:1;overflow-y:auto;padding:22px clamp(12px,4vw,32px) 8px;background-color:#06080d;background-size:140%;background-position:center;background-repeat:no-repeat}
 .msg-list{max-width:780px;margin:0 auto}
 .day-div{text-align:center;margin:18px 0 12px}
 .day-div span{border:1px solid var(--line);border-radius:99px;background:var(--glass);padding:4px 12px;color:var(--muted);font:700 10px var(--mono);text-transform:uppercase}
@@ -182,6 +187,7 @@ button,input,textarea,select{font:inherit;color:inherit}
 .profile-top{display:flex;align-items:center;gap:12px;margin-bottom:14px}
 .avatar-preview{position:relative;width:64px;height:64px;flex:none;border-radius:20px;display:grid;place-items:center;color:#081018}
 .avatar-preview svg{width:34px;height:34px}
+.wall-preview{height:190px;border-radius:14px;border:1px solid var(--line);margin-bottom:14px;background-color:#06080d;background-position:center;background-repeat:no-repeat}
 .devrow{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:7px 9px;border:1px solid var(--line);border-radius:10px;margin-bottom:6px;font:11.5px var(--mono);color:var(--muted)}
 .devrow b{color:var(--lime)}
 .toasts{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:400;display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none;width:max-content;max-width:calc(100vw - 30px)}
@@ -284,6 +290,12 @@ button,input,textarea,select{font:inherit;color:inherit}
 
 <div id="dmModal" class="modal hidden"><div class="m-scrim" data-close="dmModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="dmModal" type="button"></button><h3>Chat pribadi baru</h3><p class="sub">Masukkan nama pengguna tujuan yang sudah terdaftar.</p><label class="fld"><span>Username</span><input id="inDM" maxlength="16" placeholder="username teman"></label><button id="btnDM" class="btn primary full" type="button">Mulai chat</button></div></div>
 <div id="grpModal" class="modal hidden"><div class="m-scrim" data-close="grpModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="grpModal" type="button"></button><h3>Buat / gabung grup</h3><p class="sub">Buat grup baru atau masuk pakai kode undangan.</p><label class="fld"><span>Nama grup baru</span><input id="inGrp" maxlength="24" placeholder="contoh: Tim Kelas"></label><button id="btnGrp" class="btn primary full" type="button">Buat grup</button><div style="margin:12px 0;text-align:center;color:var(--muted);font-size:12px">— atau —</div><label class="fld"><span>Kode undangan grup</span><input id="inGrpCode" maxlength="32" placeholder="XXX-XXX-XXX"></label><button id="btnGrpJoin" class="btn ghost full" type="button">Gabung grup</button></div></div>
+<div id="wallModal" class="modal hidden"><div class="m-scrim" data-close="wallModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="wallModal" type="button"></button><h3>Edit wallpaper</h3><p class="sub">Atur kegelapan & besar-kecil gambar, lihat preview langsung.</p>
+<div id="wallPreview" class="wall-preview"></div>
+<label class="fld"><span>Kegelapan — <b id="wallDarkVal" style="color:var(--lime)">65%</b></span><input id="wallDark" type="range" min="0" max="90" step="1" value="65"></label>
+<label class="fld"><span>Ukuran gambar — <b id="wallZoomVal" style="color:var(--lime)">140%</b></span><input id="wallZoom" type="range" min="100" max="300" step="5" value="140"></label>
+<button id="btnWallSave" class="btn primary full" type="button">Simpan wallpaper</button>
+</div></div>
 <div id="profModal" class="modal hidden"><div class="m-scrim" data-close="profModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="profModal" type="button"></button><h3>Profil & pengaturan akun</h3><p class="sub">Foto dari galeri atau kamera. Tanpa foto = ikon orang standar.</p><div class="profile-top"><div class="avatar-preview" id="avatarPreview"></div><div style="flex:1"><div id="profName" style="font-weight:700">—</div><div style="color:var(--muted);font-size:12px;margin-top:2px">Avatar tampil di chat & kontak</div></div><div style="display:flex;flex-direction:column;gap:6px"><button id="btnUploadAvatar" class="mini-btn" type="button"></button><button id="btnCamAvatar" class="mini-btn" type="button"></button><button id="btnRandomAvatar" class="mini-btn" type="button"></button></div><input id="avatarInput" type="file" accept="image/*" hidden><input id="avatarCam" type="file" accept="image/*" capture="environment" hidden></div>
 <label class="fld"><span>Nama tampilan</span><input id="inpDisplayName" maxlength="24"></label>
 <div class="color-row" id="colorRow"></div><button id="btnSaveProf" class="btn primary full" type="button">Simpan profil</button>
@@ -724,11 +736,35 @@ e.textContent=rd?'✓✓':'✓';
 e.classList.toggle('read',rd);
 }
 }
+function getWall(){
+var raw=localStorage.getItem('qc-wall');
+if(!raw)return null;
+if(raw.indexOf('data:')===0)return {img:raw,dark:65,zoom:140};
+try{
+var o=JSON.parse(raw);
+if(o&&o.img)return {img:o.img,dark:o.dark==null?65:o.dark,zoom:o.zoom==null?140:o.zoom};
+}catch(e){}
+return null;
+}
+function setWall(o){localStorage.setItem('qc-wall',JSON.stringify(o));}
+function wallBG(w){
+var a=(w.dark/100).toFixed(2);
+return 'linear-gradient(rgba(4,6,12,'+a+'),rgba(4,6,12,'+a+')),url('+w.img+')';
+}
 function applyWall(){
 var s=el('msgScroll');if(!s)return;
-var w=localStorage.getItem('qc-wall');
-if(w){s.style.backgroundImage='linear-gradient(rgba(4,6,12,.82),rgba(4,6,12,.82)),url('+w+')';}
-else{s.style.backgroundImage='';}
+var w=getWall();
+if(w){
+s.style.backgroundImage=wallBG(w);
+s.style.backgroundSize=w.zoom+'%';
+s.style.backgroundPosition='center';
+s.style.backgroundRepeat='no-repeat';
+}else{
+s.style.backgroundImage='';
+s.style.backgroundSize='';
+s.style.backgroundPosition='';
+s.style.backgroundRepeat='';
+}
 }
 function compressWall(file){
 return new Promise(function(res,rej){
@@ -736,12 +772,12 @@ var r=new FileReader();
 r.onload=function(ev){
 var im=new Image();
 im.onload=function(){
-var w=im.width,h=im.height,mx=1080;
+var w=im.width,h=im.height,mx=1920;
 if(w>mx||h>mx){var s2=Math.min(mx/w,mx/h);w=Math.round(w*s2);h=Math.round(h*s2);}
 var cv=document.createElement('canvas');
 cv.width=w;cv.height=h;
 cv.getContext('2d').drawImage(im,0,0,w,h);
-res(cv.toDataURL('image/jpeg',0.55));
+res(cv.toDataURL('image/jpeg',0.85));
 };
 im.onerror=rej;
 im.src=ev.target.result;
@@ -749,6 +785,25 @@ im.src=ev.target.result;
 r.onerror=rej;
 r.readAsDataURL(file);
 });
+}
+var wallPending=null;
+function openWallEditor(img){
+var w=getWall();
+wallPending=(w&&w.img===img)?Object.assign({},w):{img:img,dark:65,zoom:140};
+syncWallUI();
+openOv('wallModal');
+}
+function syncWallUI(){
+if(!wallPending)return;
+var p=el('wallPreview');
+p.style.backgroundImage=wallBG(wallPending);
+p.style.backgroundSize=wallPending.zoom+'%';
+p.style.backgroundPosition='center';
+p.style.backgroundRepeat='no-repeat';
+el('wallDark').value=wallPending.dark;
+el('wallZoom').value=wallPending.zoom;
+put('wallDarkVal',wallPending.dark+'%');
+put('wallZoomVal',wallPending.zoom+'%');
 }
 
 function setupHomeSubs(){sub(inWild(S.me));sub(NS+'call/#');sub(presT(S.me));S.convs.forEach(subscribeConvPassive);}
@@ -845,7 +900,7 @@ if(isG)put('sbCode',c.key.slice(4));
 el('btnDeleteConv').style.display=isG?'none':'';
 el('btnLeaveGroup').style.display=isG?'':'none';
 el('btnDeleteGroup').style.display=(isG&&c.owner===S.me)?'':'none';
-el('btnWallClear').style.display=localStorage.getItem('qc-wall')?'':'none';
+el('btnWallClear').style.display=getWall()?'':'none';
 var ul=el('peopleList');ul.innerHTML='';
 var names=isG?(c.members||[S.me]):[S.me,c.peer];
 names.forEach(function(n){
@@ -1146,15 +1201,22 @@ on('btnWallpaper','click',function(){el('wallInput').click();});
 on('wallInput','change',function(e){
 var f=e.target.files[0];e.target.value='';
 if(!f)return;
-compressWall(f).then(function(d){
-localStorage.setItem('qc-wall',d);
-applyWall();renderSidebar();
-toast('Wallpaper chat dipasang');
-}).catch(function(){toast('Gagal memproses wallpaper');});
+compressWall(f).then(openWallEditor).catch(function(){toast('Gagal memproses wallpaper');});
+});
+on('wallDark','input',function(){if(!wallPending)return;wallPending.dark=+this.value;syncWallUI();});
+on('wallZoom','input',function(){if(!wallPending)return;wallPending.zoom=+this.value;syncWallUI();});
+on('btnWallSave','click',function(){
+if(!wallPending)return;
+setWall(wallPending);
+applyWall();
+closeOv('wallModal');
+renderSidebar();
+toast('Wallpaper chat disimpan');
 });
 on('btnWallClear','click',function(){
 localStorage.removeItem('qc-wall');
-applyWall();renderSidebar();
+applyWall();
+renderSidebar();
 toast('Wallpaper dihapus');
 });
 on('fabDM','click',function(){openOv('dmModal');el('inDM').focus();});
@@ -1223,4 +1285,4 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 <script src="media.js?v=22"></script>
 </body>
 </html>
-<!-- END index.html v23 -->
+<!-- END index.html v24 -->
