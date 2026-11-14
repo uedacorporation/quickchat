@@ -155,6 +155,8 @@ button,input,textarea,select{font:inherit;color:inherit}
 .emoji-pop button{height:34px;border:0;border-radius:8px;background:none;font-size:19px;cursor:pointer}
 .sidebar{position:fixed;top:0;right:0;z-index:60;width:min(320px,88vw);height:100dvh;transform:translateX(105%);transition:transform .3s;background:rgba(9,13,24,.98);border-left:1px solid var(--line);padding:16px;overflow-y:auto;display:flex;flex-direction:column;gap:14px}
 .sidebar.open{transform:none}
+.sidebar.left{right:auto;left:0;border-left:0;border-right:1px solid var(--line);transform:translateX(-105%)}
+.sidebar.left.open{transform:none}
 .scrim{position:fixed;inset:0;z-index:55;background:rgba(3,5,10,.6)}
 .sb-card{border:1px solid var(--line);border-radius:16px;background:var(--glass);padding:14px}
 .sb-label{display:block;margin-bottom:8px;color:var(--muted);font:700 10px var(--mono);letter-spacing:.14em}
@@ -249,7 +251,7 @@ button,input,textarea,select{font:inherit;color:inherit}
   </div>
 </main>
 
-<aside id="accSidebar" class="sidebar">
+<aside id="accSidebar" class="sidebar left">
   <div style="display:flex;align-items:center;justify-content:space-between"><b>Akun</b><button id="btnCloseAcc" class="icon-btn sm" type="button"></button></div>
   <div class="sb-card acc-card" id="accCard">
     <span id="accAv" style="display:contents"></span>
@@ -405,8 +407,22 @@ var ob=el('offlineBar');if(ob)ob.classList.toggle('hidden',mode==='ok');
 }
 
 var ovStack=[];
-function openOv(id){var e=el(id);if(!e)return;e.classList.remove('hidden');if(id==='sidebar'||id==='accSidebar')e.classList.add('open');try{history.pushState({qcov:id},'');}catch(err){}ovStack.push(id);}
-function hideOv(id){var e=el(id);if(!e)return;e.classList.add('hidden');if(id==='sidebar'||id==='accSidebar')e.classList.remove('open');}
+function openOv(id){
+var e=el(id);if(!e)return;
+e.classList.remove('hidden');
+if(id==='sidebar'||id==='accSidebar')e.classList.add('open');
+if(id==='accSidebar'){var sc=el('accScrim');if(sc)sc.classList.remove('hidden');}
+if(id==='sidebar'){var sc2=el('sbScrim');if(sc2)sc2.classList.remove('hidden');}
+try{history.pushState({qcov:id},'');}catch(err){}
+ovStack.push(id);
+}
+function hideOv(id){
+var e=el(id);if(!e)return;
+e.classList.add('hidden');
+if(id==='sidebar'||id==='accSidebar')e.classList.remove('open');
+if(id==='accSidebar'){var sc=el('accScrim');if(sc)sc.classList.add('hidden');}
+if(id==='sidebar'){var sc2=el('sbScrim');if(sc2)sc2.classList.add('hidden');}
+}
 function closeOv(id){var top=ovStack[ovStack.length-1];if(top===id){history.back();}else{hideOv(id);var i=ovStack.lastIndexOf(id);if(i>=0)ovStack.splice(i,1);}}
 window.addEventListener('popstate',function(){var id=ovStack.pop();if(id)hideOv(id);});
 
@@ -763,7 +779,6 @@ else{fetchRetained(gmetaT(key.slice(4)),1600).then(function(meta){if(meta&&meta.
 renderChatHeader();renderMsgs();updateTicks();
 sendRead(key);
 requestSync(key);
-if(S.view==='home')renderHome();
 }
 function backHome(){
 if(S.conv){unsub(convTopic(S.conv.key));if(S.conv.type==='dm')unsub(callT(S.conv.key));}
@@ -1043,8 +1058,8 @@ on('btnDelAcc','click',armDelete);
 on('btnMenu','click',function(){renderAcc();openOv('accSidebar');});
 on('btnCloseAcc','click',function(){closeOv('accSidebar');});
 on('accScrim','click',function(){closeOv('accSidebar');});
-on('accCard','click',function(){closeOv('accSidebar');openProfile();});
-on('btnAccSettings','click',function(){closeOv('accSidebar');openProfile();});
+on('accCard','click',function(){closeOv('accSidebar');setTimeout(openProfile,80);});
+on('btnAccSettings','click',function(){closeOv('accSidebar');setTimeout(openProfile,80);});
 on('btnAccLogout','click',function(){closeOv('accSidebar');logout();toast('Kamu keluar');});
 on('btnSaveProf','click',saveProfile);
 on('btnRandomAvatar','click',function(){tmpProf.img=null;tmpProf.color=Math.floor(Math.random()*COLORS.length);renderProfModal();});
@@ -1117,4 +1132,4 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 <script src="media.js?v=22"></script>
 </body>
 </html>
-<!-- END index.html v21 -->
+<!-- END index.html v22 -->
