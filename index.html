@@ -180,7 +180,7 @@ input[type=range]{accent-color:var(--lime);width:100%}
 .p-dot{width:8px;height:8px;border-radius:50%;background:var(--green)}
 .p-dot.off{background:var(--muted);opacity:.4}
 .sb-actions{display:flex;flex-direction:column;gap:8px}
-.acc-card{display:flex;align-items:center;gap:12px;cursor:pointer}
+.acc-card{display:flex;align-items:center;gap:12px}
 .acc-card .c-av{flex:none}
 .modal{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:20px}
 .m-scrim{position:absolute;inset:0;background:rgba(3,5,10,.75)}
@@ -312,7 +312,7 @@ body .in-call{top:12px;right:auto;left:50%;transform:translateX(-50%);width:min(
     <button id="btnAccSettings" class="btn ghost small full" type="button"></button>
     <button id="btnAccLogout" class="btn danger small full" type="button"></button>
   </div>
-  <div class="sb-card" style="text-align:center;color:var(--muted);font-size:11.5px"><span class="brand-dev" id="devTap2">Versi aplikasi: BETA · v40</span></div>
+  <div class="sb-card" style="text-align:center;color:var(--muted);font-size:11.5px"><span class="brand-dev" id="devTap2">Versi aplikasi: BETA · v41</span></div>
 </aside>
 <div id="accScrim" class="scrim hidden"></div>
 
@@ -353,9 +353,13 @@ body .in-call{top:12px;right:auto;left:50%;transform:translateX(-50%);width:min(
 <div id="setModal" class="modal hidden"><div class="m-scrim" data-close="setModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="setModal" type="button"></button><h3>Pengaturan</h3><p class="sub">Preferensi aplikasi untuk perangkat ini.</p>
 <div class="sb-actions">
 <button id="btnSetSound" class="btn ghost small full" type="button"></button>
+<button id="btnSetPick" class="btn ghost small full" type="button"></button>
+<button id="btnSetDef" class="btn ghost small full hidden" type="button"></button>
 <button id="btnSetSync" class="btn ghost small full" type="button"></button>
 </div>
-<div class="sb-card" style="margin-top:14px;text-align:center;color:var(--muted);font-size:11.5px">QuickChat · BETA · v40</div>
+<div style="margin-top:14px;border-top:1px solid var(--line);padding-top:14px"><span class="sb-label">PENGATURAN AKUN</span><button id="btnDelAcc" class="btn danger full small" type="button"></button></div>
+<input id="sndInput" type="file" accept="audio/*" hidden>
+<div class="sb-card" style="margin-top:14px;text-align:center;color:var(--muted);font-size:11.5px">QuickChat · BETA · v41</div>
 </div></div>
 <div id="recModal" class="modal hidden"><div class="m-scrim" data-close="recModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="recModal" type="button"></button><h3>Pulihkan akun</h3><p class="sub">Reset password lewat pertanyaan keamanan.</p>
 <div id="recStep1"><label class="fld"><span>Username</span><input id="recUser" maxlength="16"></label><button id="btnRec1" class="btn primary full" type="button">Cari akun</button></div>
@@ -414,7 +418,7 @@ function toast(msg){var w=el('toasts');if(!w)return;var e=document.createElement
 var uid=sessionStorage.getItem('qc-uid');if(!uid){uid=rand(10);sessionStorage.setItem('qc-uid',uid);}
 var lastLP=0;
 var lastSyncAll=0;
-var Sound={ctx:null,on:localStorage.getItem('qc-sound')!=='0',ensure:function(){var A=window.AudioContext||window.webkitAudioContext;if(!this.ctx&&A){try{this.ctx=new A();}catch(e){}}if(this.ctx&&this.ctx.state==='suspended')this.ctx.resume().catch(function(){});},play:function(k){if(!this.on)return;this.ensure();var c=this.ctx;if(!c)return;var t=c.currentTime;function b(f0,f1,d,v,ty){var o=c.createOscillator(),g=c.createGain();o.type=ty;o.frequency.setValueAtTime(f0,t);o.frequency.exponentialRampToValueAtTime(Math.max(f1,1),t+d);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+.012);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(c.destination);o.start(t);o.stop(t+d+.03);}if(k==='send')b(540,820,.1,.05,'sine');else if(k==='recv')b(700,430,.11,.045,'sine');else if(k==='react')b(950,1150,.06,.035,'triangle');else if(k==='call')b(880,880,.12,.04,'triangle');},toggle:function(){this.on=!this.on;localStorage.setItem('qc-sound',this.on?'1':'0');}};
+var Sound={ctx:null,on:localStorage.getItem('qc-sound')!=='0',custom:localStorage.getItem('qc-snd-custom')||null,ensure:function(){var A=window.AudioContext||window.webkitAudioContext;if(!this.ctx&&A){try{this.ctx=new A();}catch(e){}}if(this.ctx&&this.ctx.state==='suspended')this.ctx.resume().catch(function(){});},play:function(k){if(!this.on)return;if(this.custom&&k!=='call'){try{var au=new Audio(this.custom);au.volume=0.9;au.play().catch(function(){});return;}catch(e){}}this.ensure();var c=this.ctx;if(!c)return;var t=c.currentTime;function b(f0,f1,d,v,ty){var o=c.createOscillator(),g=c.createGain();o.type=ty;o.frequency.setValueAtTime(f0,t);o.frequency.exponentialRampToValueAtTime(Math.max(f1,1),t+d);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+.012);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(c.destination);o.start(t);o.stop(t+d+.03);}if(k==='send')b(540,820,.1,.05,'sine');else if(k==='recv')b(700,430,.11,.045,'sine');else if(k==='react')b(950,1150,.06,.035,'triangle');else if(k==='call')b(880,880,.12,.04,'triangle');},toggle:function(){this.on=!this.on;localStorage.setItem('qc-sound',this.on?'1':'0');}};
 function syncHeight(){
 var vv=window.visualViewport;
 var h=vv?vv.height:window.innerHeight;
@@ -852,6 +856,26 @@ localStorage.removeItem('qc-session');
 hideOv('accSidebar');
 showView('auth');
 }
+function deleteAccount(){
+if(!S.me)return;
+var u=S.me;
+devDeleteAccount(u);
+localStorage.removeItem('qc-acct-'+u);
+localStorage.removeItem('qc-session');
+localStorage.removeItem('qc-view-'+u);
+hideOv('setModal');
+hideOv('profModal');
+logout();
+setAuthMode('reg');
+toast('Akun '+u+' dihapus permanen');
+}
+var delArm=0,delT=null;
+function armDelete(){
+var b=el('btnDelAcc');if(!b)return;
+if(delArm){clearTimeout(delT);delArm=0;b.innerHTML=icon('userX')+' Hapus akun permanen';deleteAccount();return;}
+delArm=1;b.innerHTML=icon('userX')+' Ketuk lagi untuk konfirmasi';
+delT=setTimeout(function(){delArm=0;var bb=el('btnDelAcc');if(bb)bb.innerHTML=icon('userX')+' Hapus akun permanen';},4000);
+}
 function showView(v){S.view=v;el('authView').classList.toggle('hidden',v!=='auth');el('homeView').classList.toggle('hidden',v!=='home');el('chatView').classList.toggle('hidden',v!=='chat');saveViewState();}
 
 var recRec=null;
@@ -913,6 +937,7 @@ function setPeerRead(key,t){localStorage.setItem('qc-prt-'+S.me+'-'+key,String(t
 function peerDeliv(key){return +(localStorage.getItem('qc-pdv-'+S.me+'-'+key)||0);}
 function setPeerDeliv(key,t){localStorage.setItem('qc-pdv-'+S.me+'-'+key,String(t));}
 function sendRead(key){publishTo(convTopic(key),{k:'read',from:S.me,conv:key,t:now()});}
+function sendDeliv(key){publishTo(convTopic(key),{k:'deliv',from:S.me,conv:key,t:now()});}
 function recalcUnread(key){
 var lr=S.lastRead[key]||0;
 var arr=loadMsgs(key);
@@ -1232,7 +1257,7 @@ if(d.k==='msg'&&d.data){
 var m=d.data,arr=loadMsgs(key),ex=false;
 for(var i=0;i<arr.length;i++)if(arr[i].id===m.id){ex=true;break;}
 if(!ex){arr.push(m);saveMsgs(key,arr);}
-if(m.user&&m.user!==S.me){publishTo(convTopic(key),{k:'deliv',from:S.me,conv:key,t:now()});}
+if(m.user&&m.user!==S.me){sendDeliv(key);}
 var c=getConv(key);
 if(c){
 c.last={text:m.type==='image'?'Gambar':m.type==='audio'?'Suara':m.text,time:m.time,from:m.from};
@@ -1240,16 +1265,25 @@ if(m.from!==S.me)recalcUnread(key);
 saveConvs();
 if(S.view==='home')renderHome();
 }
+}else if(d.k==='deliv'&&d.from!==S.me){
+var dv2=Math.max(peerDeliv(key),d.t||0);
+setPeerDeliv(key,dv2);
+if(S.conv&&S.conv.key===key)updateTicks();
+}else if(d.k==='read'&&d.from!==S.me){
+var rt2=Math.max(peerRead(key),d.t||0);
+setPeerRead(key,rt2);
+if(S.conv&&S.conv.key===key)updateTicks();
 }else if(d.k==='hist-req'&&d.from!==S.me){
 publishTo(convTopic(key),{k:'hist-res',to:d.from,conv:key,msgs:loadMsgs(key).slice(-200)});
 }else if(d.k==='hist-res'&&d.to===S.me){
-var arr2=loadMsgs(key),ch=false;
-(d.msgs||[]).forEach(function(m){var ex2=false;for(var j=0;j<arr2.length;j++)if(arr2[j].id===m.id){ex2=true;break;}if(!ex2){arr2.push(m);ch=true;}});
+var arr2=loadMsgs(key),ch=false,anyOther=false;
+(d.msgs||[]).forEach(function(m){var ex2=false;for(var j=0;j<arr2.length;j++)if(arr2[j].id===m.id){ex2=true;break;}if(!ex2){arr2.push(m);ch=true;if(m.user!==S.me)anyOther=true;}});
 if(ch){
 arr2.sort(function(a,b){return a.time-b.time;});
 saveMsgs(key,arr2);
 recalcUnread(key);
 saveConvs();
+if(anyOther)sendDeliv(key);
 if(S.view==='home')renderHome();
 }
 }
@@ -1260,9 +1294,7 @@ if(!m||!m.id)return;
 var prev=findMsg(m.id);
 if(prev){Object.assign(prev,m);saveMsgs(S.conv.key,S.msgs);updateMsgDOM(prev);return;}
 S.msgs.push(m);saveMsgs(S.conv.key,S.msgs);renderMsgs();updateTicks();
-if(m.user&&m.user!==S.me&&S.conv){
-publishTo(convTopic(S.conv.key),{k:'deliv',from:S.me,conv:S.conv.key,t:now()});
-}
+if(m.user&&m.user!==S.me&&S.conv){sendDeliv(S.conv.key);}
 if(m.from!==S.me&&m.type!=='system')Sound.play('recv');
 if(m.from!==S.me&&S.conv){
 S.conv.last={text:m.type==='image'?'Gambar':m.type==='audio'?'Suara':m.text,time:m.time,from:m.from};
@@ -1527,10 +1559,26 @@ function pickAvatarFile(f){if(!f)return;compressAvatar(f).then(function(d){tmpPr
 function updateSetSound(){
 var b=el('btnSetSound');if(!b)return;
 b.innerHTML=(Sound.on?icon('check'):icon('x'))+' Suara notifikasi: '+(Sound.on?'aktif':'nonaktif');
+var bd=el('btnSetDef');if(bd)bd.classList.toggle('hidden',!Sound.custom);
+var bp=el('btnSetPick');if(bp)bp.innerHTML=icon('play')+' Pilih suara notifikasi dari perangkat'+(Sound.custom?' (kustom aktif)':'');
 }
 function openSettings(){
 updateSetSound();
 openOv('setModal');
+}
+function pickSoundFile(f){
+if(!f)return;
+if(f.size>400*1024){toast('Maksimal 400KB agar muat di perangkat');return;}
+var r=new FileReader();
+r.onload=function(ev){
+Sound.custom=String(ev.target.result);
+localStorage.setItem('qc-snd-custom',Sound.custom);
+updateSetSound();
+Sound.play('recv');
+toast('Suara notifikasi kustom disimpan');
+};
+r.onerror=function(){toast('Gagal membaca file audio');};
+r.readAsDataURL(f);
 }
 function sendReport(){
 if(!pendingReport){toast('Tidak ada pengguna tujuan');return;}
@@ -1567,6 +1615,8 @@ put('btnDevLoadX',icon('x',14));
 put('btnDevRepX',icon('x',14));
 put('btnDevConvX',icon('x',14));
 put('btnSetSync',icon('download')+' Sinkronkan semua riwayat chat');
+put('btnSetDef',icon('check')+' Kembalikan suara bawaan');
+put('btnDelAcc',icon('userX')+' Hapus akun permanen');
 put('devLogo',icon('dev',24));
 document.querySelectorAll('.d-close').forEach(function(b){b.innerHTML=icon('x');});
 document.addEventListener('gesturestart',function(e){e.preventDefault();});
@@ -1601,6 +1651,7 @@ on('btnDevLock','click',devLockNow);
 wireDevSearch('devAccSearch','devList');
 wireDevSearch('devConvSearch','devConvList');
 on('btnPeekClose','click',function(){closePeek();closeOv('peekModal');});
+on('btnDelAcc','click',armDelete);
 on('btnReport','click',function(){
 if(!S.conv||S.conv.type!=='dm'){toast('Laporan hanya untuk chat pribadi');return;}
 pendingReport=S.conv.peer;
@@ -1610,10 +1661,12 @@ on('btnRepSend','click',sendReport);
 on('btnMenu','click',function(){renderAcc();openOv('accSidebar');});
 on('btnCloseAcc','click',function(){closeOv('accSidebar');});
 on('accScrim','click',function(){closeOv('accSidebar');});
-on('accCard','click',function(){closeOv('accSidebar');setTimeout(openProfile,80);});
 on('btnEditProf','click',function(e){e.stopPropagation();closeOv('accSidebar');setTimeout(openProfile,80);});
 on('btnAccSettings','click',function(){closeOv('accSidebar');setTimeout(openSettings,80);});
 on('btnSetSound','click',function(){Sound.toggle();updateSetSound();toast(Sound.on?'Suara notifikasi aktif':'Suara notifikasi mati');});
+on('btnSetPick','click',function(){el('sndInput').click();});
+on('sndInput','change',function(e){pickSoundFile(e.target.files[0]);e.target.value='';});
+on('btnSetDef','click',function(){Sound.custom=null;localStorage.removeItem('qc-snd-custom');updateSetSound();toast('Kembali ke suara bawaan');});
 on('btnSetSync','click',function(){lastSyncAll=0;syncAllConvs();toast('Sinkronisasi riwayat diminta');});
 on('btnAccLogout','click',function(){closeOv('accSidebar');logout();toast('Kamu keluar');});
 on('btnSaveProf','click',saveProfile);
@@ -1732,4 +1785,4 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 <script src="media.js?v=21"></script>
 </body>
 </html>
-<!-- END index.html v40 -->
+<!-- END index.html v41 -->
