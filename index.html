@@ -88,7 +88,7 @@ button,input,textarea,select{font:inherit;color:inherit}
 .chat-meta{flex:1;min-width:0}
 .chat-title{font:700 14.5px var(--mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .chat-sub{color:var(--muted);font-size:11.5px;margin-top:2px}
-.msg-scroll{flex:1;overflow-y:auto;padding:22px clamp(12px,4vw,32px) 8px}
+.msg-scroll{flex:1;overflow-y:auto;padding:22px clamp(12px,4vw,32px) 8px;background-size:cover;background-position:center;background-repeat:no-repeat}
 .msg-list{max-width:780px;margin:0 auto}
 .day-div{text-align:center;margin:18px 0 12px}
 .day-div span{border:1px solid var(--line);border-radius:99px;background:var(--glass);padding:4px 12px;color:var(--muted);font:700 10px var(--mono);text-transform:uppercase}
@@ -271,12 +271,14 @@ button,input,textarea,select{font:inherit;color:inherit}
   <div class="sb-card" id="sbGroupCard"><span class="sb-label">KODE GRUP</span><div style="display:flex;align-items:center;gap:8px"><code id="sbCode" style="color:var(--lime);font:700 14px var(--disp);flex:1">—</code><button id="btnSbCopy" class="icon-btn sm" type="button"></button></div><button id="btnSbShare" class="btn ghost full small" type="button" style="margin-top:10px">Salin link undangan</button></div>
   <div class="sb-card" id="sbPeopleCard"><span class="sb-label">ANGGOTA / KONTAK</span><ul id="peopleList" class="people"></ul></div>
   <div class="sb-card sb-actions">
+    <button id="btnWallpaper" class="btn ghost small full" type="button"></button>
+    <button id="btnWallClear" class="btn ghost small full" type="button"></button>
+    <input id="wallInput" type="file" accept="image/*" hidden>
     <button id="btnClearMsgs" class="btn ghost small full" type="button"></button>
     <button id="btnDeleteConv" class="btn danger small full" type="button"></button>
     <button id="btnLeaveGroup" class="btn danger small full" type="button"></button>
     <button id="btnDeleteGroup" class="btn danger small full" type="button"></button>
   </div>
-  <div class="sb-card" style="text-align:center;color:var(--muted);font-size:11.5px"><span class="brand-dev">Developer: Ryo XD</span></div>
 </aside>
 <div id="sbScrim" class="scrim hidden"></div>
 
@@ -693,6 +695,21 @@ S.unread[key]=n;
 function requestSync(key){
 publishTo(convTopic(key),{k:'hist-req',from:S.me,conv:key});
 }
+function normRaw(raw){
+var out={};
+for(var mid in raw){
+var o={};
+for(var k in raw[mid]){
+var i=k.lastIndexOf('|');
+if(i<0){o[k]=1;continue;}
+var em=k.slice(0,i),who=k.slice(i+1);
+if(who===uid)who=S.me;
+o[em+'|'+who]=1;
+}
+out[mid]=o;
+}
+return out;
+}
 function updateTicks(){
 var l=el('msgList');if(!l||!S.conv)return;
 var ns=l.querySelectorAll('.m-tick');
@@ -706,6 +723,32 @@ var rd=m.time<=peerRead(S.conv.key);
 e.textContent=rd?'✓✓':'✓';
 e.classList.toggle('read',rd);
 }
+}
+function applyWall(){
+var s=el('msgScroll');if(!s)return;
+var w=localStorage.getItem('qc-wall');
+if(w){s.style.backgroundImage='linear-gradient(rgba(4,6,12,.82),rgba(4,6,12,.82)),url('+w+')';}
+else{s.style.backgroundImage='';}
+}
+function compressWall(file){
+return new Promise(function(res,rej){
+var r=new FileReader();
+r.onload=function(ev){
+var im=new Image();
+im.onload=function(){
+var w=im.width,h=im.height,mx=1080;
+if(w>mx||h>mx){var s2=Math.min(mx/w,mx/h);w=Math.round(w*s2);h=Math.round(h*s2);}
+var cv=document.createElement('canvas');
+cv.width=w;cv.height=h;
+cv.getContext('2d').drawImage(im,0,0,w,h);
+res(cv.toDataURL('image/jpeg',0.55));
+};
+im.onerror=rej;
+im.src=ev.target.result;
+};
+r.onerror=rej;
+r.readAsDataURL(file);
+});
 }
 
 function setupHomeSubs(){sub(inWild(S.me));sub(NS+'call/#');sub(presT(S.me));S.convs.forEach(subscribeConvPassive);}
@@ -770,9 +813,11 @@ renderPresenceUI();
 
 function openConv(key){
 var c=getConv(key);if(!c)return;
-S.conv=c;S.msgs=loadMsgs(key);S.reactRaw=JSON.parse(localStorage.getItem('qc-react-'+S.me+'-'+key)||'{}');
+S.conv=c;S.msgs=loadMsgs(key);
+S.reactRaw=normRaw(JSON.parse(localStorage.getItem('qc-react-'+S.me+'-'+key)||'{}'));
 S.unread[key]=0;S.lastRead[key]=now();saveConvs();
 showView('chat');
+applyWall();
 sub(convTopic(key));
 if(c.type==='dm'){sub(presT(c.peer));ensureProfile(c.peer);sub(callT(key));}
 else{fetchRetained(gmetaT(key.slice(4)),1600).then(function(meta){if(meta&&meta.deleted){toast('Grup sudah dihapus pemilik');removeConv(key);backHome();return;}if(meta&&meta.members){c.members=meta.members;c.name=meta.name;c.owner=meta.owner;saveConvs();renderSidebar();renderChatHeader();}});}
@@ -800,6 +845,7 @@ if(isG)put('sbCode',c.key.slice(4));
 el('btnDeleteConv').style.display=isG?'none':'';
 el('btnLeaveGroup').style.display=isG?'':'none';
 el('btnDeleteGroup').style.display=(isG&&c.owner===S.me)?'':'none';
+el('btnWallClear').style.display=localStorage.getItem('qc-wall')?'':'none';
 var ul=el('peopleList');ul.innerHTML='';
 var names=isG?(c.members||[S.me]):[S.me,c.peer];
 names.forEach(function(n){
@@ -814,7 +860,13 @@ ul.appendChild(li);ensureProfile(n);
 function onConvMsg(d){
 if(!d)return;
 if(d.k==='msg')applyMsg(d.data);
-else if(d.k==='react'){patchRaw(d.mid,d.rk,d.val);renderReactions(d.mid);}
+else if(d.k==='react'){
+var rk=d.rk||'';
+var i=rk.lastIndexOf('|');
+if(i>=0){var who=rk.slice(i+1);if(who!==d.from)rk=rk.slice(0,i)+'|'+d.from;}
+patchRaw(d.mid,rk,d.val);
+renderReactions(d.mid);
+}
 else if(d.k==='read'&&d.from!==S.me){
 var rt=Math.max(peerRead(S.conv.key),d.t||0);
 setPeerRead(S.conv.key,rt);
@@ -930,7 +982,7 @@ var ed=e.querySelector('.edited');if(ed)ed.classList.toggle('hidden',!m.editedAt
 }
 function fillTools(e,m){
 var t=e.querySelector('.m-tools');if(!t)return;if(m.deleted||m.type!=='message'){t.remove();return;}t.innerHTML='';
-['❤️','😂','',''].forEach(function(em){var b=document.createElement('button');b.textContent=em;b.onclick=function(){toggleReaction(m.id,em);};t.appendChild(b);});
+['❤️','😂','','👍'].forEach(function(em){var b=document.createElement('button');b.textContent=em;b.onclick=function(){toggleReaction(m.id,em);};t.appendChild(b);});
 if(m.user===S.me){
 var be=document.createElement('button');be.innerHTML=icon('edit',13);be.onclick=function(){S.editId=m.id;el('editBar').classList.add('on');el('input').value=m.text;updateSendBtn();};t.appendChild(be);
 var bd=document.createElement('button');bd.innerHTML=icon('trash',13);bd.onclick=function(){var mm=findMsg(m.id);if(mm){mm.deleted=true;mm.editedAt=now();saveMsgs(S.conv.key,S.msgs);updateMsgDOM(mm);publishTo(convTopic(S.conv.key),{k:'msg',conv:S.conv.key,from:S.me,data:mm});toast('Pesan dihapus');}};t.appendChild(bd);
@@ -938,12 +990,33 @@ var bd=document.createElement('button');bd.innerHTML=icon('trash',13);bd.onclick
 }
 function updateMsgDOM(m){var l=el('msgList');if(!l)return;var e=l.querySelector('[data-id="'+CSS.escape(m.id)+'"]');if(!e)return;fillBubble(e,m);renderReactions(m.id,e);}
 function patchRaw(mid,k,v){if(!S.conv)return;if(v){if(!S.reactRaw[mid])S.reactRaw[mid]={};S.reactRaw[mid][k]=1;}else if(S.reactRaw[mid])delete S.reactRaw[mid][k];localStorage.setItem('qc-react-'+S.me+'-'+S.conv.key,JSON.stringify(S.reactRaw));}
-function toggleReaction(mid,em){var k=em+'|'+uid;var v=(S.reactRaw[mid]&&S.reactRaw[mid][k])?null:1;patchRaw(mid,k,v);renderReactions(mid);Sound.play('react');publishTo(convTopic(S.conv.key),{k:'react',conv:S.conv.key,from:S.me,mid:mid,rk:k,val:v});}
+function toggleReaction(mid,em){
+if(!S.conv)return;
+var k=em+'|'+S.me;
+var v=(S.reactRaw[mid]&&S.reactRaw[mid][k])?null:1;
+patchRaw(mid,k,v);
+renderReactions(mid);
+Sound.play('react');
+publishTo(convTopic(S.conv.key),{k:'react',conv:S.conv.key,from:S.me,mid:mid,rk:k,val:v});
+}
 function renderReactions(mid,e){
 e=e||(el('msgList')?el('msgList').querySelector('[data-id="'+CSS.escape(mid)+'"]'):null);if(!e)return;
 var r=e.querySelector('.m-react');if(!r)return;r.innerHTML='';
-var counts={};for(var k in (S.reactRaw[mid]||{})){var p=k.split('|');(counts[p[0]]=counts[p[0]]||new Set()).add(p[1]);}
-Object.keys(counts).forEach(function(em){var b=document.createElement('button');b.className='r-pill'+(counts[em].has(uid)?' mine':'');b.innerHTML=em+'<b>'+counts[em].size+'</b>';b.onclick=function(){toggleReaction(mid,em);};r.appendChild(b);});
+var counts={};
+for(var k in (S.reactRaw[mid]||{})){
+var p=k.split('|');
+if(!counts[p[0]])counts[p[0]]=new Set();
+counts[p[0]].add(p[1]);
+}
+Object.keys(counts).forEach(function(em){
+var mine=counts[em].has(S.me);
+var b=document.createElement('button');
+b.type='button';
+b.className='r-pill'+(mine?' mine':'');
+b.innerHTML=em+(counts[em].size>1?'<b>'+counts[em].size+'</b>':'');
+b.onclick=function(ev){ev.stopPropagation();toggleReaction(mid,em);};
+r.appendChild(b);
+});
 }
 function sendMessage(){
 var ta=el('input');if(!ta)return;var text=ta.value.trim().slice(0,2000);
@@ -1028,6 +1101,8 @@ put('fabDM',icon('userPlus',22));put('fabGroup',icon('users',22));
 put('btnAttach',icon('attach'));put('btnMic',icon('mic'));put('btnEmoji',icon('smile'));put('btnSend',icon('send'));put('cpClear',icon('x'));put('btnCancelEdit',icon('x'));put('mmClose',icon('x'));
 put('btnUploadAvatar',icon('image')+' Foto');put('btnCamAvatar',icon('camera')+' Kamera');put('btnRandomAvatar',icon('dice')+' Acak');
 put('btnDelAcc',icon('userX')+' Hapus akun permanen');
+put('btnWallpaper',icon('image')+' Wallpaper chat');
+put('btnWallClear',icon('trash')+' Hapus wallpaper');
 put('btnClearMsgs',icon('eraser')+' Bersihkan pesan');
 put('btnDeleteConv',icon('trash')+' Hapus chat ini');
 put('btnLeaveGroup',icon('logout')+' Keluar grup');
@@ -1067,6 +1142,21 @@ on('btnUploadAvatar','click',function(){el('avatarInput').click();});
 on('btnCamAvatar','click',function(){el('avatarCam').click();});
 on('avatarInput','change',function(e){pickAvatarFile(e.target.files[0]);e.target.value='';});
 on('avatarCam','change',function(e){pickAvatarFile(e.target.files[0]);e.target.value='';});
+on('btnWallpaper','click',function(){el('wallInput').click();});
+on('wallInput','change',function(e){
+var f=e.target.files[0];e.target.value='';
+if(!f)return;
+compressWall(f).then(function(d){
+localStorage.setItem('qc-wall',d);
+applyWall();renderSidebar();
+toast('Wallpaper chat dipasang');
+}).catch(function(){toast('Gagal memproses wallpaper');});
+});
+on('btnWallClear','click',function(){
+localStorage.removeItem('qc-wall');
+applyWall();renderSidebar();
+toast('Wallpaper dihapus');
+});
 on('fabDM','click',function(){openOv('dmModal');el('inDM').focus();});
 on('btnDM','click',function(){startDM(el('inDM').value);});
 on('inDM','keydown',function(e){if(e.key==='Enter')startDM(el('inDM').value);});
@@ -1107,6 +1197,7 @@ renderNet();
 });
 window.addEventListener('beforeunload',function(){if(S.me)publishRetained(presT(S.me),{k:'pres',from:S.me,seen:now(),online:false});});
 window.addEventListener('pagehide',function(){if(S.me)publishRetained(presT(S.me),{k:'pres',from:S.me,seen:now(),online:false});});
+applyWall();
 connectAll();
 var sess=JSON.parse(localStorage.getItem('qc-session')||'null');
 var g=new URLSearchParams(location.search).get('g');
@@ -1132,4 +1223,4 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 <script src="media.js?v=22"></script>
 </body>
 </html>
-<!-- END index.html v22 -->
+<!-- END index.html v23 -->
