@@ -91,8 +91,8 @@ input[type=range]{accent-color:var(--lime);width:100%}
 .fab.alt{background:rgba(148,170,220,.12);border:1px solid var(--line);color:var(--cyan);box-shadow:none}
 .fab svg{width:22px;height:22px}
 .chat-top{display:flex;align-items:center;gap:10px;padding:10px clamp(10px,2vw,18px);border-bottom:1px solid var(--line);background:rgba(8,12,22,.85);backdrop-filter:blur(18px);z-index:20;flex:none}
-.chat-av{width:40px;height:40px;flex:none;border-radius:12px;display:grid;place-items:center;color:#081018;font-weight:800;font-size:13px}
-.chat-av svg{width:22px;height:22px}
+.chat-av{width:40px;height:40px;flex:none;border-radius:12px;display:grid;place-items:center;color:#081018;font-weight:800;font-size:13px;overflow:hidden}
+.chat-av img,.m-av img,.p-av img,.c-av img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit}
 .chat-meta{flex:1;min-width:0}
 .chat-title{font:700 14.5px var(--mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .chat-sub{color:var(--muted);font-size:11.5px;margin-top:2px}
@@ -931,7 +931,7 @@ S.conv=null;S.msgs=[];showView('home');renderHome();
 function renderChatHeader(){
 var c=S.conv;if(!c)return;
 var host=el('chatAv');
-if(c.type==='dm'){var node=avNode(c.peer,40);node.id='chatAv';node.className='chat-av';host.replaceWith(node);put('chatTitle',displayName(c.peer));put('chatSub',isOnline(c.peer)?'online':'offline');el('btnCall').style.display='';el('btnCallAudio').style.display='';}
+if(c.type==='dm'){var node=avNode(c.peer,40);node.id='chatAv';node.classList.remove('c-av');node.classList.add('chat-av');host.replaceWith(node);put('chatTitle',displayName(c.peer));put('chatSub',isOnline(c.peer)?'online':'offline');el('btnCall').style.display='';el('btnCallAudio').style.display='';}
 else{var d2=document.createElement('div');d2.id='chatAv';d2.className='chat-av';d2.style.background='linear-gradient(145deg,rgba(255,255,255,.25),rgba(0,0,0,.1)),'+colorOf(c.key);d2.textContent=initials(c.name);host.replaceWith(d2);put('chatTitle',c.name);put('chatSub',(c.members?c.members.length:1)+' anggota');el('btnCall').style.display='none';el('btnCallAudio').style.display='none';}
 renderSidebar();
 }
@@ -1442,7 +1442,7 @@ window.QC={get me(){return S.me;},get uid(){return uid;},get S(){return S;},icon
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
 </script>
-<script src="media.js?v=31"></script>
+<script src="media.js?v=33"></script>
 </body>
 </html>
-<!-- END index.html v31 -->
+<!-- END index.html v32 -->
