@@ -21,6 +21,8 @@ input[type=range]{accent-color:var(--lime);width:100%}
 .hidden{display:none!important}
 .msg{-webkit-user-select:none;user-select:none}
 .m-bubble img{-webkit-touch-callout:none}
+.ios .blob{display:none}
+.ios .top,.ios .chat-top,.ios .composer,.ios .toast,.ios .auth-card,.ios .sidebar{backdrop-filter:none;-webkit-backdrop-filter:none}
 .bg{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
 .blob{position:absolute;border-radius:50%;filter:blur(90px)}
 .b1{width:54vmax;height:54vmax;left:-16vmax;top:-20vmax;background:radial-gradient(circle,rgba(200,240,75,.15),transparent 66%);animation:d1 26s infinite alternate}
@@ -921,8 +923,7 @@ sub(convTopic(key));
 if(c.type==='dm'){sub(presT(c.peer));ensureProfile(c.peer);sub(callT(key));}
 else{fetchRetained(gmetaT(key.slice(4)),1600).then(function(meta){if(meta&&meta.deleted){toast('Grup sudah dihapus pemilik');removeConv(key);backHome();return;}if(meta&&meta.members){c.members=meta.members;c.name=meta.name;c.owner=meta.owner;saveConvs();renderSidebar();renderChatHeader();}});}
 renderChatHeader();renderMsgs();updateTicks();
-sendRead(key);
-requestSync(key);
+setTimeout(function(){sendRead(key);requestSync(key);},60);
 }
 function backHome(){
 if(S.conv){unsub(convTopic(S.conv.key));if(S.conv.type==='dm')unsub(callT(S.conv.key));}
@@ -1114,6 +1115,7 @@ var t=e.querySelector('.m-tools');if(!t)return;
 if(m.deleted||m.type!=='message'){t.remove();return;}
 t.innerHTML='';
 ['❤️','😂',''].forEach(function(em){
+if(!em)return;
 var b=document.createElement('button');
 b.type='button';
 b.textContent=em;
@@ -1286,6 +1288,8 @@ toast('Profil disimpan');
 function pickAvatarFile(f){if(!f)return;compressAvatar(f).then(function(d){tmpProf.img=d;renderProfModal();}).catch(function(){toast('Gagal memproses foto');});}
 
 function init(){
+var IS_IOS=/iP(hone|ad|od)|Macintosh/i.test(navigator.userAgent)&&('ontouchend' in window);
+if(IS_IOS)document.body.classList.add('ios');
 var qs=el('inQ');if(qs){qs.innerHTML='';QUESTIONS.forEach(function(q,i){var o=document.createElement('option');o.value=i;o.textContent=q;qs.appendChild(o);});}
 put('btnMenu',icon('menu'));put('btnCloseAcc',icon('x'));put('btnCloseSb',icon('x'));
 put('btnAccSettings',icon('person')+' Pengaturan akun');
@@ -1366,7 +1370,7 @@ on('fabGroup','click',function(){openOv('grpModal');});
 on('btnGrp','click',function(){createGroup(el('inGrp').value);});
 on('btnGrpJoin','click',function(){joinGroup(el('inGrpCode').value);});
 on('btnBack','click',backHome);
-on('btnInfo','click',function(){openOv('sidebar');});
+on('btnInfo','click',function(){renderSidebar();openOv('sidebar');});
 on('btnCloseSb','click',function(){closeOv('sidebar');});
 on('sbScrim','click',function(){closeOv('sidebar');});
 on('btnSbCopy','click',function(){if(S.conv&&S.conv.type==='group'){var c=S.conv.key.slice(4);if(navigator.clipboard)navigator.clipboard.writeText(c);toast('Kode grup disalin: '+c);}});
@@ -1442,7 +1446,7 @@ window.QC={get me(){return S.me;},get uid(){return uid;},get S(){return S;},icon
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
 </script>
-<script src="media.js?v=34"></script>
+<script src="media.js?v=21"></script>
 </body>
 </html>
-<!-- END index.html v32 -->
+<!-- END index.html v33 -->
