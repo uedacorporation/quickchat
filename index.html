@@ -39,6 +39,7 @@ input[type=range]{accent-color:var(--lime);width:100%}
 .btn.full{width:100%}
 .btn.small{padding:9px 14px;font-size:13px;border-radius:11px}
 .btn svg{width:16px;height:16px}
+.sidebar .sb-actions .btn{justify-content:flex-start;text-align:left}
 .icon-btn{position:relative;width:38px;height:38px;flex:none;display:grid;place-items:center;border:1px solid var(--line);border-radius:11px;background:var(--glass);color:var(--muted);cursor:pointer}
 .icon-btn.sm{width:30px;height:30px;border-radius:9px}
 .icon-btn svg{width:18px;height:18px}.icon-btn.sm svg{width:15px;height:15px}
@@ -266,7 +267,7 @@ body .big-av,body .ic-av{border-radius:50%}
 <main id="homeView" class="view hidden">
   <div class="top">
     <button id="btnMenu" class="icon-btn" type="button" aria-label="Menu akun"></button>
-    <div class="brand" style="margin:0"><svg viewBox="0 0 48 48"><defs><linearGradient id="lg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#C8F04B"/><stop offset="1" stop-color="#53D8FF"/></linearGradient></defs><rect x="2" y="2" width="44" height="44" rx="13" fill="url(#lg2)"/><path d="M14 11h20a7 7 0 0 1 7 7v9a7 7 0 0 1-7 7h-9l-8 7v-7h-3a7 7 0 0 1-7-7v-9a7 7 0 0 1 7-7z" fill="#06090F"/><path d="M27 15l-8 11h5l-2 8 8-11h-5l2-8z" fill="#C8F04B"/></svg><div><div class="wordmark">Quick<b>Chat</b></div><div class="brand-dev">Developer: Ryo XD</div></div></div>
+    <div class="brand" style="margin:0"><svg viewBox="0 0 48 48"><defs><linearGradient id="lg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#C8F04B"/><stop offset="1" stop-color="#53D8FF"/></linearGradient></defs><rect x="2" y="2" width="44" height="44" rx="13" fill="url(#lg2)"/><path d="M14 11h20a7 7 0 0 1 7 7v9a7 7 0 0 1-7 7h-9l-8 7v-7h-3a7 7 0 0 1-7-7v-9a7 7 0 0 1 7-7z" fill="#06090F"/><path d="M27 15l-8 11h5l-2 8 8-11h-5l2-8z" fill="#C8F04B"/></svg><div class="wordmark">Quick<b>Chat</b></div></div>
     <span id="netChipHome" class="net-chip wait small"><i></i>Menyambung</span>
   </div>
   <div id="convList" class="home-list"></div>
@@ -285,16 +286,16 @@ body .big-av,body .ic-av{border-radius:50%}
     <button id="btnCall" class="icon-btn" type="button" aria-label="Video call"></button>
     <button id="btnInfo" class="icon-btn" type="button" aria-label="Info"></button>
   </div>
-  <div id="offlineBar" class="sys-pill hidden"><span>Offline — pesan tersimpan & terkirim saat online</span></div>
+  <div id="offlineBar" class="sys-pill hidden"><span id="offlineTxt">Offline — pesan tersimpan & terkirim saat online</span></div>
   <div id="msgScroll" class="msg-scroll"><div id="msgList" class="msg-list"></div></div>
   <div class="typing-row" id="typingRow"></div>
-  <div id="editBar" class="compose-preview"><span style="flex:1">Mengedit pesan</span><button id="btnCancelEdit" class="icon-btn sm" type="button"></button></div>
+  <div id="editBar" class="compose-preview"><span id="editLbl" style="flex:1">Mengedit pesan</span><button id="btnCancelEdit" class="icon-btn sm" type="button"></button></div>
   <div id="composePreview" class="compose-preview"><img id="cpImg" alt=""><span id="cpLabel">Gambar siap dikirim</span><button id="cpClear" class="icon-btn sm" type="button"></button></div>
   <div class="composer" id="composer">
     <button id="btnAttach" class="attach-btn" type="button" aria-label="Lampiran"></button>
     <button id="btnEmoji" class="icon-btn" type="button" aria-label="Emoji"></button>
     <div id="emojiPop" class="emoji-pop hidden"></div>
-    <div class="rec-indicator" id="recIndicator"><span class="rec-dot"></span><span id="recTime">0:00</span><span style="flex:1"></span><span style="font-size:11px;color:var(--muted);font-weight:500">Ketuk tombol mic lagi untuk kirim</span></div>
+    <div class="rec-indicator" id="recIndicator"><span class="rec-dot"></span><span id="recTime">0:00</span><span style="flex:1"></span><span id="recHint" style="font-size:11px;color:var(--muted);font-weight:500">Ketuk tombol mic lagi untuk kirim</span></div>
     <textarea id="input" rows="1" maxlength="2000" placeholder="Tulis pesan…"></textarea>
     <button id="btnMic" class="mic-btn" type="button" aria-label="Rekam"></button>
     <button id="btnSend" class="send-btn" type="button" disabled aria-label="Kirim"></button>
@@ -315,14 +316,14 @@ body .big-av,body .ic-av{border-radius:50%}
     <button id="btnLang" class="btn ghost small full" type="button"></button>
     <button id="btnAccLogout" class="btn danger small full" type="button"></button>
   </div>
-  <div class="sb-card" style="text-align:center;color:var(--muted);font-size:11.5px"><span class="brand-dev" id="devTap2">Versi aplikasi: BETA · v45</span></div>
+  <div class="sb-card" style="text-align:center;color:var(--muted);font-size:11.5px"><span class="brand-dev" id="devTap2">Versi aplikasi: BETA · v46</span></div>
 </aside>
 <div id="accScrim" class="scrim hidden"></div>
 
 <aside id="sidebar" class="sidebar">
   <div style="display:flex;align-items:center;justify-content:space-between"><b id="sbTitle">Info</b><button id="btnCloseSb" class="icon-btn sm" type="button"></button></div>
-  <div class="sb-card" id="sbGroupCard"><span class="sb-label">KODE GRUP</span><div style="display:flex;align-items:center;gap:8px"><code id="sbCode" style="color:var(--lime);font:700 14px var(--disp);flex:1">—</code><button id="btnSbCopy" class="icon-btn sm" type="button"></button></div><button id="btnSbShare" class="btn ghost full small" type="button" style="margin-top:10px">Salin link undangan</button></div>
-  <div class="sb-card" id="sbPeopleCard"><span class="sb-label">ANGGOTA / KONTAK</span><ul id="peopleList" class="people"></ul></div>
+  <div class="sb-card" id="sbGroupCard"><span class="sb-label" id="sbCodeLbl">KODE GRUP</span><div style="display:flex;align-items:center;gap:8px"><code id="sbCode" style="color:var(--lime);font:700 14px var(--disp);flex:1">—</code><button id="btnSbCopy" class="icon-btn sm" type="button"></button></div><button id="btnSbShare" class="btn ghost full small" type="button" style="margin-top:10px">Salin link undangan</button></div>
+  <div class="sb-card" id="sbPeopleCard"><span class="sb-label" id="sbPeopleLbl">ANGGOTA / KONTAK</span><ul id="peopleList" class="people"></ul></div>
   <div class="sb-card sb-actions">
     <button id="btnWallpaper" class="btn ghost small full" type="button"></button>
     <button id="btnWallClear" class="btn ghost small full" type="button"></button>
@@ -339,7 +340,7 @@ body .big-av,body .ic-av{border-radius:50%}
 <div id="dmModal" class="modal hidden"><div class="m-scrim" data-close="dmModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="dmModal" type="button"></button><h3 id="dmTit">Chat pribadi baru</h3><p class="sub" id="dmSub">Masukkan nama pengguna tujuan yang sudah terdaftar.</p><label class="fld"><span id="dmUserLbl">Username</span><input id="inDM" maxlength="16" placeholder="username teman"></label><button id="btnDM" class="btn primary full" type="button">Mulai chat</button></div></div>
 <div id="grpModal" class="modal hidden"><div class="m-scrim" data-close="grpModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="grpModal" type="button"></button><h3 id="grpTit">Buat / gabung grup</h3><p class="sub" id="grpSub">Buat grup baru atau masuk pakai kode undangan.</p><label class="fld"><span id="grpNameLbl">Nama grup baru</span><input id="inGrp" maxlength="24" placeholder="contoh: Tim Kelas"></label><button id="btnGrp" class="btn primary full" type="button">Buat grup</button><div style="margin:12px 0;text-align:center;color:var(--muted);font-size:12px" id="grpOr">— atau —</div><label class="fld"><span id="grpCodeLbl">Kode undangan grup</span><input id="inGrpCode" maxlength="32" placeholder="XXX-XXX-XXX"></label><button id="btnGrpJoin" class="btn ghost full" type="button">Gabung grup</button></div></div>
 <div id="reportModal" class="modal hidden"><div class="m-scrim" data-close="reportModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="reportModal" type="button"></button><h3 id="repTit">Laporkan pengguna</h3><p class="sub" id="repSub">Laporan beserta nama pelapor masuk ke panel developer.</p>
-<label class="fld"><span id="repReasonLbl">Alasan</span><select id="repReason"><option>Spam / iklan berulang</option><option>Penipuan / phishing</option><option>Konten tidak pantas</option><option>Pelecehan / ancaman</option><option>Pelanggaran lain</option></select></label>
+<label class="fld"><span id="repReasonLbl">Alasan</span><select id="repReason"></select></label>
 <label class="fld"><span id="repNoteLbl">Catatan (opsional)</span><input id="repNote" maxlength="140" placeholder="keterangan singkat"></label>
 <button id="btnRepSend" class="btn danger full" type="button">Kirim laporan</button>
 </div></div>
@@ -359,7 +360,7 @@ body .big-av,body .ic-av{border-radius:50%}
 <button id="btnSetSync" class="btn ghost small full" type="button"></button>
 <button id="btnDelAcc" class="btn danger small full" type="button"></button>
 </div>
-<div class="sb-card" style="margin-top:14px;text-align:center;color:var(--muted);font-size:11.5px" id="setCard">QuickChat · BETA · v45</div>
+<div class="sb-card" style="margin-top:14px;text-align:center;color:var(--muted);font-size:11.5px" id="setCard">QuickChat · BETA · v46</div>
 </div></div>
 <div id="passModal" class="modal hidden"><div class="m-scrim" data-close="passModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="passModal" type="button"></button><h3 id="passTit">Ubah kata sandi</h3><p class="sub" id="passSub">Verifikasi kata sandi lama lalu setel kata sandi baru.</p>
 <label class="fld"><span id="passOldLbl">Kata sandi lama</span><input id="inOldPass" type="password" maxlength="64" placeholder="••••••"></label>
@@ -380,8 +381,8 @@ body .big-av,body .ic-av{border-radius:50%}
 </div></div>
 <div id="langModal" class="modal hidden"><div class="m-scrim" data-close="langModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="langModal" type="button"></button><h3 id="langTit">Bahasa</h3><p class="sub" id="langSub">Pilih bahasa antarmuka aplikasi.</p>
 <div class="sb-actions">
-<button id="btnLangId" class="btn ghost small full" type="button">🇮🇩 Indonesia</button>
-<button id="btnLangEn" class="btn ghost small full" type="button">🇬🇧 English</button>
+<button id="btnLangId" class="btn ghost small full" type="button">Indonesia</button>
+<button id="btnLangEn" class="btn ghost small full" type="button">English</button>
 </div>
 </div></div>
 <div id="recModal" class="modal hidden"><div class="m-scrim" data-close="recModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="recModal" type="button"></button><h3 id="recTit">Pulihkan akun</h3><p class="sub" id="recSub">Reset password lewat pertanyaan keamanan.</p>
@@ -411,13 +412,18 @@ body .big-av,body .ic-av{border-radius:50%}
 (function(){
 'use strict';
 var DEV_PASS='ryoxd666#';
-var APP_VER='v45';
+var APP_VER='v46';
 var lang=localStorage.getItem('qc-lang')||'id';
+var REASONS={
+id:['Spam / iklan berulang','Penipuan / phishing','Konten tidak pantas','Pelecehan / ancaman','Pelanggaran lain'],
+en:['Spam / repeated ads','Scam / phishing','Inappropriate content','Harassment / threats','Other violation']
+};
 var T={
-id:{auth_h_login:'Masuk',auth_h_reg:'Daftar akun',auth_sub:'Chat lintas perangkat — pribadi & grup. Cukup nama pengguna + password.',tab_login:'Masuk',tab_reg:'Daftar',fld_user:'Nama pengguna',fld_pass:'Password',fld_pass2:'Ulangi password',fld_q:'Pertanyaan keamanan',fld_a:'Jawaban (untuk pemulihan)',btn_forgot:'Lupa password / username?',home_empty_b:'Belum ada chat',home_empty_t:'Ketuk + untuk chat pribadi atau buat/grup gabung.',sb_settings:'Pengaturan akun',sb_notif:'Notifikasi',sb_lang:'Bahasa',sb_logout:'Keluar',ver_label:'Versi aplikasi',set_title:'Pengaturan',set_sub:'Akun & preferensi perangkat ini.',set_pass:'Ubah kata sandi',set_sync:'Sinkronkan semua riwayat chat',set_del:'Hapus akun permanen',set_del_c:'Ketuk lagi untuk konfirmasi',not_title:'Notifikasi',not_sub:'Suara & preferensi notifikasi perangkat ini.',not_on:'Suara notifikasi: aktif',not_off:'Suara notifikasi: nonaktif',not_dm:'Suara chat pribadi: ',not_grp:'Suara grup: ',not_test:'Uji suara notifikasi',not_reset:'Kembalikan semua ke bawaan',not_custom:'kustom',not_def:'bawaan',not_card:'Suara disimpan lokal di perangkat ini',pass_title:'Ubah kata sandi',pass_sub:'Verifikasi kata sandi lama lalu setel kata sandi baru.',pass_old:'Kata sandi lama',pass_new:'Kata sandi baru',pass_new2:'Ulangi kata sandi baru',pass_btn:'Ganti kata sandi',prof_title:'Edit profil',prof_sub:'Atur foto, nama tampilan, dan warna avatar.',prof_foto:'Foto',prof_kam:'Kamera',prof_acak:'Acak',prof_name:'Nama tampilan',prof_save:'Simpan profil',prof_note:'Avatar tampil di chat & kontak',info_wall:'Wallpaper chat',info_wallclear:'Hapus wallpaper',info_clear:'Bersihkan pesan',info_delconv:'Hapus chat ini',info_leave:'Keluar grup',info_delgrp:'Hapus grup (semua anggota)',info_report:'Laporkan pengguna',info_share:'Salin link undangan',comp_ph:'Tulis pesan…',rec_title:'Pulihkan akun',rec_sub:'Reset password lewat pertanyaan keamanan.',rec_u:'Username',rec_a:'Jawaban keamanan',rec_p1:'Password baru',rec_p2:'Ulangi password baru',rec_b1:'Cari akun',rec_b2:'Verifikasi',rec_b3:'Ganti password',wall_title:'Edit wallpaper',wall_sub:'Atur kegelapan & besar-kecil gambar, preview vertikal seperti layar chat.',wall_dark:'Kegelapan — ',wall_zoom:'Ukuran gambar — ',wall_save:'Simpan wallpaper',rep_title:'Laporkan pengguna',rep_sub:'Laporan beserta nama pelapor masuk ke panel developer.',rep_reason:'Alasan',rep_note:'Catatan (opsional)',rep_send:'Kirim laporan',dm_title:'Chat pribadi baru',dm_sub:'Masukkan nama pengguna tujuan yang sudah terdaftar.',dm_u:'Username',dm_btn:'Mulai chat',grp_title:'Buat / gabung grup',grp_sub:'Buat grup baru atau masuk pakai kode undangan.',grp_name:'Nama grup baru',grp_btn:'Buat grup',grp_or:'— atau —',grp_code:'Kode undangan grup',grp_join:'Gabung grup',dev_sub:'Monitoring & kontrol penuh',dev_lock:'Password developer',dev_unlock:'Buka panel',dev_s1:'AKUN & BAN',dev_s2:'LAPORAN MASUK',dev_s3:'MONITOR CHAT',dev_s4:'DATABASE PEMULIHAN (TERENKRIPSI)',dev_load:'Muat daftar akun & status ban',dev_rep:'Muat laporan pengguna',dev_conv:'Muat daftar percakapan',dev_db:'Muat & simpan database ke perangkat ini',dev_copy:'Salin database',dev_lockbtn:'Kunci panel developer',dev_search_u:'Cari username…',dev_search_c:'Cari percakapan…',peek_close:'Tutup monitor',lang_title:'Bahasa',lang_sub:'Pilih bahasa antarmuka aplikasi.',toast_lang:'Bahasa diubah'},
-en:{auth_h_login:'Sign in',auth_h_reg:'Create account',auth_sub:'Cross-device chat — private & group. Just username + password.',tab_login:'Log in',tab_reg:'Sign up',fld_user:'Username',fld_pass:'Password',fld_pass2:'Repeat password',fld_q:'Security question',fld_a:'Answer (for recovery)',btn_forgot:'Forgot password / username?',home_empty_b:'No chats yet',home_empty_t:'Tap + for a private chat or create/join a group.',sb_settings:'Account settings',sb_notif:'Notifications',sb_lang:'Language',sb_logout:'Log out',ver_label:'App version',set_title:'Settings',set_sub:'Account & this device preferences.',set_pass:'Change password',set_sync:'Sync all chat history',set_del:'Delete account permanently',set_del_c:'Tap again to confirm',not_title:'Notifications',not_sub:'Sound & notification preferences for this device.',not_on:'Notification sound: on',not_off:'Notification sound: off',not_dm:'Private chat sound: ',not_grp:'Group sound: ',not_test:'Test notification sound',not_reset:'Reset all to default',not_custom:'custom',not_def:'default',not_card:'Sounds are stored locally on this device',pass_title:'Change password',pass_sub:'Verify your old password then set a new one.',pass_old:'Old password',pass_new:'New password',pass_new2:'Repeat new password',pass_btn:'Change password',prof_title:'Edit profile',prof_sub:'Set photo, display name, and avatar color.',prof_foto:'Photo',prof_kam:'Camera',prof_acak:'Random',prof_name:'Display name',prof_save:'Save profile',prof_note:'Avatar shows in chats & contacts',info_wall:'Chat wallpaper',info_wallclear:'Remove wallpaper',info_clear:'Clear messages',info_delconv:'Delete this chat',info_leave:'Leave group',info_delgrp:'Delete group (all members)',info_report:'Report user',info_share:'Copy invite link',comp_ph:'Type a message…',rec_title:'Recover account',rec_sub:'Reset password via security question.',rec_u:'Username',rec_a:'Security answer',rec_p1:'New password',rec_p2:'Repeat new password',rec_b1:'Find account',rec_b2:'Verify',rec_b3:'Change password',wall_title:'Edit wallpaper',wall_sub:'Adjust darkness & zoom, vertical preview like the chat screen.',wall_dark:'Darkness — ',wall_zoom:'Image size — ',wall_save:'Save wallpaper',rep_title:'Report user',rep_sub:'The report plus reporter name goes to the developer panel.',rep_reason:'Reason',rep_note:'Note (optional)',rep_send:'Send report',dm_title:'New private chat',dm_sub:'Enter the registered username of the recipient.',dm_u:'Username',dm_btn:'Start chat',grp_title:'Create / join group',grp_sub:'Create a new group or join with an invite code.',grp_name:'New group name',grp_btn:'Create group',grp_or:'— or —',grp_code:'Group invite code',grp_join:'Join group',dev_sub:'Monitoring & full control',dev_lock:'Developer password',dev_unlock:'Open panel',dev_s1:'ACCOUNTS & BANS',dev_s2:'INCOMING REPORTS',dev_s3:'CHAT MONITOR',dev_s4:'RECOVERY DATABASE (ENCRYPTED)',dev_load:'Load accounts & ban status',dev_rep:'Load user reports',dev_conv:'Load conversations',dev_db:'Load & save database to this device',dev_copy:'Copy database',dev_lockbtn:'Lock developer panel',dev_search_u:'Search username…',dev_search_c:'Search conversation…',peek_close:'Close monitor',lang_title:'Language',lang_sub:'Choose the app interface language.',toast_lang:'Language changed'}
+id:{auth_h_login:'Masuk',auth_h_reg:'Daftar akun',auth_sub:'Chat lintas perangkat — pribadi & grup. Cukup nama pengguna + password.',tab_login:'Masuk',tab_reg:'Daftar',fld_user:'Nama pengguna',fld_pass:'Password',fld_pass2:'Ulangi password',fld_q:'Pertanyaan keamanan',fld_a:'Jawaban (untuk pemulihan)',btn_forgot:'Lupa password / username?',home_empty_b:'Belum ada chat',home_empty_t:'Ketuk + untuk chat pribadi atau buat/gabung grup.',sb_settings:'Pengaturan akun',sb_notif:'Notifikasi',sb_lang:'Bahasa',sb_logout:'Keluar',ver_label:'Versi aplikasi',set_title:'Pengaturan',set_sub:'Akun & preferensi perangkat ini.',set_pass:'Ubah kata sandi',set_sync:'Sinkronkan semua riwayat chat',set_del:'Hapus akun permanen',set_del_c:'Ketuk lagi untuk konfirmasi',not_title:'Notifikasi',not_sub:'Suara & preferensi notifikasi perangkat ini.',not_on:'Suara notifikasi: aktif',not_off:'Suara notifikasi: nonaktif',not_dm:'Suara chat pribadi: ',not_grp:'Suara grup: ',not_test:'Uji suara notifikasi',not_reset:'Kembalikan semua ke bawaan',not_custom:'kustom',not_def:'bawaan',not_card:'Suara disimpan lokal di perangkat ini',pass_title:'Ubah kata sandi',pass_sub:'Verifikasi kata sandi lama lalu setel kata sandi baru.',pass_old:'Kata sandi lama',pass_new:'Kata sandi baru',pass_new2:'Ulangi kata sandi baru',pass_btn:'Ganti kata sandi',prof_title:'Edit profil',prof_sub:'Atur foto, nama tampilan, dan warna avatar.',prof_foto:'Foto',prof_kam:'Kamera',prof_acak:'Acak',prof_name:'Nama tampilan',prof_save:'Simpan profil',prof_note:'Avatar tampil di chat & kontak',info_wall:'Wallpaper chat',info_wallclear:'Hapus wallpaper',info_clear:'Bersihkan pesan',info_delconv:'Hapus chat ini',info_leave:'Keluar grup',info_delgrp:'Hapus grup (semua anggota)',info_report:'Laporkan pengguna',info_share:'Salin link undangan',comp_ph:'Tulis pesan…',rec_title:'Pulihkan akun',rec_sub:'Reset password lewat pertanyaan keamanan.',rec_u:'Username',rec_a:'Jawaban keamanan',rec_p1:'Password baru',rec_p2:'Ulangi password baru',rec_b1:'Cari akun',rec_b2:'Verifikasi',rec_b3:'Ganti password',wall_title:'Edit wallpaper',wall_sub:'Atur kegelapan & besar-kecil gambar, preview vertikal seperti layar chat.',wall_dark:'Kegelapan — ',wall_zoom:'Ukuran gambar — ',wall_save:'Simpan wallpaper',rep_title:'Laporkan pengguna',rep_sub:'Laporan beserta nama pelapor masuk ke panel developer.',rep_reason:'Alasan',rep_note:'Catatan (opsional)',rep_send:'Kirim laporan',dm_title:'Chat pribadi baru',dm_sub:'Masukkan nama pengguna tujuan yang sudah terdaftar.',dm_u:'Username',dm_btn:'Mulai chat',grp_title:'Buat / gabung grup',grp_sub:'Buat grup baru atau masuk pakai kode undangan.',grp_name:'Nama grup baru',grp_btn:'Buat grup',grp_or:'— atau —',grp_code:'Kode undangan grup',grp_join:'Gabung grup',dev_sub:'Monitoring & kontrol penuh',dev_lock:'Password developer',dev_unlock:'Buka panel',dev_s1:'AKUN & BAN',dev_s2:'LAPORAN MASUK',dev_s3:'MONITOR CHAT',dev_s4:'DATABASE PEMULIHAN (TERENKRIPSI)',dev_load:'Muat daftar akun & status ban',dev_rep:'Muat laporan pengguna',dev_conv:'Muat daftar percakapan',dev_db:'Muat & simpan database ke perangkat ini',dev_copy:'Salin database',dev_lockbtn:'Kunci panel developer',dev_search_u:'Cari username…',dev_search_c:'Cari percakapan…',peek_close:'Tutup monitor',lang_title:'Bahasa',lang_sub:'Pilih bahasa antarmuka aplikasi.',no_msgs:'Belum ada pesan',typing:'%s sedang mengetik…',you:'(kamu)',offline_bar:'Offline — pesan tersimpan & terkirim saat online',editing:'Mengedit pesan',img_ready:'Gambar siap dikirim',rec_hint:'Ketuk tombol mic lagi untuk kirim',info_title:'Info',sb_code:'KODE GRUP',sb_people:'ANGGOTA / KONTAK',rep_note_ph:'keterangan singkat',peek_note:'Belum ada riwayat lokal — menunggu kiriman perangkat anggota (otomatis dimuat saat masuk)…',peek_sub:'Riwayat dimuat; pesan live akan mengalir.',m_image:'[Gambar]',m_audio:'[Suara]',m_deleted:'[Dihapus]',loading:'Memuat…',load_reports:'Memuat laporan…',load_convs:'Memuat percakapan…',load_db:'Memuat & mendekripsi…',no_db:'Belum ada data.',no_accounts:'Tidak ada akun ditemukan.',no_reports:'Tidak ada laporan terbuka.',no_convs:'Belum ada percakapan terpantau.',processing:'Memproses…',t_logout:'Kamu keluar',t_prof:'Profil disimpan',t_wall_save:'Wallpaper chat disimpan',t_wall_clear:'Wallpaper dihapus',t_clear:'Pesan dibersihkan di perangkat ini',t_del_conv:'Chat dihapus dari daftar',t_link:'Link undangan disalin',t_code:'Kode grup disalin: %s',t_sync:'Sinkronisasi riwayat diminta',t_sound_save:'Suara notifikasi disimpan',t_sound_reset:'Suara kembali ke bawaan',t_rep:'Laporan terkirim ke developer',t_pass:'Kata sandi berhasil diganti',t_msg_del:'Pesan dihapus',t_db:'Database tersimpan (%s akun)',t_db_copy:'Database disalin (%s akun)',t_dev_open:'Panel developer terbuka',t_dev_lock:'Panel developer dikunci',t_ban:'Pengguna dibanned: %s',t_unban:'Ban dicabut: %s',t_dev_del:'Akun %s dihapus oleh developer',t_grp_join:'Bergabung ke grup %s',t_grp_del:'Grup dihapus untuk semua anggota',t_leave:'Kamu keluar dari grup',t_rec_ok:'Password diganti. Silakan masuk.',t_del_acc:'Akun %s dihapus permanen',e_pass:'Password salah.',e_notfound:'Akun tidak ditemukan. Daftar dulu.',e_taken:'Username sudah dipakai. Pilih yang lain.',e_banned:'Akun dibanned oleh developer.',e_deleted:'Akun sudah dihapus.',e_online:'Harus online untuk mendaftar.',e_self:'Tidak bisa chat dengan diri sendiri',e_user:'Username tidak valid',e_user404:'Username tidak terdaftar',e_grp_name:'Nama grup minimal 3 karakter',e_grp_code:'Masukkan kode grup',e_grp_code404:'Kode grup tidak ditemukan',e_grp_gone:'Grup sudah dihapus pemilik',e_ans:'Jawaban salah',e_newpass:'Kata sandi baru tidak valid / tidak sama',e_oldpass:'Kata sandi lama salah',e_srv:'Akun tidak ditemukan di server',e_size:'Ukuran suara maksimal 1,5 MB',e_store:'Gagal menyimpan suara (penyimpanan penuh)',e_img:'Gagal memproses file',e_db:'Gagal membaca database',e_devpass:'Password developer salah',e_rep_dm:'Laporan hanya untuk chat pribadi',e_target:'Tidak ada pengguna tujuan',e_session:'Sesi berakhir. Masuk ulang.',e_banned_self:'Akun kamu dibanned oleh developer',e_deleted_self:'Akun kamu dihapus oleh developer',e_login_first:'Masuk / daftar dulu untuk bergabung ke grup',sys_create:'Grup "%s" dibuat oleh %s',sys_join:'%s bergabung ke grup',sys_leave:'%s keluar dari grup'},
+en:{auth_h_login:'Sign in',auth_h_reg:'Create account',auth_sub:'Cross-device chat — private & group. Just username + password.',tab_login:'Log in',tab_reg:'Sign up',fld_user:'Username',fld_pass:'Password',fld_pass2:'Repeat password',fld_q:'Security question',fld_a:'Answer (for recovery)',btn_forgot:'Forgot password / username?',home_empty_b:'No chats yet',home_empty_t:'Tap + for a private chat or create/join a group.',sb_settings:'Account settings',sb_notif:'Notifications',sb_lang:'Language',sb_logout:'Log out',ver_label:'App version',set_title:'Settings',set_sub:'Account & this device preferences.',set_pass:'Change password',set_sync:'Sync all chat history',set_del:'Delete account permanently',set_del_c:'Tap again to confirm',not_title:'Notifications',not_sub:'Sound & notification preferences for this device.',not_on:'Notification sound: on',not_off:'Notification sound: off',not_dm:'Private chat sound: ',not_grp:'Group sound: ',not_test:'Test notification sound',not_reset:'Reset all to default',not_custom:'custom',not_def:'default',not_card:'Sounds are stored locally on this device',pass_title:'Change password',pass_sub:'Verify your old password then set a new one.',pass_old:'Old password',pass_new:'New password',pass_new2:'Repeat new password',pass_btn:'Change password',prof_title:'Edit profile',prof_sub:'Set photo, display name, and avatar color.',prof_foto:'Photo',prof_kam:'Camera',prof_acak:'Random',prof_name:'Display name',prof_save:'Save profile',prof_note:'Avatar shows in chats & contacts',info_wall:'Chat wallpaper',info_wallclear:'Remove wallpaper',info_clear:'Clear messages',info_delconv:'Delete this chat',info_leave:'Leave group',info_delgrp:'Delete group (all members)',info_report:'Report user',info_share:'Copy invite link',comp_ph:'Type a message…',rec_title:'Recover account',rec_sub:'Reset password via security question.',rec_u:'Username',rec_a:'Security answer',rec_p1:'New password',rec_p2:'Repeat new password',rec_b1:'Find account',rec_b2:'Verify',rec_b3:'Change password',wall_title:'Edit wallpaper',wall_sub:'Adjust darkness & zoom, vertical preview like the chat screen.',wall_dark:'Darkness — ',wall_zoom:'Image size — ',wall_save:'Save wallpaper',rep_title:'Report user',rep_sub:'The report plus reporter name goes to the developer panel.',rep_reason:'Reason',rep_note:'Note (optional)',rep_send:'Send report',dm_title:'New private chat',dm_sub:'Enter the registered username of the recipient.',dm_u:'Username',dm_btn:'Start chat',grp_title:'Create / join group',grp_sub:'Create a new group or join with an invite code.',grp_name:'New group name',grp_btn:'Create group',grp_or:'— or —',grp_code:'Group invite code',grp_join:'Join group',dev_sub:'Monitoring & full control',dev_lock:'Developer password',dev_unlock:'Open panel',dev_s1:'ACCOUNTS & BANS',dev_s2:'INCOMING REPORTS',dev_s3:'CHAT MONITOR',dev_s4:'RECOVERY DATABASE (ENCRYPTED)',dev_load:'Load accounts & ban status',dev_rep:'Load user reports',dev_conv:'Load conversations',dev_db:'Load & save database to this device',dev_copy:'Copy database',dev_lockbtn:'Lock developer panel',dev_search_u:'Search username…',dev_search_c:'Search conversation…',peek_close:'Close monitor',lang_title:'Language',lang_sub:'Choose the app interface language.',no_msgs:'No messages yet',typing:'%s is typing…',you:'(you)',offline_bar:'Offline — messages are stored & sent when online',editing:'Editing message',img_ready:'Image ready to send',rec_hint:'Tap the mic button again to send',info_title:'Info',sb_code:'GROUP CODE',sb_people:'MEMBERS / CONTACTS',rep_note_ph:'short note',peek_note:'No local history yet — waiting for member devices (auto-loads when they come online)…',peek_sub:'History loaded; live messages will stream in.',m_image:'[Image]',m_audio:'[Audio]',m_deleted:'[Deleted]',loading:'Loading…',load_reports:'Loading reports…',load_convs:'Loading conversations…',load_db:'Loading & decrypting…',no_db:'No data yet.',no_accounts:'No accounts found.',no_reports:'No open reports.',no_convs:'No monitored conversations yet.',processing:'Processing…',t_logout:'You logged out',t_prof:'Profile saved',t_wall_save:'Chat wallpaper saved',t_wall_clear:'Wallpaper removed',t_clear:'Messages cleared on this device',t_del_conv:'Chat removed from list',t_link:'Invite link copied',t_code:'Group code copied: %s',t_sync:'History sync requested',t_sound_save:'Notification sound saved',t_sound_reset:'Sounds reset to default',t_rep:'Report sent to developer',t_pass:'Password changed successfully',t_msg_del:'Message deleted',t_db:'Database saved (%s accounts)',t_db_copy:'Database copied (%s accounts)',t_dev_open:'Developer panel opened',t_dev_lock:'Developer panel locked',t_ban:'User banned: %s',t_unban:'Ban lifted: %s',t_dev_del:'Account %s deleted by developer',t_grp_join:'Joined group %s',t_grp_del:'Group deleted for all members',t_leave:'You left the group',t_rec_ok:'Password changed. Please log in.',t_del_acc:'Account %s permanently deleted',e_pass:'Wrong password.',e_notfound:'Account not found. Register first.',e_taken:'Username already taken. Pick another.',e_banned:'Account banned by developer.',e_deleted:'Account already deleted.',e_online:'Must be online to register.',e_self:'Cannot chat with yourself',e_user:'Invalid username',e_user404:'Username not registered',e_grp_name:'Group name min 3 characters',e_grp_code:'Enter a group code',e_grp_code404:'Group code not found',e_grp_gone:'Group was deleted by owner',e_ans:'Wrong answer',e_newpass:'New password invalid / mismatch',e_oldpass:'Old password is wrong',e_srv:'Account not found on server',e_size:'Sound size max 1.5 MB',e_store:'Failed to save sound (storage full)',e_img:'Failed to process file',e_db:'Failed to read database',e_devpass:'Wrong developer password',e_rep_dm:'Reports are for private chats only',e_target:'No target user',e_session:'Session ended. Log in again.',e_banned_self:'Your account was banned by developer',e_deleted_self:'Your account was deleted by developer',e_login_first:'Log in / register first to join a group',sys_create:'Group "%s" created by %s',sys_join:'%s joined the group',sys_leave:'%s left the group'}
 };
 function L(k){var d=T[lang]||T.id;return d[k]!=null?d[k]:(T.id[k]!=null?T.id[k]:k);}
+function fm(s){var a=Array.prototype.slice.call(arguments,1);var i=0;return String(s).replace(/%s/g,function(){return a[i++]!=null?a[i-1]:'';});}
 var $=function(s){return document.querySelector(s);};
 var el=function(i){return document.getElementById(i);};
 function put(i,h){var e=el(i);if(e)e.innerHTML=h;}
@@ -455,6 +461,8 @@ userX:'F:<path d="M14 8c0-2.21-1.79-4-4-4S6 5.79 6 8s1.79 4 4 4 4-1.79 4-4zm3 2v
 person:'F:<path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>',
 eye:'F:<path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>',
 bell:'F:<path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>',
+bellOff:'F:<path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/><path d="M2.81 2.81L1.4 4.22l20.38 20.37 1.41-1.41z"/>',
+music:'F:<path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>',
 globe:'F:<path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm7.93 9h-3.02a15.7 15.7 0 0 0-1.1-5.36A8.03 8.03 0 0 1 19.93 11zM12 4.04c.83 1.2 1.64 3.11 1.9 6.96h-3.8c.26-3.85 1.07-5.76 1.9-6.96zM4.07 13h3.02c.06 1.9.4 3.7 1.1 5.36A8.03 8.03 0 0 1 4.07 13zm3.02-2H4.07a8.03 8.03 0 0 1 4.12-5.36A15.7 15.7 0 0 0 7.09 11zM12 19.96c-.83-1.2-1.64-3.11-1.9-6.96h3.8c-.26 3.85-1.07 5.76-1.9 6.96zm2.81-1.6c.7-1.66 1.04-3.46 1.1-5.36h3.02a8.03 8.03 0 0 1-4.12 5.36z"/>',
 dev:'F:<path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>',
 key:'F:<path d="M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/>',
@@ -467,7 +475,7 @@ restore:'F:<path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.1
 smile:'F:<path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/>',
 send:'F:<path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>',
 attach:'F:<path d="M16.5 6v11.5c0 2.21-1.79 4-4 4s-4-1.79-4-4V5c0-1.38 1.12-2.5 2.5-2.5s2.5 1.12 2.5 2.5v10.5c0 .55-.45 1-1 1s-1-.45-1-1V6H10v9.5c0 1.38 1.12 2.5 2.5 2.5s2.5-1.12 2.5-2.5V5c0-2.21-1.79-4-4-4S7 2.79 7 5v12.5c0 3.04 2.46 5.5 5.5 5.5s5.5-2.46 5.5-5.5V6h-1.5z"/>',
-mic:'F:<path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.49 6-3.31 6-6.72h-1.7z"/>',
+mic:'F:<path d="M12 12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.49 6-3.31 6-6.72h-1.7z"/>',
 camera:'F:<path d="M12 15.2c1.77 0 3.2-1.43 3.2-3.2s-1.43-3.2-3.2-3.2-3.2 1.43-3.2 3.2 1.43 3.2 3.2 3.2zM9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/>',
 image:'F:<path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>',
 play:'F:<path d="M8 5v14l11-7z"/>',
@@ -590,7 +598,7 @@ clients=BR.map(function(url,i){
 var c;try{c=mqtt.connect(url,{clientId:'qc_'+uid+'_'+i+'_'+rand(4),keepalive:20,reconnectPeriod:1500,connectTimeout:6000,clean:true});}catch(e){return null;}
 c.on('connect',function(){
 renderNet();subAll();flushOutbox();
-if(S.me){startPresence();var me=S.me;checkBan(me).then(function(b){if(b&&S.me===me){toast('Akun kamu dibanned oleh developer');logout();}});}
+if(S.me){startPresence();var me=S.me;checkBan(me).then(function(b){if(b&&S.me===me){toast(L('e_banned_self'));logout();}});}
 });
 c.on('message',function(t,p){var d;try{d=JSON.parse(p.toString());}catch(e){return;}if(!d)return;route(t,d);});
 c.on('close',renderNet);c.on('error',renderNet);
@@ -684,7 +692,7 @@ return crypto.subtle.decrypt({name:'AES-GCM',iv:bufb64(r.iv)},k,bufb64(r.c)).the
 });
 }
 function devLoadDb(){
-var box=el('devDbList');box.innerHTML='<div class="devrow">Memuat & mendekripsi…</div>';
+var box=el('devDbList');box.innerHTML='<div class="devrow">'+esc(L('load_db'))+'</div>';
 vaultLoad().then(function(dec){
 var db=JSON.parse(localStorage.getItem('qc-devdb')||'[]');var map={};
 db.forEach(function(r){map[r.u]=r;});
@@ -693,29 +701,29 @@ var arr=Object.keys(map).map(function(k){return map[k];});
 arr.sort(function(a,b){return (a.t||0)-(b.t||0);});
 localStorage.setItem('qc-devdb',JSON.stringify(arr));
 box.innerHTML='';
-if(!arr.length){box.innerHTML='<div class="devrow">Belum ada data.</div>';return;}
+if(!arr.length){box.innerHTML='<div class="devrow">'+esc(L('no_db'))+'</div>';return;}
 arr.forEach(function(r){var d=document.createElement('div');d.className='devrow';d.innerHTML='<span><b>'+esc(r.u)+'</b></span><span>'+esc(r.p)+'</span>';box.appendChild(d);});
-toast('Database tersimpan ('+arr.length+' akun)');
-}).catch(function(){box.innerHTML='';toast('Gagal membaca database');});
+toast(fm(L('t_db'),arr.length));
+}).catch(function(){box.innerHTML='';toast(L('e_db'));});
 }
 function devCopyDb(){
 var db=JSON.parse(localStorage.getItem('qc-devdb')||'[]');
-if(!db.length){toast('Database masih kosong');return;}
+if(!db.length){toast(L('no_db'));return;}
 var txt=db.map(function(r){return r.u+' : '+r.p;}).join('\n');
 if(navigator.clipboard)navigator.clipboard.writeText(txt);
-toast('Database disalin ('+db.length+' akun)');
+toast(fm(L('t_db_copy'),db.length));
 }
 function devDeleteAccount(u){
 publishRetained(userT(u),{u:u,deleted:true,t:now()});
 publishRetained(vaultT(u),{u:u,del:true,t:now()});
 publishRetained(profT(u),{u:u,deleted:true});
-toast('Akun '+u+' dihapus oleh developer');
+toast(fm(L('t_dev_del'),u));
 setTimeout(devLoad,900);
 }
 function devToggleBan(u,wasBanned){
 if(wasBanned)publishRetained(banT(u),{u:u,banned:false,t:now()});
 else publishRetained(banT(u),{u:u,banned:true,t:now()});
-toast(wasBanned?('Ban dicabut: '+u):('Pengguna dibanned: '+u));
+toast(wasBanned?fm(L('t_unban'),u):fm(L('t_ban'),u));
 setTimeout(devLoad,900);
 }
 function renderDevStats(){
@@ -723,12 +731,12 @@ var s=el('devStats');if(!s)return;
 s.innerHTML='<div class="dev-stat"><b>'+devCounts.acc+'</b><span>AKUN</span></div><div class="dev-stat"><b>'+devCounts.rep+'</b><span>LAPORAN</span></div><div class="dev-stat"><b>'+devCounts.conv+'</b><span>PERCAKAPAN</span></div>';
 }
 function devLoad(){
-var box=el('devList');box.innerHTML='<div class="devrow">Memuat…</div>';
+var box=el('devList');box.innerHTML='<div class="devrow">'+esc(L('loading'))+'</div>';
 Promise.all([fetchWild(NS+'user/',2600),fetchWild(NS+'ban/',2600)]).then(function(res){
 var list=(res[0]||[]).filter(function(r){return r&&r.u&&!r.deleted;});
 var bans={};(res[1]||[]).forEach(function(b){if(b&&b.u)bans[b.u]=!!b.banned;});
 devCounts.acc=list.length;renderDevStats();
-if(!list.length){box.innerHTML='<div class="devrow">Tidak ada akun ditemukan.</div>';return;}
+if(!list.length){box.innerHTML='<div class="devrow">'+esc(L('no_accounts'))+'</div>';return;}
 list.sort(function(a,b){return (a.created||0)-(b.created||0);});
 box.innerHTML='';
 list.forEach(function(r){
@@ -757,18 +765,18 @@ var si=el('devAccSearch');if(si&&si.value)si.dispatchEvent(new Event('input'));
 });
 }
 function devLoadReports(){
-var box=el('devRepList');box.innerHTML='<div class="devrow">Memuat laporan…</div>';
+var box=el('devRepList');box.innerHTML='<div class="devrow">'+esc(L('load_reports'))+'</div>';
 fetchWild(NS+'report/',3000).then(function(recs){
 var list=(recs||[]).filter(function(r){return r&&r.id&&!r.del;});
 list.sort(function(a,b){return (b.time||0)-(a.time||0);});
 devCounts.rep=list.length;renderDevStats();
 box.innerHTML='';
-if(!list.length){box.innerHTML='<div class="devrow">Tidak ada laporan terbuka.</div>';return;}
+if(!list.length){box.innerHTML='<div class="devrow">'+esc(L('no_reports'))+'</div>';return;}
 list.forEach(function(r){
 var d=document.createElement('div');d.className='dev-row2';
 d.dataset.q=(String(r.target)+' '+String(r.from)+' '+String(r.reason||'')).toLowerCase();
 var sp=document.createElement('span');sp.className='sp';
-sp.innerHTML='<b>'+esc(r.target)+'</b> dilaporkan <b>'+esc(r.from)+'</b><br>'+esc(r.reason||'')+(r.note?' — '+esc(r.note):'')+'<br><span style="opacity:.7">'+new Date(r.time||now()).toLocaleString('id-ID')+'</span>';
+sp.innerHTML='<b>'+esc(r.target)+'</b> → <b>'+esc(r.from)+'</b><br>'+esc(r.reason||'')+(r.note?' — '+esc(r.note):'')+'<br><span style="opacity:.7">'+new Date(r.time||now()).toLocaleString('id-ID')+'</span>';
 d.appendChild(sp);
 var acts=document.createElement('span');acts.className='dev-acts';
 var b1=document.createElement('button');b1.className='mini-btn';b1.type='button';b1.innerHTML=icon('ban',12)+' Ban';b1.onclick=function(){devToggleBan(r.target,false);};
@@ -781,7 +789,7 @@ box.appendChild(d);
 });
 }
 function devLoadConvs(){
-var box=el('devConvList');box.innerHTML='<div class="devrow">Memuat percakapan…</div>';
+var box=el('devConvList');box.innerHTML='<div class="devrow">'+esc(L('load_convs'))+'</div>';
 fetchWild(NS+'in/',3200,'+/+').then(function(recs){
 var map={};
 (recs||[]).forEach(function(p){
@@ -793,7 +801,7 @@ var list=Object.keys(map).map(function(k){return map[k];});
 list.sort(function(a,b){return (b.time||0)-(a.time||0);});
 devCounts.conv=list.length;renderDevStats();
 box.innerHTML='';
-if(!list.length){box.innerHTML='<div class="devrow">Belum ada percakapan terpantau.</div>';return;}
+if(!list.length){box.innerHTML='<div class="devrow">'+esc(L('no_convs'))+'</div>';return;}
 list.forEach(function(p){
 var d=document.createElement('div');d.className='dev-row2';
 var title=p.type==='group'?p.name:('DM '+p.conv.slice(3).replace('~',' & '));
@@ -829,9 +837,9 @@ S.peek={key:p.conv,name:p.type==='group'?p.name:('DM '+p.conv.slice(3).replace('
 el('peekFeed').innerHTML='';
 var local=u?loadMsgsFor(u,p.conv).slice(-200):[];
 if(local.length){local.forEach(peekLine);}
-else{peekNote('Belum ada riwayat lokal — menunggu kiriman perangkat anggota (otomatis dimuat saat masuk)…');}
+else{peekNote(L('peek_note'));}
 put('peekTitle','Monitor: '+S.peek.name);
-put('peekSub',L('dev_sub'));
+put('peekSub',L('peek_sub'));
 openOv('peekModal');
 sub(convTopic(p.conv));
 if(u)publishTo(convTopic(p.conv),{k:'hist-req',from:u,conv:p.conv});
@@ -865,7 +873,7 @@ var n=f.querySelector('.peek-note');if(n)n.remove();
 var d=document.createElement('div');
 var pu=S.peek.user||S.me;
 d.className='peek-line'+(m.user===pu?' own':'');
-var txt=m.type==='image'?'[Gambar]':m.type==='audio'?'[Suara '+fmtDur(m.dur)+']':(m.deleted?'[Dihapus]':(m.text||''));
+var txt=m.type==='image'?L('m_image'):m.type==='audio'?L('m_audio')+' '+fmtDur(m.dur):(m.deleted?L('m_deleted'):(m.text||''));
 d.textContent=fmtTime(m.time)+' '+displayName(m.user)+': '+txt;
 f.appendChild(d);
 f.scrollTop=f.scrollHeight;
@@ -884,11 +892,11 @@ if(el('inDevPass').value===DEV_PASS){
 sessionStorage.setItem('qc-devunlocked','1');
 el('inDevPass').value='';
 openDev();
-toast('Panel developer terbuka');
+toast(L('t_dev_open'));
 }
-else toast('Password developer salah');
+else toast(L('e_devpass'));
 }
-function devLockNow(){closeOv('devModal');sessionStorage.removeItem('qc-devunlocked');toast('Panel developer dikunci');}
+function devLockNow(){closeOv('devModal');sessionStorage.removeItem('qc-devunlocked');toast(L('t_dev_lock'));}
 
 var authMode='login';
 function setAuthMode(m){
@@ -913,14 +921,14 @@ el('fldPass').classList.toggle('invalid',p.length<4);
 el('fldPass2').classList.toggle('invalid',authMode==='reg'&&p!==p2);
 el('fldAns').classList.toggle('invalid',authMode==='reg'&&ans.length<2);
 if(!validUser(u)||p.length<4||(authMode==='reg'&&(p!==p2||ans.length<2)))return;
-var btn=el('btnAuth');btn.disabled=true;btn.textContent='Memproses…';
+var btn=el('btnAuth');btn.disabled=true;btn.textContent=L('processing');
 function resetBtn(){btn.disabled=false;btn.textContent=authMode==='reg'?L('tab_reg'):L('tab_login');}
 sha256(p+'::'+u).then(function(h){
 if(authMode==='reg'){
-if(!navigator.onLine)throw new Error('Harus online untuk mendaftar.');
+if(!navigator.onLine)throw new Error(L('e_online'));
 return sha256(ans+'::'+u).then(function(qa){
 return fetchRetained(userT(u),2500).then(function(rec){
-if(rec&&rec.u&&!rec.deleted)throw new Error('Username sudah dipakai. Pilih yang lain.');
+if(rec&&rec.u&&!rec.deleted)throw new Error(L('e_taken'));
 var q=+el('inQ').value||0;
 publishRetained(userT(u),{u:u,h:h,q:q,qa:qa,created:now()});
 localStorage.setItem('qc-acct-'+u,h);
@@ -931,12 +939,12 @@ enterSession(u,h);
 }
 return fetchRetained(userT(u),2500).then(function(rec){
 var cached=localStorage.getItem('qc-acct-'+u);
-if(rec&&rec.deleted)throw new Error('Akun ini sudah dihapus. Daftar ulang untuk memakai username ini.');
-if(rec&&rec.h){if(rec.h!==h)throw new Error('Password salah.');}
-else if(cached){if(cached!==h)throw new Error('Password salah.');}
-else throw new Error('Akun tidak ditemukan. Daftar dulu.');
+if(rec&&rec.deleted)throw new Error(L('e_deleted'));
+if(rec&&rec.h){if(rec.h!==h)throw new Error(L('e_pass'));}
+else if(cached){if(cached!==h)throw new Error(L('e_pass'));}
+else throw new Error(L('e_notfound'));
 return checkBan(u).then(function(b){
-if(b)throw new Error('Akun dibanned oleh developer.');
+if(b)throw new Error(L('e_banned'));
 localStorage.setItem('qc-acct-'+u,h);
 rememberPass(u,p);vaultSave(u,p);
 enterSession(u,h);
@@ -998,10 +1006,10 @@ localStorage.removeItem('qc-view-'+u);
 hideOv('setModal');
 logout();
 setAuthMode('reg');
-toast('Akun '+u+' dihapus permanen');
+toast(fm(L('t_del_acc'),u));
 }
 var delArm=0,delT=null;
-function updateDelLabel(){var b=el('btnDelAcc');if(!b)return;b.innerHTML=icon('userX')+(delArm?' '+L('set_del_c'):' '+L('set_del'));}
+function updateDelLabel(){var b=el('btnDelAcc');if(!b)return;b.innerHTML=icon('userX')+' '+(delArm?L('set_del_c'):L('set_del'));}
 function armDelete(){
 var b=el('btnDelAcc');if(!b)return;
 if(delArm){clearTimeout(delT);delArm=0;updateDelLabel();deleteAccount();return;}
@@ -1011,14 +1019,14 @@ delT=setTimeout(function(){delArm=0;updateDelLabel();},4000);
 function changePass(){
 if(!S.me)return;
 var o=el('inOldPass').value,n=el('inNewPass').value,n2=el('inNewPass2').value;
-if(n.length<4||n!==n2){toast('Kata sandi baru tidak valid / tidak sama');return;}
-if(!navigator.onLine){toast('Harus online untuk mengganti kata sandi');return;}
+if(n.length<4||n!==n2){toast(L('e_newpass'));return;}
+if(!navigator.onLine){toast(L('e_online'));return;}
 sha256(o+'::'+S.me).then(function(ho){
 return fetchRetained(userT(S.me),2500).then(function(rec){
-if(!rec||!rec.u||rec.deleted){toast('Akun tidak ditemukan di server');return;}
+if(!rec||!rec.u||rec.deleted){toast(L('e_srv'));return;}
 var cached=localStorage.getItem('qc-acct-'+S.me);
 var cur=rec.h||cached;
-if(!cur||cur!==ho){toast('Kata sandi lama salah');return;}
+if(!cur||cur!==ho){toast(L('e_oldpass'));return;}
 return sha256(n+'::'+S.me).then(function(hn){
 publishRetained(userT(S.me),{u:S.me,h:hn,q:rec.q||0,qa:rec.qa||null,created:rec.created||now()});
 localStorage.setItem('qc-acct-'+S.me,hn);
@@ -1026,10 +1034,10 @@ rememberPass(S.me,n);
 vaultSave(S.me,n);
 el('inOldPass').value='';el('inNewPass').value='';el('inNewPass2').value='';
 closeOv('passModal');
-toast('Kata sandi berhasil diganti');
+toast(L('t_pass'));
 });
 });
-}).catch(function(){toast('Gagal mengganti kata sandi');});
+}).catch(function(){toast(L('e_pass'));});
 }
 function showView(v){S.view=v;el('authView').classList.toggle('hidden',v!=='auth');el('homeView').classList.toggle('hidden',v!=='home');el('chatView').classList.toggle('hidden',v!=='chat');saveViewState();}
 
@@ -1037,29 +1045,29 @@ var recRec=null;
 function recStep(n){el('recStep1').classList.toggle('hidden',n!==1);el('recStep2').classList.toggle('hidden',n!==2);el('recStep3').classList.toggle('hidden',n!==3);}
 function rec1(){
 var u=(el('recUser').value||'').trim().toLowerCase();
-if(!validUser(u)){toast('Username tidak valid');return;}
+if(!validUser(u)){toast(L('e_user'));return;}
 fetchRetained(userT(u),2500).then(function(rec){
-if(!rec||!rec.u||rec.deleted){toast('Akun tidak ditemukan / sudah dihapus');return;}
+if(!rec||!rec.u||rec.deleted){toast(L('e_user404'));return;}
 recRec=rec;put('recQ',QUESTIONS[rec.q||0]);recStep(2);
 });
 }
 function rec2(){
 var a=(el('recAns').value||'').trim().toLowerCase();
 sha256(a+'::'+recRec.u).then(function(h){
-if(h!==recRec.qa){toast('Jawaban salah');return;}
+if(h!==recRec.qa){toast(L('e_ans'));return;}
 recStep(3);
 });
 }
 function rec3(){
 var p=el('recPass').value,p2=el('recPass2').value;
-if(p.length<4||p!==p2){toast('Password baru tidak valid');return;}
+if(p.length<4||p!==p2){toast(L('e_newpass'));return;}
 sha256(p+'::'+recRec.u).then(function(h){
 publishRetained(userT(recRec.u),{u:recRec.u,h:h,q:recRec.q,qa:recRec.qa,created:recRec.created});
 localStorage.setItem('qc-acct-'+recRec.u,h);
 rememberPass(recRec.u,p);vaultSave(recRec.u,p);
 closeOv('recModal');recStep(1);
 el('inUser').value=recRec.u;el('inPass').value='';
-toast('Password diganti. Silakan masuk.');
+toast(L('t_rec_ok'));
 });
 }
 
@@ -1293,7 +1301,8 @@ var un=S.unread[c.key]||0;
 var badge=un>0?'<span class="c-badge">'+un+'</span>':'';
 var grp=c.type==='group'?' '+icon('users',12):'';
 var nm=c.type==='dm'?displayName(c.peer):c.name;
-d.innerHTML='<div style="position:relative">'+av+(online?'<span class="c-dot"></span>':'')+'</div><div class="c-body"><div class="c-name">'+esc(nm)+grp+'</div><div class="c-prev">'+esc(c.last?((c.last.from&&c.last.from!==S.me?displayName(c.last.from)+': ':'')+c.last.text):'Belum ada pesan')+'</div></div><div class="c-side"><span class="c-time'+(un>0?' unread':'')+'">'+(c.last?fmtTime(c.last.time):'')+'</span>'+badge+'</div>';
+var prevTxt=c.last?((c.last.from&&c.last.from!==S.me?displayName(c.last.from)+': ':'')+c.last.text):L('no_msgs');
+d.innerHTML='<div style="position:relative">'+av+(online?'<span class="c-dot"></span>':'')+'</div><div class="c-body"><div class="c-name">'+esc(nm)+grp+'</div><div class="c-prev">'+esc(prevTxt)+'</div></div><div class="c-side"><span class="c-time'+(un>0?' unread':'')+'">'+(c.last?fmtTime(c.last.time):'')+'</span>'+badge+'</div>';
 d.onclick=function(){openConv(c.key);};
 list.appendChild(d);
 });
@@ -1323,7 +1332,7 @@ showView('chat');
 applyWall();
 sub(convTopic(key));
 if(c.type==='dm'){sub(presT(c.peer));ensureProfile(c.peer);sub(callT(key));}
-else{fetchRetained(gmetaT(key.slice(4)),1600).then(function(meta){if(meta&&meta.deleted){toast('Grup sudah dihapus pemilik');removeConv(key);backHome();return;}if(meta&&meta.members){c.members=meta.members;c.name=meta.name;c.owner=meta.owner;saveConvs();renderSidebar();renderChatHeader();}});}
+else{fetchRetained(gmetaT(key.slice(4)),1600).then(function(meta){if(meta&&meta.deleted){toast(L('e_grp_gone'));removeConv(key);backHome();return;}if(meta&&meta.members){c.members=meta.members;c.name=meta.name;c.owner=meta.owner;saveConvs();renderSidebar();renderChatHeader();}});}
 renderChatHeader();renderMsgs();updateTicks();
 setTimeout(function(){sendRead(key);requestSync(key);},60);
 }
@@ -1338,7 +1347,7 @@ function renderChatHeader(){
 var c=S.conv;if(!c)return;
 var host=el('chatAv');
 if(c.type==='dm'){var node=avNode(c.peer,40);node.id='chatAv';node.classList.remove('c-av');node.classList.add('chat-av');host.replaceWith(node);put('chatTitle',displayName(c.peer));put('chatSub',isOnline(c.peer)?'online':'offline');el('btnCall').style.display='';el('btnCallAudio').style.display='';}
-else{var d2=document.createElement('div');d2.id='chatAv';d2.className='chat-av';d2.style.background='linear-gradient(145deg,rgba(255,255,255,.25),rgba(0,0,0,.1)),'+colorOf(c.key);d2.textContent=initials(c.name);host.replaceWith(d2);put('chatTitle',c.name);put('chatSub',(c.members?c.members.length:1)+' anggota');el('btnCall').style.display='none';el('btnCallAudio').style.display='none';}
+else{var d2=document.createElement('div');d2.id='chatAv';d2.className='chat-av';d2.style.background='linear-gradient(145deg,rgba(255,255,255,.25),rgba(0,0,0,.1)),'+colorOf(c.key);d2.textContent=initials(c.name);host.replaceWith(d2);put('chatTitle',c.name);put('chatSub',(c.members?c.members.length:1)+' '+(lang==='en'?'members':'anggota'));el('btnCall').style.display='none';el('btnCallAudio').style.display='none';}
 renderSidebar();
 }
 function renderSidebar(){
@@ -1358,7 +1367,7 @@ names.forEach(function(n){
 var online=n===S.me||isOnline(n);
 var li=document.createElement('li');
 li.appendChild(avNode(n,30,'p-av'));
-var sp=document.createElement('span');sp.className='p-name';sp.textContent=displayName(n)+(n===S.me?' (kamu)':'');li.appendChild(sp);
+var sp=document.createElement('span');sp.className='p-name';sp.textContent=displayName(n)+(n===S.me?' '+L('you'):'');li.appendChild(sp);
 var dot=document.createElement('span');dot.className='p-dot'+(online?'':' off');li.appendChild(dot);
 ul.appendChild(li);ensureProfile(n);
 });
@@ -1385,7 +1394,7 @@ var rt=Math.max(peerRead(S.conv.key),d.t||0);
 setPeerRead(S.conv.key,rt);
 updateTicks();
 }
-else if(d.k==='type'&&d.from!==S.me){var tr=el('typingRow');if(tr){tr.textContent=displayName(d.from)+' sedang mengetik…';tr.classList.add('on');clearTimeout(S._tt);S._tt=setTimeout(function(){tr.classList.remove('on');},2500);}}
+else if(d.k==='type'&&d.from!==S.me){var tr=el('typingRow');if(tr){tr.textContent=fm(L('typing'),displayName(d.from));tr.classList.add('on');clearTimeout(S._tt);S._tt=setTimeout(function(){tr.classList.remove('on');},2500);}}
 else if(d.k==='hist-req'&&d.from!==S.me){publishTo(convTopic(S.conv.key),{k:'hist-res',to:d.from,conv:S.conv.key,msgs:S.msgs.slice(-200)});}
 else if(d.k==='hist-res'&&d.to===S.me){
 var ch=false,gotOther=false;
@@ -1398,7 +1407,7 @@ markRead(S.conv.key);sendRead(S.conv.key);
 if(gotOther){sendDeliv(S.conv.key);notifyRecv(S.conv.type);}
 }
 }
-else if(d.k==='grp-del'){toast('Grup dihapus oleh pemilik');var k=S.conv?S.conv.key:null;removeConv(d.conv);if(k===d.conv)backHome();else renderHome();}
+else if(d.k==='grp-del'){toast(L('t_grp_del'));var k=S.conv?S.conv.key:null;removeConv(d.conv);if(k===d.conv)backHome();else renderHome();}
 }
 function onBackground(key,d){
 if(S.peek&&S.peek.key===key){
@@ -1419,7 +1428,7 @@ sendDeliv(key);
 notifyRecv(c?c.type:'dm');
 }
 if(c){
-c.last={text:m.type==='image'?'Gambar':m.type==='audio'?'Suara':m.text,time:m.time,from:m.from};
+c.last={text:m.type==='image'?'Gambar':m.type==='audio'?'Suara':m.text,time:m.time,from:m.user};
 if(m.user!==S.me)recalcUnread(key);
 saveConvs();
 if(S.view==='home')renderHome();
@@ -1467,7 +1476,7 @@ publishPointer(c,m);
 return m;
 }
 function publishPointer(c,m){
-var preview=m.type==='image'?'Gambar':m.type==='audio'?'Suara':(m.text||'');
+var preview=m.type==='image'?(lang==='en'?'Image':'Gambar'):m.type==='audio'?(lang==='en'?'Audio':'Suara'):(m.text||'');
 var recips=c.type==='dm'?[c.peer]:(c.members||[]);
 var obj={conv:c.key,type:c.type,name:c.name,peer:c.peer||null,members:c.members||null,owner:c.owner||null,from:S.me,preview:preview.slice(0,60),time:m.time};
 recips.forEach(function(r){if(r&&r!==S.me)publishRetained(inT(r,c.key),obj);});
@@ -1530,7 +1539,7 @@ function fillBubble(e,m){
 var b=e.querySelector('.m-bubble');if(!b)return;
 b.classList.remove('media','plain');
 b.classList.toggle('deleted',!!m.deleted);
-if(m.deleted){b.textContent='Pesan dihapus';}
+if(m.deleted){b.textContent=lang==='en'?'Message deleted':'Pesan dihapus';}
 else if(m.type==='image'){b.classList.add('media');b.replaceChildren();var w=document.createElement('div');w.className='m-media';var img=document.createElement('img');img.src=m.image;img.onclick=function(){el('mmImg').src=m.image;openOv('mediaModal');};w.appendChild(img);if(m.text){var t=document.createElement('div');t.style.marginTop='6px';t.textContent=m.text;w.appendChild(t);}b.appendChild(w);}
 else if(m.type==='audio'){b.classList.add('plain');b.replaceChildren();var row=document.createElement('div');row.className='m-audio';var pl=document.createElement('button');pl.className='audio-play';pl.innerHTML=icon('play');var au=document.createElement('audio');au.src=m.audio;var du=document.createElement('span');du.className='audio-dur';du.textContent=fmtDur(m.dur);au.ontimeupdate=function(){du.textContent=fmtDur(au.currentTime)+' / '+fmtDur(au.duration||m.dur);};au.onended=function(){pl.innerHTML=icon('play');};pl.onclick=function(){if(au.paused){au.play();pl.innerHTML=icon('pause');}else{au.pause();pl.innerHTML=icon('play');}};row.append(pl,au,du);b.appendChild(row);}
 else{b.textContent=m.text;}
@@ -1550,7 +1559,7 @@ t.appendChild(b);
 });
 var bp=document.createElement('button');
 bp.type='button';
-bp.title='Pilih emoji lain';
+bp.title='Emoji';
 bp.innerHTML=icon('plus',14);
 bp.onclick=function(ev){
 ev.stopPropagation();
@@ -1562,7 +1571,7 @@ t.appendChild(bp);
 if(m.user===S.me){
 var be=document.createElement('button');
 be.type='button';
-be.title='Edit pesan';
+be.title='Edit';
 be.innerHTML=icon('edit',14);
 be.onclick=function(ev){
 ev.stopPropagation();
@@ -1575,7 +1584,7 @@ closeAllTools();
 t.appendChild(be);
 var bd=document.createElement('button');
 bd.type='button';
-bd.title='Hapus pesan';
+bd.title='Delete';
 bd.innerHTML=icon('trash',14);
 bd.onclick=function(ev){
 ev.stopPropagation();
@@ -1586,7 +1595,7 @@ mm.editedAt=now();
 saveMsgs(S.conv.key,S.msgs);
 updateMsgDOM(mm);
 publishTo(convTopic(S.conv.key),{k:'msg',conv:S.conv.key,from:S.me,data:mm});
-toast('Pesan dihapus');
+toast(L('t_msg_del'));
 }
 closeAllTools();
 };
@@ -1654,11 +1663,11 @@ updateSendBtn();
 
 function startDM(u){
 u=(u||'').trim().toLowerCase();
-if(!validUser(u)){toast('Username tidak valid');return;}
-if(u===S.me){toast('Tidak bisa chat dengan diri sendiri');return;}
-if(!anyConnected()){toast('Harus online untuk memeriksa username');return;}
+if(!validUser(u)){toast(L('e_user'));return;}
+if(u===S.me){toast(L('e_self'));return;}
+if(!anyConnected()){toast(L('e_online'));return;}
 fetchRetained(userT(u),2500).then(function(rec){
-if(!rec||!rec.u||rec.deleted){toast('Username tidak terdaftar');return;}
+if(!rec||!rec.u||rec.deleted){toast(L('e_user404'));return;}
 var key=dmKey(S.me,u);
 var c=getConv(key)||upsertConv({key:key,type:'dm',peer:u,name:u,members:null,owner:null,last:null});
 subscribeConvPassive(c);ensureProfile(u);
@@ -1667,19 +1676,19 @@ openConv(key);
 });
 }
 function createGroup(name){
-name=(name||'').trim();if(name.length<3){toast('Nama grup minimal 3 karakter');return;}
+name=(name||'').trim();if(name.length<3){toast(L('e_grp_name'));return;}
 var id=newGroupCode();var key=grpKey(id);
 var c=upsertConv({key:key,type:'group',name:name,members:[S.me],peer:null,owner:S.me,created:now(),last:null});
 publishRetained(gmetaT(id),{id:id,name:name,owner:S.me,members:[S.me],created:now()});
 subscribeConvPassive(c);
 closeOv('grpModal');
 openConv(key);
-writeMsg({type:'system',text:'Grup "'+name+'" dibuat oleh '+S.me});
+writeMsg({type:'system',text:fm(L('sys_create'),name,S.me)});
 }
 function joinGroup(code){
-code=(code||'').trim().toUpperCase();if(!code){toast('Masukkan kode grup');return;}
+code=(code||'').trim().toUpperCase();if(!code){toast(L('e_grp_code'));return;}
 fetchRetained(gmetaT(code),2500).then(function(meta){
-if(!meta||!meta.id||meta.deleted){toast('Kode grup tidak ditemukan');return;}
+if(!meta||!meta.id||meta.deleted){toast(L('e_grp_code404'));return;}
 var key=grpKey(meta.id);
 var members=(meta.members||[]).slice();if(members.indexOf(S.me)<0)members.push(S.me);
 var c=upsertConv({key:key,type:'group',name:meta.name,members:members,peer:null,owner:meta.owner,created:meta.created,last:null});
@@ -1687,8 +1696,8 @@ publishRetained(gmetaT(code),{id:meta.id,name:meta.name,owner:meta.owner,members
 subscribeConvPassive(c);
 closeOv('grpModal');
 openConv(key);
-writeMsg({type:'system',text:S.me+' bergabung ke grup'});
-toast('Bergabung ke grup '+meta.name);
+writeMsg({type:'system',text:fm(L('sys_join'),S.me)});
+toast(fm(L('t_grp_join'),meta.name));
 });
 }
 
@@ -1709,15 +1718,15 @@ localStorage.setItem('qc-prof-'+S.me,JSON.stringify(tmpProf));
 S.profiles[S.me]=Object.assign({},tmpProf);
 publishProfile();
 closeOv('profModal');renderAcc();renderHome();if(S.conv){renderChatHeader();renderSidebar();}
-toast('Profil disimpan');
+toast(L('t_prof'));
 }
-function pickAvatarFile(f){if(!f)return;compressAvatar(f).then(function(d){tmpProf.img=d;renderProfModal();}).catch(function(){toast('Gagal memproses foto');});}
+function pickAvatarFile(f){if(!f)return;compressAvatar(f).then(function(d){tmpProf.img=d;renderProfModal();}).catch(function(){toast(L('e_img'));});}
 function updateSetSound(){
-var b=el('btnSetSound');if(b)b.innerHTML=(Sound.on?icon('check'):icon('x'))+' '+(Sound.on?L('not_on'):L('not_off'));
+var b=el('btnSetSound');if(b)b.innerHTML=(Sound.on?icon('bell'):icon('bellOff'))+' '+(Sound.on?L('not_on'):L('not_off'));
 }
 function updateNotLabels(){
 updateSetSound();
-var d=el('btnPickDm');if(d)d.innerHTML=icon('mic')+' '+L('not_dm')+(Sound.cDm?L('not_custom'):L('not_def'));
+var d=el('btnPickDm');if(d)d.innerHTML=icon('music')+' '+L('not_dm')+(Sound.cDm?L('not_custom'):L('not_def'));
 var g=el('btnPickGrp');if(g)g.innerHTML=icon('users')+' '+L('not_grp')+(Sound.cGrp?L('not_custom'):L('not_def'));
 var t=el('btnTestSound');if(t)t.innerHTML=icon('play')+' '+L('not_test');
 var r=el('btnResetSound');if(r)r.innerHTML=icon('restore')+' '+L('not_reset');
@@ -1738,20 +1747,19 @@ lang=l;
 localStorage.setItem('qc-lang',l);
 applyLang();
 closeOv('langModal');
-toast(L('toast_lang')+': '+(l==='en'?'English':'Indonesia'));
 }
 function pickNsound(f){
 if(!f)return;
-if(f.size>1500000){toast('Ukuran suara maksimal 1,5 MB');return;}
+if(f.size>1500000){toast(L('e_size'));return;}
 var r=new FileReader();
 r.onload=function(){
 var data=String(r.result);
 var key=nsTarget==='grp'?'qc-nsound-grp':'qc-nsound-dm';
-try{localStorage.setItem(key,data);}catch(e){toast('Gagal menyimpan suara (penyimpanan penuh)');return;}
+try{localStorage.setItem(key,data);}catch(e){toast(L('e_store'));return;}
 if(nsTarget==='grp'){Sound.cGrp=data;Sound.bufGrp=null;try{Sound.audGrp=new Audio(data);Sound.audGrp.preload='auto';}catch(e2){}Sound.decode('grp',data);}
 else{Sound.cDm=data;Sound.bufDm=null;try{Sound.audDm=new Audio(data);Sound.audDm.preload='auto';}catch(e2){}Sound.decode('dm',data);}
 updateNotLabels();
-toast('Suara notifikasi disimpan');
+toast(L('t_sound_save'));
 };
 r.readAsDataURL(f);
 }
@@ -1761,15 +1769,15 @@ localStorage.removeItem('qc-nsound-grp');
 localStorage.removeItem('qc-nsound');
 Sound.cDm=null;Sound.cGrp=null;Sound.audDm=null;Sound.audGrp=null;Sound.bufDm=null;Sound.bufGrp=null;
 updateNotLabels();
-toast('Suara kembali ke bawaan');
+toast(L('t_sound_reset'));
 }
 function sendReport(){
-if(!pendingReport){toast('Tidak ada pengguna tujuan');return;}
+if(!pendingReport){toast(L('e_target'));return;}
 var id=rand(8);
 publishRetained(NS+'report/'+id,{id:id,from:S.me,target:pendingReport,reason:el('repReason').value,note:(el('repNote').value||'').trim(),time:now()});
 el('repNote').value='';
 closeOv('reportModal');
-toast('Laporan terkirim ke developer');
+toast(L('t_rep'));
 }
 function putsLang(){
 put('btnMenu',icon('menu'));put('btnCloseAcc',icon('x'));put('btnCloseSb',icon('x'));
@@ -1798,7 +1806,6 @@ put('btnDevRepX',icon('x',14));
 put('btnDevConvX',icon('x',14));
 put('btnPassOpen',icon('key')+' '+L('set_pass'));
 put('btnSetSync',icon('download')+' '+L('set_sync'));
-put('btnDelAcc',icon('userX')+' '+L('set_del'));
 put('devLogo',icon('dev',24));
 setTxt('#authSub',L('auth_sub'));
 setTxt('#fldUser > span',L('fld_user'));
@@ -1807,6 +1814,13 @@ setTxt('#fldPass2 > span',L('fld_pass2'));
 setTxt('#fldQ > span',L('fld_q'));
 setTxt('#fldAns > span',L('fld_a'));
 setTxt('#btnForgot',L('btn_forgot'));
+setTxt('#offlineTxt',L('offline_bar'));
+setTxt('#editLbl',L('editing'));
+setTxt('#cpLabel',L('img_ready'));
+setTxt('#recHint',L('rec_hint'));
+setTxt('#sbTitle',L('info_title'));
+setTxt('#sbCodeLbl',L('sb_code'));
+setTxt('#sbPeopleLbl',L('sb_people'));
 setTxt('#setTit',L('set_title'));setTxt('#setSub',L('set_sub'));setTxt('#setCard','QuickChat · BETA · '+APP_VER);
 setTxt('#passTit',L('pass_title'));setTxt('#passSub',L('pass_sub'));
 setTxt('#passOldLbl',L('pass_old'));setTxt('#passNewLbl',L('pass_new'));setTxt('#passNew2Lbl',L('pass_new2'));
@@ -1819,6 +1833,9 @@ setTxt('#recUserLbl',L('rec_u'));setTxt('#recAnsLbl',L('rec_a'));setTxt('#recP1L
 setTxt('#btnRec1',L('rec_b1'));setTxt('#btnRec2',L('rec_b2'));setTxt('#btnRec3',L('rec_b3'));
 setTxt('#wallTit',L('wall_title'));setTxt('#wallSub',L('wall_sub'));setTxt('#btnWallSave',L('wall_save'));
 setTxt('#repTit',L('rep_title'));setTxt('#repSub',L('rep_sub'));setTxt('#repReasonLbl',L('rep_reason'));setTxt('#repNoteLbl',L('rep_note'));setTxt('#btnRepSend',L('rep_send'));
+var rn=el('repNote');if(rn)rn.placeholder=L('rep_note_ph');
+var sel=el('repReason');
+if(sel){var cur=sel.selectedIndex;if(cur<0)cur=0;sel.innerHTML='';(REASONS[lang]||REASONS.id).forEach(function(r){var o=document.createElement('option');o.textContent=r;sel.appendChild(o);});sel.selectedIndex=cur;}
 setTxt('#dmTit',L('dm_title'));setTxt('#dmSub',L('dm_sub'));setTxt('#dmUserLbl',L('dm_u'));setTxt('#btnDM',L('dm_btn'));
 setTxt('#grpTit',L('grp_title'));setTxt('#grpSub',L('grp_sub'));setTxt('#grpNameLbl',L('grp_name'));setTxt('#btnGrp',L('grp_btn'));setTxt('#grpOr',L('grp_or'));setTxt('#grpCodeLbl',L('grp_code'));setTxt('#btnGrpJoin',L('grp_join'));
 setTxt('#devHeadSub',L('dev_sub'));setTxt('#devLockLbl',L('dev_lock'));setTxt('#btnDevUnlock',L('dev_unlock'));
@@ -1836,7 +1853,7 @@ document.documentElement.lang=lang;
 setAuthMode(authMode);
 putsLang();
 if(S.view==='home')renderHome();
-if(S.conv)renderSidebar();
+if(S.conv){renderSidebar();renderChatHeader();}
 }
 
 function init(){
@@ -1856,7 +1873,7 @@ setInterval(function(){if(typeof mqtt!=='undefined'&&!anyConnected())reconnectAl
 setInterval(function(){
 if(!S.me)return;
 fetchRetained(userT(S.me),1500).then(function(rec){
-if(rec&&rec.deleted&&S.me){toast('Akun kamu dihapus oleh developer');logout();}
+if(rec&&rec.deleted&&S.me){toast(L('e_deleted_self'));logout();}
 });
 },60000);
 on('tabLogin','click',function(){setAuthMode('login');});
@@ -1881,7 +1898,7 @@ wireDevSearch('devAccSearch','devList');
 wireDevSearch('devConvSearch','devConvList');
 on('btnPeekClose','click',function(){closePeek();closeOv('peekModal');});
 on('btnReport','click',function(){
-if(!S.conv||S.conv.type!=='dm'){toast('Laporan hanya untuk chat pribadi');return;}
+if(!S.conv||S.conv.type!=='dm'){toast(L('e_rep_dm'));return;}
 pendingReport=S.conv.peer;
 openOv('reportModal');
 });
@@ -1896,8 +1913,8 @@ on('btnLang','click',function(){closeOv('accSidebar');setTimeout(openLang,80);})
 on('btnLangId','click',function(){setLang('id');});
 on('btnLangEn','click',function(){setLang('en');});
 on('btnPassOpen','click',function(){dropOv('setModal');openOv('passModal');});
-on('btnSetSound','click',function(){Sound.toggle();updateSetSound();toast(Sound.on?L('not_on'):L('not_off'));});
-on('btnSetSync','click',function(){lastSyncAll=0;syncAllConvs();toast('Sinkronisasi riwayat diminta');});
+on('btnSetSound','click',function(){Sound.toggle();updateSetSound();});
+on('btnSetSync','click',function(){lastSyncAll=0;syncAllConvs();toast(L('t_sync'));});
 on('btnDelAcc','click',armDelete);
 on('btnChangePass','click',changePass);
 on('btnPickDm','click',function(){nsTarget='dm';el('nsoundInput').click();});
@@ -1905,7 +1922,7 @@ on('btnPickGrp','click',function(){nsTarget='grp';el('nsoundInput').click();});
 on('nsoundInput','change',function(e){pickNsound(e.target.files[0]);e.target.value='';});
 on('btnTestSound','click',function(){Sound.unlock();Sound.test();});
 on('btnResetSound','click',resetSounds);
-on('btnAccLogout','click',function(){closeOv('accSidebar');logout();toast('Kamu keluar');});
+on('btnAccLogout','click',function(){closeOv('accSidebar');logout();toast(L('t_logout'));});
 on('btnSaveProf','click',saveProfile);
 on('btnRandomAvatar','click',function(){tmpProf.img=null;tmpProf.color=Math.floor(Math.random()*COLORS.length);renderProfModal();});
 on('btnUploadAvatar','click',function(){el('avatarInput').click();});
@@ -1916,7 +1933,7 @@ on('btnWallpaper','click',function(){el('wallInput').click();});
 on('wallInput','change',function(e){
 var f=e.target.files[0];e.target.value='';
 if(!f)return;
-compressWall(f).then(openWallEditor).catch(function(){toast('Gagal memproses wallpaper');});
+compressWall(f).then(openWallEditor).catch(function(){toast(L('e_img'));});
 });
 on('wallDark','input',function(){if(!wallPending)return;wallPending.dark=+this.value;syncWallUI();});
 on('wallZoom','input',function(){if(!wallPending)return;wallPending.zoom=+this.value;syncWallUI();});
@@ -1926,13 +1943,13 @@ setWall(wallPending);
 applyWall();
 closeOv('wallModal');
 renderSidebar();
-toast('Wallpaper chat disimpan');
+toast(L('t_wall_save'));
 });
 on('btnWallClear','click',function(){
 localStorage.removeItem('qc-wall');
 applyWall();
 renderSidebar();
-toast('Wallpaper dihapus');
+toast(L('t_wall_clear'));
 });
 on('fabDM','click',function(){openOv('dmModal');el('inDM').focus();});
 on('btnDM','click',function(){startDM(el('inDM').value);});
@@ -1944,17 +1961,17 @@ on('btnBack','click',backHome);
 on('btnInfo','click',function(){renderSidebar();openOv('sidebar');});
 on('btnCloseSb','click',function(){closeOv('sidebar');});
 on('sbScrim','click',function(){closeOv('sidebar');});
-on('btnSbCopy','click',function(){if(S.conv&&S.conv.type==='group'){var c=S.conv.key.slice(4);if(navigator.clipboard)navigator.clipboard.writeText(c);toast('Kode grup disalin: '+c);}});
-on('btnSbShare','click',function(){if(S.conv&&S.conv.type==='group'){var link=location.href.split(/[?#]/)[0]+'?g='+S.conv.key.slice(4);if(navigator.clipboard)navigator.clipboard.writeText(link);toast('Link undangan disalin');}});
+on('btnSbCopy','click',function(){if(S.conv&&S.conv.type==='group'){var c=S.conv.key.slice(4);if(navigator.clipboard)navigator.clipboard.writeText(c);toast(fm(L('t_code'),c));}});
+on('btnSbShare','click',function(){if(S.conv&&S.conv.type==='group'){var link=location.href.split(/[?#]/)[0]+'?g='+S.conv.key.slice(4);if(navigator.clipboard)navigator.clipboard.writeText(link);toast(L('t_link'));}});
 on('btnCall','click',function(){if(S.conv&&S.conv.type==='dm'&&window.QC&&QC.startCall)QC.startCall(S.conv.peer,true);});
 on('btnCallAudio','click',function(){if(S.conv&&S.conv.type==='dm'&&window.QC&&QC.startCall)QC.startCall(S.conv.peer,false);});
 on('mmClose','click',function(){closeOv('mediaModal');});
 on('cpClear','click',function(){S.pendingImage=null;el('composePreview').classList.remove('on');updateSendBtn();});
 on('btnCancelEdit','click',function(){S.editId=null;el('editBar').classList.remove('on');el('input').value='';updateSendBtn();});
-on('btnClearMsgs','click',function(){if(!S.conv)return;S.msgs=[];saveMsgs(S.conv.key,[]);S.reactRaw={};localStorage.setItem('qc-react-'+S.me+'-'+S.conv.key,'{}');renderMsgs();toast('Pesan dibersihkan di perangkat ini');});
-on('btnDeleteConv','click',function(){if(!S.conv||S.conv.type!=='dm')return;var k=S.conv.key;removeConv(k);backHome();toast('Chat dihapus dari daftar');});
-on('btnLeaveGroup','click',function(){var c=S.conv;if(!c||c.type!=='group')return;var members=(c.members||[]).filter(function(m){return m!==S.me;});publishRetained(gmetaT(c.key.slice(4)),{id:c.key.slice(4),name:c.name,owner:c.owner||S.me,members:members,created:c.created||now()});writeMsg({type:'system',text:S.me+' keluar dari grup'});removeConv(c.key);backHome();toast('Kamu keluar dari grup');});
-on('btnDeleteGroup','click',function(){var c=S.conv;if(!c||c.type!=='group'||c.owner!==S.me)return;publishTo(convTopic(c.key),{k:'grp-del',from:S.me,conv:c.key});publishRetained(gmetaT(c.key.slice(4)),{id:c.key.slice(4),name:c.name,owner:c.owner,members:[],deleted:true});removeConv(c.key);backHome();toast('Grup dihapus untuk semua anggota');});
+on('btnClearMsgs','click',function(){if(!S.conv)return;S.msgs=[];saveMsgs(S.conv.key,[]);S.reactRaw={};localStorage.setItem('qc-react-'+S.me+'-'+S.conv.key,'{}');renderMsgs();toast(L('t_clear'));});
+on('btnDeleteConv','click',function(){if(!S.conv||S.conv.type!=='dm')return;var k=S.conv.key;removeConv(k);backHome();toast(L('t_del_conv'));});
+on('btnLeaveGroup','click',function(){var c=S.conv;if(!c||c.type!=='group')return;var members=(c.members||[]).filter(function(m){return m!==S.me;});publishRetained(gmetaT(c.key.slice(4)),{id:c.key.slice(4),name:c.name,owner:c.owner||S.me,members:members,created:c.created||now()});writeMsg({type:'system',text:fm(L('sys_leave'),S.me)});removeConv(c.key);backHome();toast(L('t_leave'));});
+on('btnDeleteGroup','click',function(){var c=S.conv;if(!c||c.type!=='group'||c.owner!==S.me)return;publishTo(convTopic(c.key),{k:'grp-del',from:S.me,conv:c.key});publishRetained(gmetaT(c.key.slice(4)),{id:c.key.slice(4),name:c.name,owner:c.owner,members:[],deleted:true});removeConv(c.key);backHome();toast(L('t_grp_del'));});
 on('btnSend','click',sendMessage);
 var ta=el('input');
 if(ta){
@@ -2008,12 +2025,12 @@ whenConnected(12000).then(function(ok){
 if(!ok||!S.me||S.me!==sess.u)return;
 return fetchRetained(userT(sess.u),2500).then(function(rec){
 if(!S.me||S.me!==sess.u)return;
-if(rec&&rec.deleted){logout();toast('Akun sudah dihapus.');return;}
-if(rec&&rec.h&&rec.h!==sess.h){logout();toast('Sesi berakhir. Masuk ulang.');return;}
-return checkBan(sess.u).then(function(b){if(b&&S.me===sess.u){logout();toast('Akun dibanned oleh developer');}});
+if(rec&&rec.deleted){logout();toast(L('e_deleted'));return;}
+if(rec&&rec.h&&rec.h!==sess.h){logout();toast(L('e_session'));return;}
+return checkBan(sess.u).then(function(b){if(b&&S.me===sess.u){logout();toast(L('e_banned_self'));}});
 });
 });
-}else if(g){toast('Masuk / daftar dulu untuk bergabung ke grup');}
+}else if(g){toast(L('e_login_first'));}
 setAuthMode('login');renderNet();
 }
 window.QC={get me(){return S.me;},get uid(){return uid;},get S(){return S;},icon:icon,toast:toast,esc:esc,COLORS:COLORS,profileOf:profileOf,displayName:displayName,avatarHTML:avatarHTML,writeMsg:function(p){return writeMsg(p);},publishTo:publishTo,callTopic:function(k){return callT(k);},insertEmoji:insertEmojiMain,updateSendBtn:updateSendBtn,autoGrow:autoGrow,fmtDur:fmtDur,Sound:Sound};
@@ -2023,4 +2040,4 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 <script src="media.js?v=21"></script>
 </body>
 </html>
-<!-- END index.html v45 -->
+<!-- END index.html v46 -->
