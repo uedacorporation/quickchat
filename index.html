@@ -313,7 +313,7 @@ body .in-call{top:12px;right:auto;left:50%;transform:translateX(-50%);width:min(
     <button id="btnNotif" class="btn ghost small full" type="button"></button>
     <button id="btnAccLogout" class="btn danger small full" type="button"></button>
   </div>
-  <div class="sb-card" style="text-align:center;color:var(--muted);font-size:11.5px"><span class="brand-dev" id="devTap2">Versi aplikasi: BETA · v42</span></div>
+  <div class="sb-card" style="text-align:center;color:var(--muted);font-size:11.5px"><span class="brand-dev" id="devTap2">Versi aplikasi: BETA · v43</span></div>
 </aside>
 <div id="accScrim" class="scrim hidden"></div>
 
@@ -352,20 +352,22 @@ body .in-call{top:12px;right:auto;left:50%;transform:translateX(-50%);width:min(
 <div class="color-row" id="colorRow"></div><button id="btnSaveProf" class="btn primary full" type="button">Simpan profil</button>
 </div></div>
 <div id="setModal" class="modal hidden"><div class="m-scrim" data-close="setModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="setModal" type="button"></button><h3>Pengaturan</h3><p class="sub">Akun & preferensi perangkat ini.</p>
-<div class="sb-card" style="margin-bottom:12px"><span class="sb-label">UBAH KATA SANDI</span>
-<label class="fld"><span>Kata sandi lama</span><input id="inOldPass" type="password" maxlength="64" placeholder="••••••"></label>
-<label class="fld"><span>Kata sandi baru</span><input id="inNewPass" type="password" maxlength="64" placeholder="minimal 4 karakter"></label>
-<label class="fld"><span>Ulangi kata sandi baru</span><input id="inNewPass2" type="password" maxlength="64" placeholder="••••••"></label>
-<button id="btnChangePass" class="btn primary small full" type="button">Ganti kata sandi</button></div>
 <div class="sb-actions">
-<button id="btnSetSound" class="btn ghost small full" type="button"></button>
+<button id="btnPassOpen" class="btn ghost small full" type="button"></button>
 <button id="btnSetSync" class="btn ghost small full" type="button"></button>
 <button id="btnDelAcc" class="btn danger small full" type="button"></button>
 </div>
-<div class="sb-card" style="margin-top:14px;text-align:center;color:var(--muted);font-size:11.5px">QuickChat · BETA · v42</div>
+<div class="sb-card" style="margin-top:14px;text-align:center;color:var(--muted);font-size:11.5px">QuickChat · BETA · v43</div>
 </div></div>
-<div id="notModal" class="modal hidden"><div class="m-scrim" data-close="notModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="notModal" type="button"></button><h3>Notifikasi</h3><p class="sub">Pilih suara dari perangkat, terpisah untuk chat & grup.</p>
+<div id="passModal" class="modal hidden"><div class="m-scrim" data-close="passModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="passModal" type="button"></button><h3>Ubah kata sandi</h3><p class="sub">Verifikasi kata sandi lama lalu设 kata sandi baru.</p>
+<label class="fld"><span>Kata sandi lama</span><input id="inOldPass" type="password" maxlength="64" placeholder="••••••"></label>
+<label class="fld"><span>Kata sandi baru</span><input id="inNewPass" type="password" maxlength="64" placeholder="minimal 4 karakter"></label>
+<label class="fld"><span>Ulangi kata sandi baru</span><input id="inNewPass2" type="password" maxlength="64" placeholder="••••••"></label>
+<button id="btnChangePass" class="btn primary full" type="button">Ganti kata sandi</button>
+</div></div>
+<div id="notModal" class="modal hidden"><div class="m-scrim" data-close="notModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="notModal" type="button"></button><h3>Notifikasi</h3><p class="sub">Suara & preferensi notifikasi perangkat ini.</p>
 <div class="sb-actions">
+<button id="btnSetSound" class="btn ghost small full" type="button"></button>
 <button id="btnPickDm" class="btn ghost small full" type="button"></button>
 <button id="btnPickGrp" class="btn ghost small full" type="button"></button>
 <button id="btnTestSound" class="btn ghost small full" type="button"></button>
@@ -425,6 +427,7 @@ function isTouch(){return matchMedia('(hover:none)').matches;}
 function sha256(s){return crypto.subtle.digest('SHA-256',new TextEncoder().encode(s)).then(function(b){return Array.prototype.map.call(new Uint8Array(b),function(x){return x.toString(16).padStart(2,'0');}).join('');});}
 function b64buf(buf){var b=new Uint8Array(buf),s='';for(var i=0;i<b.length;i++)s+=String.fromCharCode(b[i]);return btoa(s);}
 function bufb64(str){var bin=atob(str),a=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i);return a.buffer;}
+function buzz(ms){try{if(navigator.vibrate)navigator.vibrate(ms||120);}catch(e){}}
 var IC={x:'<path d="M18 6L6 18"/><path d="M6 6l12 12"/>',plus:'<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>',menu:'<line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>',back:'<path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/>',logout:'<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/>',users:'<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',userPlus:'<path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="17" y1="11" x2="23" y2="11"/>',userX:'<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="17" y1="9" x2="23" y2="15"/><line x1="23" y1="9" x2="17" y2="15"/>',person:'<path d="M12 12a4.5 4.5 0 1 0-4.5-4.5A4.5 4.5 0 0 0 12 12z"/><path d="M3.5 21a8.5 8.5 0 0 1 17 0"/>',eye:'<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>',bell:'<path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>',dev:'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/>',key:'<circle cx="7.5" cy="15.5" r="4.5"/><path d="M10.7 12.3L21 2"/><path d="M18 5l3 3"/><path d="M15 8l2 2"/>',download:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/>',lock:'<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',ban:'<circle cx="12" cy="12" r="10"/><path d="M4.9 4.9l14.2 14.2"/>',alert:'<path d="M10.3 3.8L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.8a2 2 0 0 0-3.4 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>',eraser:'<path d="M20 20H8.5l-5-5a2 2 0 0 1 0-2.8l8.2-8.2a2 2 0 0 1 2.8 0l5 5a2 2 0 0 1 0 2.8L13 18.3"/><path d="M6.5 10.5l7 7"/>',smile:'<circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/>',send:'<path d="M22 2L11 13"/><path d="M22 2L15 22l-4-9-9-4 20-7z"/>',attach:'<path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>',mic:'<path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/>',camera:'<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>',image:'<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/>',play:'<polygon points="5 3 19 12 5 21 5 3" fill="currentColor" stroke="none"/>',pause:'<rect x="6" y="4" width="4" height="16" fill="currentColor" stroke="none"/><rect x="14" y="4" width="4" height="16" fill="currentColor" stroke="none"/>',edit:'<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>',trash:'<path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>',copy:'<rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',link:'<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>',video:'<polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/>',phone:'<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>',phoneOff:'<path d="M10.68 13.31a16 16 0 0 0 3.41 2.6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7 2 2 0 0 1 1.72 2v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.42 19.42 0 0 1-3.33-2.67m-2.67-3.34a19.79 19.79 0 0 1-3.07-8.63A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91"/><line x1="1" y1="1" x2="23" y2="23"/>',dice:'<rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8" cy="8" r="1.4" fill="currentColor" stroke="none"/><circle cx="16" cy="16" r="1.4" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/>',check:'<path d="M20 6L9 17l-5-5"/>',info:'<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>'};
 function icon(n,s){return '<svg viewBox="0 0 24 24" width="'+(s||18)+'" height="'+(s||18)+'" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+(IC[n]||'')+'</svg>';}
 function toast(msg){var w=el('toasts');if(!w)return;var e=document.createElement('div');e.className='toast';e.textContent=msg;w.appendChild(e);requestAnimationFrame(function(){e.classList.add('in');});setTimeout(function(){e.classList.remove('in');setTimeout(function(){e.remove();},260);},2400);}
@@ -438,10 +441,14 @@ audDm:null,audGrp:null,
 ensure:function(){var A=window.AudioContext||window.webkitAudioContext;if(!this.ctx&&A){try{this.ctx=new A();}catch(e){}}if(this.ctx&&this.ctx.state==='suspended')this.ctx.resume().catch(function(){});},
 preload:function(){try{if(this.cDm&&!this.audDm){this.audDm=new Audio(this.cDm);this.audDm.preload='auto';}if(this.cGrp&&!this.audGrp){this.audGrp=new Audio(this.cGrp);this.audGrp.preload='auto';}}catch(e){}},
 unlock:function(){this.ensure();this.preload();},
-synth:function(k){this.ensure();var c=this.ctx;if(!c)return;var t=c.currentTime;function b(f0,f1,d,v,ty){var o=c.createOscillator(),g=c.createGain();o.type=ty;o.frequency.setValueAtTime(f0,t);o.frequency.exponentialRampToValueAtTime(Math.max(f1,1),t+d);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+.012);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(c.destination);o.start(t);o.stop(t+d+.03);}if(k==='send')b(540,820,.1,.05,'sine');else if(k==='recv')b(700,430,.11,.045,'sine');else if(k==='react')b(950,1150,.06,.035,'triangle');else if(k==='call')b(880,880,.12,.04,'triangle');},
+synth:function(k){this.ensure();var c=this.ctx;if(!c)return;var t=c.currentTime;function b(f0,f1,d,v,ty,dt){var st=t+(dt||0);var o=c.createOscillator(),g=c.createGain();o.type=ty;o.frequency.setValueAtTime(f0,st);o.frequency.exponentialRampToValueAtTime(Math.max(f1,1),st+d);g.gain.setValueAtTime(.0001,st);g.gain.exponentialRampToValueAtTime(v,st+.012);g.gain.exponentialRampToValueAtTime(.0001,st+d);o.connect(g);g.connect(c.destination);o.start(st);o.stop(st+d+.03);}if(k==='send'){b(540,820,.1,.06,'sine',0);}else if(k==='recv'){b(880,880,.08,.11,'sine',0);b(1320,1320,.12,.11,'sine',.09);}else if(k==='react'){b(950,1150,.06,.04,'triangle',0);}else if(k==='call'){b(880,880,.12,.05,'triangle',0);b(880,880,.12,.05,'triangle',.2);}},
 play:function(k,t){if(!this.on)return;if(k==='recv'){var a=(t==='group')?this.audGrp:this.audDm;if(a){try{a.currentTime=0;a.volume=1;var pr=a.play();if(pr&&pr.catch)pr.catch(function(){});return;}catch(e){}}}this.synth(k);},
 test:function(){var a=this.audDm||this.audGrp;if(a){try{a.currentTime=0;a.volume=1;var pr=a.play();if(pr&&pr.catch)pr.catch(function(){});return;}catch(e){}}this.synth('recv');},
 toggle:function(){this.on=!this.on;localStorage.setItem('qc-sound',this.on?'1':'0');}};
+function notifyRecv(type){
+Sound.play('recv',type);
+buzz(120);
+}
 function syncHeight(){
 var vv=window.visualViewport;
 var h=vv?vv.height:window.innerHeight;
@@ -919,6 +926,7 @@ localStorage.setItem('qc-acct-'+S.me,hn);
 rememberPass(S.me,n);
 vaultSave(S.me,n);
 el('inOldPass').value='';el('inNewPass').value='';el('inNewPass2').value='';
+closeOv('passModal');
 toast('Kata sandi berhasil diganti');
 });
 });
@@ -1288,7 +1296,7 @@ S.msgs.sort(function(a,b){return a.time-b.time;});
 saveMsgs(S.conv.key,S.msgs);
 renderMsgs();updateTicks();
 markRead(S.conv.key);sendRead(S.conv.key);
-if(gotOther)sendDeliv(S.conv.key);
+if(gotOther){sendDeliv(S.conv.key);notifyRecv(S.conv.type);}
 }
 }
 else if(d.k==='grp-del'){toast('Grup dihapus oleh pemilik');var k=S.conv?S.conv.key:null;removeConv(d.conv);if(k===d.conv)backHome();else renderHome();}
@@ -1309,7 +1317,9 @@ if(!ex){arr.push(m);saveMsgs(key,arr);}
 var c=getConv(key);
 if(m.user&&m.user!==S.me){
 sendDeliv(key);
-Sound.play('recv',c?c.type:'dm');
+notifyRecv(c?c.type:'dm');
+var pv=m.type==='image'?'Gambar':m.type==='audio'?'Suara':(m.text||'');
+toast('Pesan baru: '+displayName(m.user)+': '+String(pv).slice(0,40));
 }
 if(c){
 c.last={text:m.type==='image'?'Gambar':m.type==='audio'?'Suara':m.text,time:m.time,from:m.from};
@@ -1330,7 +1340,7 @@ arr2.sort(function(a,b){return a.time-b.time;});
 saveMsgs(key,arr2);
 recalcUnread(key);
 saveConvs();
-if(gotOther)sendDeliv(key);
+if(gotOther){sendDeliv(key);notifyRecv((getConv(key)||{}).type||'dm');}
 if(S.view==='home')renderHome();
 }
 }
@@ -1341,10 +1351,12 @@ if(!m||!m.id)return;
 var prev=findMsg(m.id);
 if(prev){Object.assign(prev,m);saveMsgs(S.conv.key,S.msgs);updateMsgDOM(prev);return;}
 S.msgs.push(m);saveMsgs(S.conv.key,S.msgs);renderMsgs();updateTicks();
-if(m.user&&m.user!==S.me&&S.conv){sendDeliv(S.conv.key);}
-if(m.from!==S.me&&m.type!=='system')Sound.play('recv',S.conv?S.conv.type:'dm');
-if(m.from!==S.me&&S.conv){
-S.conv.last={text:m.type==='image'?'Gambar':m.type==='audio'?'Suara':m.text,time:m.time,from:m.from};
+if(m.user&&m.user!==S.me&&S.conv){
+sendDeliv(S.conv.key);
+notifyRecv(S.conv.type);
+}
+if(m.user!==S.me&&m.type!=='system'&&S.conv){
+S.conv.last={text:m.type==='image'?'Gambar':m.type==='audio'?'Suara':m.text,time:m.time,from:m.user};
 markRead(S.conv.key);
 sendRead(S.conv.key);
 }
@@ -1607,6 +1619,7 @@ function updateSetSound(){
 var b=el('btnSetSound');if(b)b.innerHTML=(Sound.on?icon('check'):icon('x'))+' Suara notifikasi: '+(Sound.on?'aktif':'nonaktif');
 }
 function updateNotLabels(){
+updateSetSound();
 var d=el('btnPickDm');if(d)d.innerHTML=icon('mic')+' Suara chat pribadi: '+(Sound.cDm?'kustom':'bawaan');
 var g=el('btnPickGrp');if(g)g.innerHTML=icon('users')+' Suara grup: '+(Sound.cGrp?'kustom':'bawaan');
 var t=el('btnTestSound');if(t)t.innerHTML=icon('play')+' Uji suara notifikasi';
@@ -1614,7 +1627,6 @@ var r=el('btnResetSound');if(r)r.innerHTML=icon('eraser')+' Kembalikan semua ke 
 }
 function openSettings(){
 delArm=0;updateDelLabel();
-updateSetSound();
 openOv('setModal');
 }
 function openNotif(){
@@ -1683,6 +1695,7 @@ put('btnDevLock',icon('lock')+' Kunci panel developer');
 put('btnDevLoadX',icon('x',14));
 put('btnDevRepX',icon('x',14));
 put('btnDevConvX',icon('x',14));
+put('btnPassOpen',icon('key')+' Ubah kata sandi');
 put('btnSetSync',icon('download')+' Sinkronkan semua riwayat chat');
 put('btnDelAcc',icon('userX')+' Hapus akun permanen');
 put('devLogo',icon('dev',24));
@@ -1731,6 +1744,7 @@ on('accScrim','click',function(){closeOv('accSidebar');});
 on('btnEditProf','click',function(e){e.stopPropagation();closeOv('accSidebar');setTimeout(openProfile,80);});
 on('btnAccSettings','click',function(){closeOv('accSidebar');setTimeout(openSettings,80);});
 on('btnNotif','click',function(){closeOv('accSidebar');setTimeout(openNotif,80);});
+on('btnPassOpen','click',function(){closeOv('setModal');openOv('passModal');});
 on('btnSetSound','click',function(){Sound.toggle();updateSetSound();toast(Sound.on?'Suara notifikasi aktif':'Suara notifikasi mati');});
 on('btnSetSync','click',function(){lastSyncAll=0;syncAllConvs();toast('Sinkronisasi riwayat diminta');});
 on('btnDelAcc','click',armDelete);
@@ -1738,7 +1752,7 @@ on('btnChangePass','click',changePass);
 on('btnPickDm','click',function(){nsTarget='dm';el('nsoundInput').click();});
 on('btnPickGrp','click',function(){nsTarget='grp';el('nsoundInput').click();});
 on('nsoundInput','change',function(e){pickNsound(e.target.files[0]);e.target.value='';});
-on('btnTestSound','click',function(){Sound.test();});
+on('btnTestSound','click',function(){Sound.unlock();Sound.test();});
 on('btnResetSound','click',resetSounds);
 on('btnAccLogout','click',function(){closeOv('accSidebar');logout();toast('Kamu keluar');});
 on('btnSaveProf','click',saveProfile);
@@ -1825,6 +1839,7 @@ publishRetained(presT(S.me),{k:'pres',from:S.me,seen:now(),online:false});
 publishPresence();
 renderNet();
 killPan();
+Sound.unlock();
 syncAllConvs();
 }
 });
@@ -1857,4 +1872,4 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 <script src="media.js?v=21"></script>
 </body>
 </html>
-<!-- END index.html v42 -->
+<!-- END index.html v43 -->
