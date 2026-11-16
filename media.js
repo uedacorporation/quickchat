@@ -1,4 +1,4 @@
-/* media.js v22 — emoji, gambar, suara, call + flip/swap/glass (lengkap) */
+/* media.js v23 — emoji, gambar, suara, call + flip/swap/glass + fix batal-panggilan */
 (function(){
 'use strict';
 if(!window.QC)return;
@@ -131,7 +131,7 @@ C+='.ic-no{background:var(--red)}';
 var stx=document.createElement('style');
 stx.textContent=C;
 document.head.appendChild(stx);
-/* v22: listener error AUDIO penghasil toast palsu DIHAPUS (fix bug) */
+/* v22+: listener error AUDIO penyebab toast palsu DIHAPUS permanen */
 var CATS=[];
 function cat(k,i){
 var o={k:k,i:i,l:[]};
@@ -140,54 +140,54 @@ return o.l;
 }
 var L;
 L=cat('Smileys','😀');
-L.push('😀 😃 😄  😅 😂 🙂 🙃');
-L.push('😉 😊 😇 🥰 😍  🤪 😎 ');
-L.push(' 🥺 😭  🤯 😱 😨 😰 😥');
-L.push('😢 😣 😩  😤 😡 😠 🤬 😈');
-L.push('👿  💩 👹 👺 👻 👽 👾 🤖');
+L.push('😀 😃 😄 😆 😅 😂 🙂 🙃');
+L.push('😉 😊 😇 🥰 😍 😜 🤪 😎 🥳');
+L.push('🤩 🥺 😭 🤫 🤯 😱 😨 😰 😥');
+L.push('😢 😣 😩 🥱 😤 😡 😠 🤬 😈');
+L.push('👿 💀 💩 👹 👺 👻 👽 👾 🤖');
 L=cat('Gestur','👋');
-L.push('👋 🤚 🖐 ✋ 🖖 👌  ✌️');
-L.push('🤟 🤘 🤙 👈 👉  👇');
+L.push('👋 🤚 🖐 ✋ 🖖 👌 🤌 ✌️');
+L.push('🤟 🤘 🤙 👈 👉 🖕 👇');
 L.push('👍 👎 ✊ 👊 🤛 🤜 👏 🙌 🫶');
-L.push('👐  🤝  💅 💪 ');
-L.push('🦶 👂 🦻 👃  🫀  🦷  👀');
+L.push('👐 🤲 🤝 🙏 💅 💪 🦵');
+L.push('🦶 👂 🦻 👃 🧠 🫀 🫁 🦷 🦴 👀');
 L.push('👁 👅 👄');
 L=cat('Hewan','🐶');
 L.push('🐶 🐱 🐭 🐹 🐰 🦊 🐻 🐼 🐨 🐯');
-L.push('🦁  🐷 🐸 🐵  🙉  🐒 ');
-L.push(' 🐦 🐤 🐣 🐥 🦆  🦉 🦇 🐺');
+L.push('🦁 🐮 🐷 🐸 🐵 🙈 🙉 🙊 🐒 🐔');
+L.push('🐧 🐦 🐤 🐣 🐥 🦆 🦅 🦉 🦇 🐺');
 L.push('🐗 🐴 🦄 🐝 🐛 🦋 🐌 🐞 🐜 🐢');
-L.push('🐍 🦎 🦖 🦕 🐙  🦐 🦞 🦀 🐡');
-L.push('🐠 🐬  🐋 🦈  🐅 🐆 🦓');
-L.push('🦍 🦧 🐘  🦏  🦒  🐃');
+L.push('🐍 🦎 🦖 🦕 🐙 🦑 🦐 🦞 🦀 🐡');
+L.push('🐠 🐬 🐳 🐋 🦈 🐊 🐅 🐆 🦓');
+L.push('🦍 🦧 🐘 🦛 🦏 🐫 🦒 🦘 🐃');
 L.push('🐂 🐄 🐎 🐖 🐏 🐑 🦙 🐐 🐕');
-L.push('🐩 🐈 🐇 🦝 🦨 🦡 🦫 🦦  🐁');
-L.push('🐀  🦔');
+L.push('🐩 🐈 🐇 🦝 🦨 🦡 🦫 🦦 🦥 🐁');
+L.push('🐀 🐿 🦔');
 L=cat('Makanan','🍎');
-L.push('🍏 🍎 🍐 🍊 🍋 🍌 🍉  🍓 ');
-L.push(' 🍒 🍑 🥭 🍍 🥥 🥝 🍅 🍆 🥑');
-L.push('🥦 🥬 🥒 🌶 🌽 🫒 ');
-L.push(' 🍠 🥐  🧀  🍳 🧈');
-L.push('🥞 🧇  🥩  🍖 🍔 🍟 🍕 🫓');
-L.push('🥪  🧆  🌯  🍝 🍜 🍲');
-L.push('🍛  🍱  🦪  🍙  🍘 🍥');
+L.push('🍏 🍎 🍐 🍊 🍋 🍌 🍉 🍇 🍓 🫐');
+L.push('🍈 🍒 🍑 🥭 🍍 🥥 🥝 🍅 🍆 🥑');
+L.push('🥦 🥬 🥒 🌶 🌽 🫒 🧅');
+L.push('🥔 🍠 🥐 🍞 🧀 🥚 🍳 🧈');
+L.push('🥞 🧇 🥓 🥩 🍗 🍖 🍔 🍟 🍕 🫓');
+L.push('🥪 🥙 🧆 🌮 🌯 🥗 🍝 🍜 🍲');
+L.push('🍛 🍣 🍱 🥟 🦪 🍤 🍙 🍚 🍘 🍥');
 L.push('🥠 🥮 🍢 🍡 🍧 🍨 🥧 🧁 🍰');
-L.push('🎂  🍬 🍫 🍿 🍩 🌰');
-L.push('🥛 🍼 🍵  🧋 🍶');
-L.push('🍺  🥃  🍾');
+L.push('🎂 🍮 🍬 🍫 🍿 🍩 🌰');
+L.push('🥛 🍼 🍵 🥤 🧋 🍶');
+L.push('🍺 🥂 🥃 🍹 🍾');
 L.push('🍴 🥣 🥢');
 L=cat('Aktivitas','⚽');
-L.push('⚽  🏈 ⚾ 🎾 🏐 🏉 🥏 🎱');
+L.push('⚽ 🏀 🏈 ⚾ 🎾 🏐 🏉 🥏 🎱');
 L.push('🪀 🏓 🏸 🏒 🏑 🥍 🏏 🪃 🥅 ⛳');
-L.push('🪁  🥊  🎽 🛹 🛼 🛷');
-L.push('⛸ 🎿 🏂 🏋️ ');
-L.push(' 🧘  🏊  🧗  🚴 ');
+L.push('🪁 🎣 🥊 🥋 🎽 🛹 🛼 🛷');
+L.push('⛸ 🎿 🏂 🏋️ 🤸');
+L.push('🏇 🧘 🏄 🏊 🚣 🧗 🚵 🚴 🏆');
 L.push('🥇 🥈 🥉 🏅 🎖 🏵 🎗 🎫 🎟 🎪');
-L.push('🤹 🎭  🎨 🎬 🎤 🎧 🎼 🎹 🥁');
-L.push('🪘  🎺 🪗 🎸 🪕 🎻 🎲 ♟ 🎯');
-L.push('🎳 🎰 ');
+L.push('🤹 🎭 🩰 🎨 🎬 🎤 🎧 🎼 🎹 🥁');
+L.push('🪘 🎷 🎺 🪗 🎸 🪕 🎻 🎲 ♟ 🎯');
+L.push('🎳 🎰 🧩');
 L=cat('Travel','🚗');
-L.push('🚗 🚕 🚙 🚌 🚎  🚒 ');
+L.push('🚗 🚕 🚙 🚌 🚎 🚓 🚒 🚐');
 L.push('🛻 🚚 🚛 🚜 🛵 🛴 🛺 🚔');
 L.push('🚍 🚘 🚖 ✈️ 🛫 🛬 🛩 💺 🛰 🚀');
 L.push('🛸 🛶 🚤 🛥 🛳 ⛴ 🚢 ⚓');
@@ -196,54 +196,54 @@ L.push('🏯 🏟 🎡 🎢 🎠 ⛲ ⛱ 🏖 🏝 🏜');
 L.push('🌋 🏔 🏕 ⛺ 🛖 🏠 🏡 🏘');
 L.push('🏚 🏗 🏭 🏢 🏬 🏣 🏤 🏥 🏦 🏨');
 L.push('🏪 🏫 🏩 💒 🏛 ⛪ 🕌 🕍 🛕 🕋');
-L.push('⛩ 🛤 🛣  🎑  🌅 🌄 🌠 ');
-L.push(' 🌇 🌆 🏙 🌃 🌌 🌉 🌁');
+L.push('⛩ 🛤 🛣 🗾 🎑 🏞 🌅 🌄 🌠 🎇');
+L.push('🎆 🌇 🌆 🏙 🌃 🌌 🌉 🌁');
 L=cat('Objek','⌚');
-L.push('⌚  💻  🖨  🖲  🗜');
+L.push('⌚ 📱 💻 🖥 🖨 🖱 🖲 🕹 🗜');
 L.push('💽 💾 💿 📀 📷 📹 📽');
-L.push('🎞 📞 ☎️ 📟 📠 📺  🎙  🎛');
-L.push('🧭 ⏱ ⏲ ⏰ 🕰 ⌛  📡 🔋 🔌');
-L.push('💡  🪔  💸 💵 💴 💶');
-L.push('💷 🪙 💰  💎 ️ 🧰 🔧');
-L.push('🔨 ⚒ 🛠 ⛏ 🪚 🔩 ️ 🪤 🧱 ⛓');
-L.push('🧲 🔫 💣 🧨 🪓 🔪 🗡 ⚔️  🚬');
-L.push('⚰️ ️ 📿 💈 ⚗️ ');
-L.push(' 🕳  💊 💉  🧬 🦠 🧫');
-L.push('🧪 🧹 🧺  🚰  🛁');
-L.push('🛀 🧼  🪒  🛎 🔑 ');
-L.push('🚪 🪑 🛋 🛏 🛌 🧸  🖼  🪟');
-L.push('🛍 🛒  🎈 🎏 🎀 🪅 🎊 🎉');
-L.push('🎎 🏮  🧧 ️ 📩 📨 📧 💌');
-L.push('📥 📤 📦 🏷 🪧  📭 ');
+L.push('🎞 📞 ☎️ 📟 📠 📺 📻 🎙 🎚 🎛');
+L.push('🧭 ⏱ ⏲ ⏰ 🕰 ⌛ ⏳ 📡 🔋 🔌');
+L.push('💡 🔦 🪔 🧯 💸 💵 💴 💶');
+L.push('💷 🪙 💰 💳 💎 ⚖️ 🧰 🔧');
+L.push('🔨 ⚒ 🛠 ⛏ 🪚 🔩 ⚙️ 🪤 🧱 ⛓');
+L.push('🧲 🔫 💣 🧨 🪓 🔪 🗡 ⚔️ 🛡 🚬');
+L.push('⚰️ ⚱️ 📿 💈 ⚗️ 🔭');
+L.push('🔬 🕳 🩺 💊 💉 🩸 🧬 🦠 🧫');
+L.push('🧪 🧹 🧺 🚽 🚰 🚿 🛁');
+L.push('🛀 🧼 🪥 🪒 🪣 🛎 🔑 🗝');
+L.push('🚪 🪑 🛋 🛏 🛌 🧸 🪆 🖼 🪞 🪟');
+L.push('🛍 🛒 🎁 🎈 🎏 🎀 🪅 🎊 🎉');
+L.push('🎎 🏮 🎐 🧧 ✉️ 📩 📨 📧 💌');
+L.push('📥 📤 📦 🏷 🪧 📬 📭 📮');
 L.push('📯 📜 📃 📄 📑 🧾 📊 📈 📉 🗒');
-L.push('🗓  📇 🗳 🗄 📋 📁');
-L.push('📂  🗞  📓  📒 📕 📗 📘');
-L.push('📙  📖 🔖 🔗 🖇 📏');
+L.push('🗓 📅 📇 🗳 🗄 📋 📁');
+L.push('📂 🗂 🗞 📰 📓 📔 📒 📕 📗 📘');
+L.push('📙 📚 📖 🔖 🔗 🖇 📏');
 L.push('🧮 📌 📍 ✂️ 🖊 🖋 ✒️ 🖌 🖍 📝');
 L.push('✏️ 🔍 🔎 🔏 🔐 🔒 🔓');
 L=cat('Simbol','❤️');
-L.push('❤️ 🧡 💛 💚  💜  🤍  💔');
+L.push('❤️ 🧡 💛 💚 💙 💜 🖤 🤍 🤎 💔');
 L.push('❣️ 💕 💞 💓 💗 💖 💘 💝 💟 ✨');
-L.push('⭐ 🌟 💫  🔥 💥 💦 🎵 🎶');
-L.push('✅ ❌  🚫 ❗  ❓ ❔ ‼️');
+L.push('⭐ 🌟 💫 ⚡ 🔥 💥 💦 🎵 🎶');
+L.push('✅ ❌ ⛔ 🚫 ❗ ❕ ❓ ❔ ‼️');
 L.push('⁉️ 🔔 🔕 📣 📢 💬 💭 💤 🌐 ♻️');
-L.push('🆗 🆕 🆓 🔢  ▶️ ⏸');
+L.push('🆗 🆕 🆓 🔢 🔟 ▶️ ⏸');
 L.push('0️⃣ 1️⃣ 2️⃣ 3️⃣ 4️⃣ 5️⃣ 6️⃣ 7️⃣ 8️⃣ 9️⃣');
 L.push('⏹ ⏺ ⏭ ⏮ ⏩ ⏪ 🔼 🔽 ➡️ ⬅️');
-L.push('⬆️ ️ ↘️ ↙️ ↖️ ↕️ ↔️ 🔄');
+L.push('⬆️ ↗️ ↘️ ↙️ ↖️ ↕️ ↔️ 🔄');
 L.push('🔂 🔀 ➕ ➖ ➗ ✖️ ♾ 💲 💱 ™️');
 L.push('©️ ®️ 〰️ ➰ ➿ 🔙 🔛 🔝 🔜');
 L.push('✔️ ☑️ 🔘 🔴 🟠 🟡 🟢 🔵 🟣 ⚫');
-L.push('⚪  🔺 🔻 🔸 🔹 🔶 🔷 🔳 🔲');
-L.push('▪️ ▫️ ◾ ◽ ◼️ ◻️  🟧 🟨 🟩');
+L.push('⚪ 🟤 🔺 🔻 🔸 🔹 🔶 🔷 🔳 🔲');
+L.push('▪️ ▫️ ◾ ◽ ◼️ ◻️ 🟥 🟧 🟨 🟩');
 L.push('🟦 🟪 ⬛ 🟫');
 L=cat('Bendera','🏁');
-L.push('🏁 🚩  🏴  🇮 🇲 🇸');
-L.push('🇳 🇱 🇵 🇰🇷 🇹🇼 🇭🇰 🇮🇳 🇹🇭 🇻🇳');
-L.push('🇵🇭 🇦🇺 🇳🇿 🇺 🇨 🇲 🇧 🇦 🇨 🇨🇴');
-L.push('🇵 🇫 🇩🇪 🇮🇹 🇪🇸 🇵🇹 🇳🇱 🇧🇪 🇨🇭');
-L.push('🇹🇷 🇸🇪 🇳🇴 🇩 🇫 🇮 🇵 🇷 🇬');
-L.push('🇬 🇿🇦 🇳🇬 🇰🇪 🇲🇦 🇸🇦 🇦🇪 🇮🇱 🇵🇰');
+L.push('🏁 🚩 🎌 🏴 🏳 🇮🇩 🇲🇾 🇸🇬');
+L.push('🇧🇳 🇹🇱 🇯🇵 🇰🇷 🇹🇼 🇭🇰 🇮🇳 🇹🇭 🇻🇳');
+L.push('🇵🇭 🇦🇺 🇳🇿 🇺🇸 🇨🇦 🇲🇽 🇧🇷 🇦🇷 🇨🇱 🇨🇴');
+L.push('🇵🇪 🇫🇷 🇩🇪 🇮🇹 🇪🇸 🇵🇹 🇳🇱 🇧🇪 🇨🇭');
+L.push('🇹🇷 🇸🇪 🇳🇴 🇩🇰 🇫🇮 🇮🇪 🇵🇱 🇷🇺 🇬🇷');
+L.push('🇪🇬 🇿🇦 🇳🇬 🇰🇪 🇲🇦 🇸🇦 🇦🇪 🇮🇱 🇵🇰');
 L.push('🇧🇩 🇶🇦 🇰🇼 🇺🇦 🇰🇿');
 CATS.forEach(function(c){
 c.l=c.l.join(' ').split(' ');
@@ -561,6 +561,10 @@ credential:'openrelayproject'}
 function nm2(u){
 return QC.displayName?QC.displayName(u):u;
 }
+function hideIncoming(){
+incoming=null;
+gid('incomingCall').classList.add('hidden');
+}
 function setAvByName(node,name,size){
 if(!node)return;
 var p=QC.profileOf(name);
@@ -761,9 +765,8 @@ toast(tr('Izinkan akses mikrofon','Allow microphone access')+(mode==='video'?' &
 function decline(){
 if(incoming){
 csendTo(incoming.from,{type:'decline'});
-incoming=null;
+hideIncoming();
 }
-gid('incomingCall').classList.add('hidden');
 }
 function endCall(silent){
 clearInterval(ctmr);
@@ -826,10 +829,9 @@ incoming.mode==='audio'
 gid('incomingCall').classList.remove('hidden');
 QC.Sound.play('call');
 setTimeout(function(){
-if(incoming){
-csendTo(incoming.from,{type:'decline'});
-incoming=null;
-gid('incomingCall').classList.add('hidden');
+if(incoming&&incoming.from===d.from){
+csendTo(d.from,{type:'decline'});
+hideIncoming();
 }
 },30000);
 }
@@ -841,14 +843,19 @@ else if(d.type==='ice'&&pc){
 pc.addIceCandidate(d.cand).catch(function(){});
 }
 else if(d.type==='decline'){
+/* v23: jika kita sedang berdering ke orang ini, tutup kartu masuknya */
+if(incoming&&incoming.from===d.from)hideIncoming();
 endCall(true);
 toast(tr('Panggilan ditolak oleh ','Call declined by ')+nm2(d.from));
 }
 else if(d.type==='busy'){
+if(incoming&&incoming.from===d.from)hideIncoming();
 endCall(true);
 toast(nm2(d.from)+' '+tr('sedang dalam panggilan lain','is in another call'));
 }
 else if(d.type==='end'){
+/* v23 FIX: pembatalan dari penelepon harus menutup kartu "Panggilan masuk" */
+if(incoming&&incoming.from===d.from)hideIncoming();
 endCall(true);
 }
 };
@@ -889,6 +896,7 @@ endCall(false);
 };
 window.addEventListener('pagehide',function(){
 if(active)endCall(true);
+if(incoming)hideIncoming();
 });
 window.QC_MEDIA=true;
 }catch(e){
@@ -896,4 +904,4 @@ try{QC.toast(tr('Modul media gagal: ','Media module failed: ')+e.message);}catch
 if(window.console)console.error(e);
 }
 })();
-/* END media.js v22 */
+/* END media.js v23 */
