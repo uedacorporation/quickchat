@@ -1,4 +1,4 @@
-/* media.js v23 — emoji, gambar, suara, call + flip/swap/glass + fix batal-panggilan */
+/* media.js v24 — emoji, gambar, suara, call + flip/swap/glass/autoplay-fix (lengkap) */
 (function(){
 'use strict';
 if(!window.QC)return;
@@ -34,7 +34,7 @@ C+='.emoji-cats button{flex:none;padding:4px 8px;border:0;';
 C+='border-radius:8px;background:none;font-size:15px;';
 C+='cursor:pointer;opacity:.5}';
 C+='.emoji-cats button.on{opacity:1;';
-C+='background:rgba(200,240,75,.12)}';
+C+='background:rgba(0,168,132,.14)}';
 C+='.emoji-grid{flex:1;min-height:150px;max-height:190px;';
 C+='overflow-y:auto;display:grid;';
 C+='grid-template-columns:repeat(8,1fr);gap:2px}';
@@ -45,7 +45,7 @@ C+='.attach-menu{position:absolute;';
 C+='bottom:calc(100% + 8px);left:0;z-index:28;';
 C+='display:none;flex-direction:column;gap:4px;';
 C+='min-width:170px;border:1px solid rgba(255,255,255,.14);';
-C+='border-radius:14px;background:rgba(11,17,32,.9);';
+C+='border-radius:14px;background:rgba(11,17,32,.92);';
 C+='backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);';
 C+='padding:6px}';
 C+='.attach-menu.on{display:flex}';
@@ -54,7 +54,7 @@ C+='gap:9px;padding:9px 11px;border:0;border-radius:10px;';
 C+='background:none;color:var(--text);font-size:13px;';
 C+='cursor:pointer;text-align:left}';
 C+='.attach-menu button svg{width:17px;height:17px;';
-C+='color:var(--cyan)}';
+C+='color:var(--lime,#00A884)}';
 C+='.call-modal{position:fixed;inset:0;z-index:300;';
 C+='background:#000;display:flex;flex-direction:column}';
 C+='.call-remote{flex:1;position:relative;';
@@ -72,7 +72,7 @@ C+='.call-ph{display:flex;flex-direction:column;';
 C+='align-items:center;gap:12px;color:var(--muted)}';
 C+='.call-ph .big-av{width:100px;height:100px;';
 C+='border-radius:50%;display:grid;place-items:center;';
-C+='color:#081018;overflow:hidden}';
+C+='color:#DFE7EA;overflow:hidden}';
 C+='.call-ph .big-av svg{width:56px;height:56px}';
 C+='.big-av img,.ic-av img{width:100%;height:100%;';
 C+='object-fit:cover;display:block}';
@@ -87,7 +87,8 @@ C+='color:#fff;font:600 14px var(--body)}';
 C+='.call-info small{display:block;';
 C+='color:rgba(255,255,255,.8);font-size:12px}';
 C+='.call-ctrl{display:flex;justify-content:center;';
-C+='align-items:center;gap:14px;padding:16px;';
+C+='align-items:center;gap:14px;';
+C+='padding:16px calc(16px + env(safe-area-inset-bottom));';
 C+='background:rgba(10,14,24,.55);';
 C+='backdrop-filter:blur(18px) saturate(1.4);';
 C+='-webkit-backdrop-filter:blur(18px) saturate(1.4)}';
@@ -100,38 +101,41 @@ C+='box-shadow:inset 0 1px 0 rgba(255,255,255,.18)}';
 C+='.call-ctrl button svg{width:21px;height:21px}';
 C+='.c-mute.on,.c-vid.off,.c-flip.on{background:rgba(255,255,255,.88);';
 C+='color:#081018}';
-C+='.c-end{background:var(--red);border-color:transparent;';
-C+='width:64px;height:64px}';
+C+='.c-end{background:#EF5350;border-color:transparent;';
+C+='width:64px;height:64px;';
+C+='box-shadow:0 6px 18px rgba(239,83,80,.4)}';
 C+='.call-status{position:absolute;top:50%;left:50%;';
 C+='transform:translate(-50%,-50%);color:#fff;';
 C+='font:700 17px var(--body)}';
 C+='.in-call{position:fixed;top:16px;right:16px;';
 C+='z-index:350;min-width:260px;';
 C+='border:1px solid rgba(255,255,255,.14);border-radius:18px;';
-C+='background:rgba(12,16,28,.86);';
+C+='background:rgba(12,16,28,.88);';
 C+='backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);';
 C+='padding:12px;box-shadow:0 10px 30px rgba(0,0,0,.45)}';
 C+='.ic-top{display:flex;align-items:center;gap:10px;';
 C+='margin-bottom:9px}';
 C+='.ic-av{width:40px;height:40px;border-radius:50%;';
-C+='display:grid;place-items:center;color:#081018;';
+C+='display:grid;place-items:center;color:#DFE7EA;';
 C+='overflow:hidden}';
 C+='.ic-av svg{width:22px;height:22px}';
 C+='.ic-nm{flex:1;font-weight:700;font-size:13.5px}';
 C+='.ic-nm small{display:block;font-weight:500;';
-C+='font-size:10.5px;color:var(--cyan)}';
+C+='font-size:10.5px;color:var(--lime,#00A884)}';
 C+='.ic-act{display:flex;gap:8px;';
 C+='justify-content:flex-end}';
-C+='.ic-act button{width:40px;height:40px;';
+C+='.ic-act button{width:42px;height:42px;';
 C+='border-radius:50%;border:0;cursor:pointer;';
 C+='display:grid;place-items:center;color:#fff}';
-C+='.ic-act button svg{width:17px;height:17px}';
-C+='.ic-ok{background:var(--green)}';
-C+='.ic-no{background:var(--red)}';
+C+='.ic-act button svg{width:18px;height:18px}';
+C+='.ic-ok{background:var(--lime,#00A884);color:#04120E;';
+C+='box-shadow:0 6px 18px rgba(0,168,132,.4)}';
+C+='.ic-no{background:#EF5350;';
+C+='box-shadow:0 6px 18px rgba(239,83,80,.4)}';
 var stx=document.createElement('style');
 stx.textContent=C;
 document.head.appendChild(stx);
-/* v22+: listener error AUDIO penyebab toast palsu DIHAPUS permanen */
+/* v22+: listener error AUDIO penyebab toast palsu TIDAK ADA lagi */
 var CATS=[];
 function cat(k,i){
 var o={k:k,i:i,l:[]};
@@ -518,7 +522,7 @@ H+='<div id="callBigName">—</div>';
 H+='<div id="callModeTxt" style="font-size:12px"></div>';
 H+='</div>';
 H+='<div id="callStatus" class="call-status" ';
-H+='style="display:none">'+tr('Memanggil…','Calling…')+'</div>';
+H+='style="display:none"></div>';
 H+='<div class="call-info"><span id="callName">—</span>';
 H+='<small id="callTimer">00:00</small></div>';
 H+='<div class="call-local" id="callLocal">';
@@ -528,19 +532,19 @@ H+='<div class="call-ctrl">';
 H+='<button id="ctrlMute" class="c-mute" type="button">';
 H+=icon('mic')+'</button>';
 H+='<button id="ctrlVideo" class="c-vid" type="button">';
-H+=icon('video')+'</button>';
+H+=icon('video2')+'</button>';
 H+='<button id="ctrlFlip" class="c-flip" type="button">';
 H+=icon('camflip')+'</button>';
 H+='<button id="ctrlEnd" class="c-end" type="button">';
-H+=icon('phoneOff')+'</button>';
+H+=icon('endbar')+'</button>';
 H+='</div></div>';
 H+='<div id="incomingCall" class="in-call hidden">';
 H+='<div class="ic-top"><div id="icAv" class="ic-av"></div>';
 H+='<div class="ic-nm"><div id="icName">—</div>';
-H+='<small id="icMode">'+tr('Panggilan video masuk…','Incoming video call…')+'</small>';
+H+='<small id="icMode"></small>';
 H+='</div></div><div class="ic-act">';
 H+='<button id="icNo" class="ic-no" type="button">';
-H+=icon('phoneOff')+'</button>';
+H+=icon('endbar')+'</button>';
 H+='<button id="icOk" class="ic-ok" type="button">';
 H+=icon('phone')+'</button>';
 H+='</div></div>';
@@ -568,11 +572,21 @@ gid('incomingCall').classList.add('hidden');
 function setAvByName(node,name,size){
 if(!node)return;
 var p=QC.profileOf(name);
-var bg='linear-gradient(145deg,rgba(255,255,255,.3),';
-bg+='rgba(0,0,0,.12)),';
+var bg='linear-gradient(145deg,rgba(255,255,255,.06),';
+bg+='rgba(0,0,0,.18)),';
 bg+=QC.COLORS[((p&&p.color)||0)%QC.COLORS.length];
 node.style.background=bg;
 node.innerHTML=QC.avatarHTML(name,size||60);
+}
+function attachRemote(rv,stream){
+rv.srcObject=stream;
+rv.muted=true;
+var p=rv.play();
+if(p&&p.then){
+p.then(function(){rv.muted=false;}).catch(function(){rv.muted=false;});
+}else{
+rv.muted=false;
+}
 }
 function csendTo(to,o){
 if(!to)return;
@@ -613,7 +627,10 @@ setAvByName(gid('callBigAv'),name,56);
 gid('callBigName').textContent=nm2(name);
 gid('callName').textContent=nm2(name);
 gid('callModeTxt').textContent=
-callMode==='audio'?tr('Panggilan suara','Voice call'):tr('Panggilan video','Video call');
+callMode==='audio'
+?tr('Panggilan suara','Voice call')
+:tr('Panggilan video','Video call');
+gid('callStatus').textContent=tr('Memanggil…','Calling…');
 gid('callPh').style.display='';
 gid('callStatus').style.display=ans?'none':'';
 gid('callLocal').style.display=
@@ -640,8 +657,7 @@ gid('callTimer').textContent=m+':'+d;
 function getMedia(video,face){
 var va={echoCancellation:true,noiseSuppression:true};
 if(video){
-var vc={width:{ideal:720},height:{ideal:1280}};
-if(face)vc.facingMode=face;
+var vc={facingMode:face||'user',width:{ideal:720},height:{ideal:1280}};
 return navigator.mediaDevices
 .getUserMedia({video:vc,audio:va})
 .catch(function(){
@@ -658,9 +674,7 @@ pc=new RTCPeerConnection(ICE);
 ls.getTracks().forEach(function(t){pc.addTrack(t,ls);});
 pc.ontrack=function(e){
 var rv=gid('remoteVideo');
-rv.srcObject=e.streams[0];
-rv.muted=false;
-rv.play().catch(function(){});
+attachRemote(rv,e.streams[0]);
 if(callMode==='video'){
 gid('callPh').style.display='none';
 }
@@ -790,7 +804,7 @@ gid('localVideo').srcObject=null;
 function flipCam(){
 if(callMode==='audio'||!active)return;
 facing=facing==='user'?'environment':'user';
-navigator.mediaDevices.getUserMedia({video:{facingMode:facing,width:{ideal:720},height:{ideal:1280}}}).then(function(st){
+getMedia(true,facing).then(function(st){
 var nv=st.getVideoTracks()[0];
 if(!nv)return;
 var old=ls?ls.getVideoTracks()[0]:null;
@@ -843,7 +857,6 @@ else if(d.type==='ice'&&pc){
 pc.addIceCandidate(d.cand).catch(function(){});
 }
 else if(d.type==='decline'){
-/* v23: jika kita sedang berdering ke orang ini, tutup kartu masuknya */
 if(incoming&&incoming.from===d.from)hideIncoming();
 endCall(true);
 toast(tr('Panggilan ditolak oleh ','Call declined by ')+nm2(d.from));
@@ -854,7 +867,6 @@ endCall(true);
 toast(nm2(d.from)+' '+tr('sedang dalam panggilan lain','is in another call'));
 }
 else if(d.type==='end'){
-/* v23 FIX: pembatalan dari penelepon harus menutup kartu "Panggilan masuk" */
 if(incoming&&incoming.from===d.from)hideIncoming();
 endCall(true);
 }
@@ -904,4 +916,4 @@ try{QC.toast(tr('Modul media gagal: ','Media module failed: ')+e.message);}catch
 if(window.console)console.error(e);
 }
 })();
-/* END media.js v23 */
+/* END media.js v24 */
