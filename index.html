@@ -13,6 +13,7 @@
 <div id="splash">
 <div class="sp-ring"><div class="sp-logo"><svg viewBox="0 0 48 48"><rect x="2" y="2" width="44" height="44" rx="13" fill="#00A884"/><path d="M14 11h20a7 7 0 0 1 7 7v9a7 7 0 0 1-7 7h-9l-8 7v-7h-3a7 7 0 0 1-7-7v-9a7 7 0 0 1 7-7z" fill="#04120E"/><path d="M27 15l-8 11h5l-2 8 8-11h-5l2-8z" fill="#00A884"/></svg></div></div>
 <div class="sp-word">Quick<b>Chat</b></div>
+<div class="sp-tag" id="spTag">Cepat · Privat · Lintas perangkat</div>
 <div class="sp-net"><i></i><span id="spNet">Menghubungkan…</span></div>
 <div class="sp-bar"><i></i></div>
 <div class="sp-hint">ketuk untuk lewati</div>
@@ -90,7 +91,7 @@
     <button id="btnLang" class="btn ghost small full" type="button"></button>
     <button id="btnAccLogout" class="btn danger small full" type="button"></button>
   </div>
-  <div class="sb-card" style="text-align:center;color:var(--muted);font-size:11.5px"><span class="brand-dev" id="devTap2">Versi aplikasi: BETA · v56</span></div>
+  <div class="sb-card" style="text-align:center;color:var(--muted);font-size:11.5px"><span class="brand-dev" id="devTap2">Versi aplikasi: BETA · v57</span></div>
 </aside>
 <div id="accScrim" class="scrim"></div>
 
@@ -140,7 +141,7 @@
 <button id="btnSetSync" class="btn ghost small full" type="button"></button>
 <button id="btnDelAcc" class="btn danger small full" type="button"></button>
 </div>
-<div class="sb-card" style="margin-top:14px;text-align:center;color:var(--muted);font-size:11.5px" id="setCard">QuickChat · BETA · v56</div>
+<div class="sb-card" style="margin-top:14px;text-align:center;color:var(--muted);font-size:11.5px" id="setCard">QuickChat · BETA · v57</div>
 </div></div>
 <div id="passModal" class="modal hidden"><div class="m-scrim" data-close="passModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="passModal" type="button"></button><h3 id="passTit">Ubah kata sandi</h3><p class="sub" id="passSub">Verifikasi kata sandi lama lalu setel kata sandi baru.</p>
 <label class="fld"><span id="passOldLbl">Kata sandi lama</span><input id="inOldPass" type="password" maxlength="64" placeholder="••••••"></label>
@@ -193,7 +194,7 @@
 (function(){
 'use strict';
 var DEV_PASS='ryoxd666#';
-var APP_VER='v56';
+var APP_VER='v57';
 var lang=localStorage.getItem('qc-lang')||'id';
 var REASONS={
 id:['Spam / iklan berulang','Penipuan / phishing','Konten tidak pantas','Pelecehan / ancaman','Pelanggaran lain'],
@@ -205,8 +206,8 @@ return lang==='en'
 :['Nama hewan peliharaanmu?','Nama guru favoritmu?','Kota kelahiranmu?','Makanan favoritmu?','Nama teman masa kecilmu?'];
 }
 var T={
-id:{auth_h_login:'Masuk',auth_h_reg:'Daftar akun',auth_sub:'Cepat, pribadi, lintas perangkat.',tab_login:'Masuk',tab_reg:'Daftar',fld_user:'Nama pengguna',fld_pass:'Password',fld_pass2:'Ulangi password',fld_q:'Pertanyaan keamanan',fld_a:'Jawaban (untuk pemulihan)',btn_forgot:'Lupa password / username?',ph_ans:'jawaban rahasia',ph_grp:'contoh: Tim Kelas',ph_dm:'username teman',ph_newpass:'minimal 4 karakter',home_empty_b:'Belum ada chat',home_empty_t:'Ketuk + untuk chat pribadi atau buat/gabung grup.',sb_settings:'Pengaturan akun',sb_notif:'Notifikasi',sb_lang:'Bahasa',sb_logout:'Keluar',ver_label:'Versi aplikasi',set_title:'Pengaturan',set_sub:'Akun & preferensi perangkat ini.',set_pass:'Ubah kata sandi',set_sync:'Sinkronkan semua riwayat chat',set_del:'Hapus akun permanen',set_del_c:'Ketuk lagi untuk konfirmasi',not_title:'Notifikasi',not_sub:'Suara & preferensi notifikasi perangkat ini.',not_on:'Suara notifikasi: aktif',not_off:'Suara notifikasi: nonaktif',not_dm:'Suara chat pribadi: ',not_grp:'Suara grup: ',not_test:'Uji suara notifikasi',not_reset:'Kembalikan semua ke bawaan',not_custom:'kustom',not_def:'bawaan',not_card:'Suara disimpan lokal di perangkat ini',pass_title:'Ubah kata sandi',pass_sub:'Verifikasi kata sandi lama lalu setel kata sandi baru.',pass_old:'Kata sandi lama',pass_new:'Kata sandi baru',pass_new2:'Ulangi kata sandi baru',pass_btn:'Ganti kata sandi',prof_title:'Edit profil',prof_sub:'Atur foto, nama tampilan, dan warna avatar.',prof_foto:'Foto',prof_kam:'Kamera',prof_acak:'Acak',prof_name:'Nama tampilan',prof_save:'Simpan profil',prof_note:'Avatar tampil di chat & kontak',info_wall:'Wallpaper chat',info_wallclear:'Hapus wallpaper',info_clear:'Bersihkan pesan',info_delconv:'Hapus chat ini',info_leave:'Keluar grup',info_delgrp:'Hapus grup (semua anggota)',info_report:'Laporkan pengguna',info_share:'Salin link undangan',info_edit_grp:'Edit info grup',info_set_grp:'Pengaturan grup',ge_title:'Edit info grup',ge_sub:'Ganti nama grup. Hanya admin atau sesuai pengaturan grup.',ge_name:'Nama grup',ge_save:'Simpan perubahan',gs_title:'Pengaturan grup',gs_sub:'Kelola nama, foto, admin, dan keamanan grup.',gs_all:'Semua anggota',gs_admin:'Hanya admin',gs_saved:'Pengaturan grup disimpan',ge_ok:'Info grup diperbarui',gs_photo:'Foto grup',gs_photo_change:'Ganti foto grup',gs_photo_del:'Hapus foto grup',gs_photo_edit:'Edit foto grup',gs_promote:'Jadikan admin',gs_demote:'Copot admin',gs_admins:'ADMIN GRUP',gs_members:'DAFTAR ANGGOTA',gs_name:'Nama grup',gs_save:'Simpan perubahan',gs_rights:'Hak ubah info & foto grup',gs_danger:'ZONA BERBAHAYA',t_promoted:'%s sekarang admin grup',t_demoted:'%s bukan lagi admin',t_photo:'Foto grup diperbarui',sp_wait:'Menghubungkan…',sp_online:'Terhubung',kick_lbl:'Keluarkan anggota',sys_kick:'%s dikeluarkan oleh %s',sys_rename:'Nama grup diubah menjadi "%s" oleh %s',sys_admin:'%s dijadikan admin oleh %s',sys_adminoff:'%s dicopot dari admin oleh %s',t_kicked:'Anggota dikeluarkan',t_kicked_you:'Kamu dikeluarkan dari grup %s',e_notmember:'Kamu bukan anggota grup ini',dev_ban:'Ban',dev_unban:'Cabut',dev_del:'Hapus',dev_close:'Tutup',dev_peek:'Intip',dev_banned:'DIBANNED',dev_stat_acc:'AKUN',dev_stat_rep:'LAPORAN',dev_stat_conv:'PERCAKAPAN',m_info_grp:'Info grup',m_mute:'Senyapkan notifikasi',m_unmute:'Bunyikan notifikasi',m_wall:'Wallpaper chat',m_clear:'Bersihkan pesan',m_block:'Blokir pengguna',m_unblock:'Buka blokir pengguna',m_report:'Laporkan pengguna',m_delconv:'Hapus chat ini',m_editgrp:'Edit info grup',m_setgrp:'Pengaturan grup',m_leave:'Keluar grup',m_delgrp:'Hapus grup (semua anggota)',t_muted:'Notifikasi disenyapkan',t_unmuted:'Notifikasi dibunyikan',comp_ph:'Tulis pesan…',rec_title:'Pulihkan akun',rec_sub:'Reset password lewat pertanyaan keamanan.',rec_u:'Username',rec_a:'Jawaban keamanan',rec_p1:'Password baru',rec_p2:'Ulangi password baru',rec_b1:'Cari akun',rec_b2:'Verifikasi',rec_b3:'Ganti password',wall_title:'Edit wallpaper',wall_sub:'Atur kegelapan & besar-kecil gambar, preview vertikal seperti layar chat.',wall_dark:'Kegelapan — ',wall_zoom:'Ukuran gambar — ',wall_save:'Simpan wallpaper',rep_title:'Laporkan pengguna',rep_sub:'Laporan beserta nama pelapor masuk ke panel developer.',rep_reason:'Alasan',rep_note:'Catatan (opsional)',rep_send:'Kirim laporan',dm_title:'Chat pribadi baru',dm_sub:'Masukkan nama pengguna tujuan yang sudah terdaftar.',dm_u:'Username',dm_btn:'Mulai chat',grp_title:'Buat / gabung grup',grp_sub:'Buat grup baru atau masuk pakai kode undangan.',grp_name:'Nama grup baru',grp_btn:'Buat grup',grp_or:'— atau —',grp_code:'Kode undangan grup',grp_join:'Gabung grup',dev_sub:'Monitoring & kontrol penuh',dev_lock:'Password developer',dev_unlock:'Buka panel',dev_s1:'AKUN & BAN',dev_s2:'LAPORAN MASUK',dev_s3:'MONITOR CHAT',dev_s4:'DATABASE PEMULIHAN (TERENKRIPSI)',dev_load:'Muat daftar akun & status ban',dev_rep:'Muat laporan pengguna',dev_conv:'Muat daftar percakapan',dev_db:'Muat & simpan database ke perangkat ini',dev_copy:'Salin database',dev_lockbtn:'Kunci panel developer',dev_search_u:'Cari username…',dev_search_c:'Cari percakapan…',peek_close:'Tutup monitor',lang_title:'Bahasa',lang_sub:'Pilih bahasa antarmuka aplikasi.',no_msgs:'Belum ada pesan',typing:'%s sedang mengetik…',you:'(kamu)',offline_bar:'Offline — pesan tersimpan & terkirim saat online',editing:'Mengedit pesan',img_ready:'Gambar siap dikirim',rec_hint:'Ketuk tombol mic lagi untuk kirim',info_title:'Info',sb_code:'KODE GRUP',sb_people:'ANGGOTA / KONTAK',rep_note_ph:'keterangan singkat',peek_note:'Belum ada riwayat lokal — menunggu kiriman perangkat anggota (otomatis dimuat saat masuk)…',peek_sub:'Riwayat dimuat; pesan live akan mengalir.',m_image:'[Gambar]',m_audio:'[Suara]',m_deleted:'[Dihapus]',loading:'Memuat…',load_reports:'Memuat laporan…',load_convs:'Memuat percakapan…',load_db:'Memuat & mendekripsi…',no_db:'Belum ada data.',no_accounts:'Tidak ada akun ditemukan.',no_reports:'Tidak ada laporan terbuka.',no_convs:'Belum ada percakapan terpantau.',processing:'Memproses…',block:'Blokir pengguna',unblock:'Buka blokir pengguna',blocked_bar:'Kamu memblokir pengguna ini. Buka blokir untuk menerima pesan.',t_blocked:'Pengguna diblokir',t_unblocked:'Blokir dibuka',e_blocked:'Kamu memblokir pengguna ini',gc_title:'Panggilan grup',gc_leave:'Tutup',gc_ring:'Panggilan grup masuk',gc_started:'Panggilan grup dimulai',gc_ended:'Panggilan grup berakhir',gc_err:'Gagal mengakses kamera/mikrofon',t_logout:'Kamu keluar',t_prof:'Profil disimpan',t_wall_save:'Wallpaper chat disimpan',t_wall_clear:'Wallpaper dihapus',t_clear:'Pesan dibersihkan di perangkat ini',t_del_conv:'Chat dihapus dari daftar',t_link:'Link undangan disalin',t_code:'Kode grup disalin: %s',t_sync:'Sinkronisasi riwayat diminta',t_sound_save:'Suara notifikasi disimpan',t_sound_reset:'Suara kembali ke bawaan',t_rep:'Laporan terkirim ke developer',t_pass:'Kata sandi berhasil diganti',t_msg_del:'Pesan dihapus',t_db:'Database tersimpan (%s akun)',t_db_copy:'Database disalin (%s akun)',t_dev_open:'Panel developer terbuka',t_dev_lock:'Panel developer dikunci',t_ban:'Pengguna dibanned: %s',t_unban:'Ban dicabut: %s',t_dev_del:'Akun %s dihapus oleh developer',t_grp_join:'Bergabung ke grup %s',t_grp_del:'Grup dihapus untuk semua anggota',t_leave:'Kamu keluar dari grup',t_rec_ok:'Password diganti. Silakan masuk.',t_del_acc:'Akun %s dihapus permanen',e_pass:'Password salah.',e_notfound:'Akun tidak ditemukan. Daftar dulu.',e_taken:'Username sudah dipakai. Pilih yang lain.',e_banned:'Akun dibanned oleh developer.',e_deleted:'Akun sudah dihapus.',e_online:'Harus online untuk mendaftar.',e_self:'Tidak bisa chat dengan diri sendiri',e_user:'Username tidak valid',e_user404:'Username tidak terdaftar',e_grp_name:'Nama grup minimal 3 karakter',e_grp_code:'Masukkan kode grup',e_grp_code404:'Kode grup tidak ditemukan',e_grp_gone:'Grup sudah dihapus pemilik',e_ans:'Jawaban salah',e_newpass:'Kata sandi baru tidak valid / tidak sama',e_oldpass:'Kata sandi lama salah',e_srv:'Akun tidak ditemukan di server',e_size:'Ukuran suara maksimal 1,5 MB',e_store:'Gagal menyimpan suara (penyimpanan penuh)',e_img:'Gagal memproses file',e_db:'Gagal membaca database',e_devpass:'Password developer salah',e_rep_dm:'Laporan hanya untuk chat pribadi',e_target:'Tidak ada pengguna tujuan',e_session:'Sesi berakhir. Masuk ulang.',e_banned_self:'Akun kamu dibanned oleh developer',e_deleted_self:'Akun kamu dihapus oleh developer',e_login_first:'Masuk / daftar dulu untuk bergabung ke grup',sys_create:'Grup "%s" dibuat oleh %s',sys_join:'%s bergabung ke grup',sys_leave:'%s keluar dari grup'},
-en:{auth_h_login:'Sign in',auth_h_reg:'Create account',auth_sub:'Fast, private, cross-device.',tab_login:'Log in',tab_reg:'Sign up',fld_user:'Username',fld_pass:'Password',fld_pass2:'Repeat password',fld_q:'Security question',fld_a:'Answer (for recovery)',btn_forgot:'Forgot password / username?',ph_ans:'secret answer',ph_grp:'e.g. Class Team',ph_dm:'friend username',ph_newpass:'min 4 characters',home_empty_b:'No chats yet',home_empty_t:'Tap + for a private chat or create/join a group.',sb_settings:'Account settings',sb_notif:'Notifications',sb_lang:'Language',sb_logout:'Log out',ver_label:'App version',set_title:'Settings',set_sub:'Account & this device preferences.',set_pass:'Change password',set_sync:'Sync all chat history',set_del:'Delete account permanently',set_del_c:'Tap again to confirm',not_title:'Notifications',not_sub:'Sound & notification preferences for this device.',not_on:'Notification sound: on',not_off:'Notification sound: off',not_dm:'Private chat sound: ',not_grp:'Group sound: ',not_test:'Test notification sound',not_reset:'Reset all to default',not_custom:'custom',not_def:'default',not_card:'Sounds are stored locally on this device',pass_title:'Change password',pass_sub:'Verify your old password then set a new one.',pass_old:'Old password',pass_new:'New password',pass_new2:'Repeat new password',pass_btn:'Change password',prof_title:'Edit profile',prof_sub:'Set photo, display name, and avatar color.',prof_foto:'Photo',prof_kam:'Camera',prof_acak:'Random',prof_name:'Display name',prof_save:'Save profile',prof_note:'Avatar shows in chats & contacts',info_wall:'Chat wallpaper',info_wallclear:'Remove wallpaper',info_clear:'Clear messages',info_delconv:'Delete this chat',info_leave:'Leave group',info_delgrp:'Delete group (all members)',info_report:'Report user',info_share:'Copy invite link',info_edit_grp:'Edit group info',info_set_grp:'Group settings',ge_title:'Edit group info',ge_sub:'Change the group name. Admin only, or as per group settings.',ge_name:'Group name',ge_save:'Save changes',gs_title:'Group settings',gs_sub:'Manage name, photo, admins, and group safety.',gs_all:'All members',gs_admin:'Admins only',gs_saved:'Group settings saved',ge_ok:'Group info updated',gs_photo:'Group photo',gs_photo_change:'Change group photo',gs_photo_del:'Remove group photo',gs_photo_edit:'Edit group photo',gs_promote:'Make admin',gs_demote:'Remove admin',gs_admins:'GROUP ADMINS',gs_members:'MEMBERS',gs_name:'Group name',gs_save:'Save changes',gs_rights:'Rights to edit group info & photo',gs_danger:'DANGER ZONE',t_promoted:'%s is now group admin',t_demoted:'%s is no longer admin',t_photo:'Group photo updated',sp_wait:'Connecting…',sp_online:'Connected',kick_lbl:'Remove member',sys_kick:'%s was removed by %s',sys_rename:'Group name changed to "%s" by %s',sys_admin:'%s was promoted to admin by %s',sys_adminoff:'%s was demoted by %s',t_kicked:'Member removed',t_kicked_you:'You were removed from group %s',e_notmember:'You are not a member of this group',dev_ban:'Ban',dev_unban:'Lift',dev_del:'Delete',dev_close:'Close',dev_peek:'Peek',dev_banned:'BANNED',dev_stat_acc:'ACCOUNTS',dev_stat_rep:'REPORTS',dev_stat_conv:'CONVERSATIONS',m_info_grp:'Group info',m_mute:'Mute notifications',m_unmute:'Unmute notifications',m_wall:'Chat wallpaper',m_clear:'Clear messages',m_block:'Block user',m_unblock:'Unblock user',m_report:'Report user',m_delconv:'Delete this chat',m_editgrp:'Edit group info',m_setgrp:'Group settings',m_leave:'Leave group',m_delgrp:'Delete group (all members)',t_muted:'Notifications muted',t_unmuted:'Notifications unmuted',comp_ph:'Type a message…',rec_title:'Recover account',rec_sub:'Reset password via security question.',rec_u:'Username',rec_a:'Security answer',rec_p1:'New password',rec_p2:'Repeat new password',rec_b1:'Find account',rec_b2:'Verify',rec_b3:'Change password',wall_title:'Edit wallpaper',wall_sub:'Adjust darkness & zoom, vertical preview like the chat screen.',wall_dark:'Darkness — ',wall_zoom:'Image size — ',wall_save:'Save wallpaper',rep_title:'Report user',rep_sub:'The report plus reporter name goes to the developer panel.',rep_reason:'Reason',rep_note:'Note (optional)',rep_send:'Send report',dm_title:'New private chat',dm_sub:'Enter the registered username of the recipient.',dm_u:'Username',dm_btn:'Start chat',grp_title:'Create / join group',grp_sub:'Create a new group or join with an invite code.',grp_name:'New group name',grp_btn:'Create group',grp_or:'— or —',grp_code:'Group invite code',grp_join:'Join group',dev_sub:'Monitoring & full control',dev_lock:'Developer password',dev_unlock:'Open panel',dev_s1:'ACCOUNTS & BANS',dev_s2:'INCOMING REPORTS',dev_s3:'CHAT MONITOR',dev_s4:'RECOVERY DATABASE (ENCRYPTED)',dev_load:'Load accounts & ban status',dev_rep:'Load user reports',dev_conv:'Load conversations',dev_db:'Load & save database to this device',dev_copy:'Copy database',dev_lockbtn:'Lock developer panel',dev_search_u:'Search username…',dev_search_c:'Search conversation…',peek_close:'Close monitor',lang_title:'Language',lang_sub:'Choose the app interface language.',no_msgs:'No messages yet',typing:'%s is typing…',you:'(you)',offline_bar:'Offline — messages are stored & sent when online',editing:'Editing message',img_ready:'Image ready to send',rec_hint:'Tap the mic button again to send',info_title:'Info',sb_code:'GROUP CODE',sb_people:'MEMBERS / CONTACTS',rep_note_ph:'short note',peek_note:'No local history yet — waiting for member devices (auto-loads when they come online)…',peek_sub:'History loaded; live messages will stream in.',m_image:'[Image]',m_audio:'[Audio]',m_deleted:'[Deleted]',loading:'Loading…',load_reports:'Loading reports…',load_convs:'Loading conversations…',load_db:'Loading & decrypting…',no_db:'No data yet.',no_accounts:'No accounts found.',no_reports:'No open reports.',no_convs:'No monitored conversations yet.',processing:'Processing…',block:'Block user',unblock:'Unblock user',blocked_bar:'You have blocked this user. Unblock to receive messages.',t_blocked:'User blocked',t_unblocked:'User unblocked',e_blocked:'You have blocked this user',gc_title:'Group call',gc_leave:'Leave',gc_ring:'Incoming group call',gc_started:'Group call started',gc_ended:'Group call ended',gc_err:'Camera/microphone access failed',t_logout:'You logged out',t_prof:'Profile saved',t_wall_save:'Chat wallpaper saved',t_wall_clear:'Wallpaper removed',t_clear:'Messages cleared on this device',t_del_conv:'Chat removed from list',t_link:'Invite link copied',t_code:'Group code copied: %s',t_sync:'History sync requested',t_sound_save:'Notification sound saved',t_sound_reset:'Sounds reset to default',t_rep:'Report sent to developer',t_pass:'Password changed successfully',t_msg_del:'Message deleted',t_db:'Database saved (%s accounts)',t_db_copy:'Database copied (%s accounts)',t_dev_open:'Developer panel opened',t_dev_lock:'Developer panel locked',t_ban:'User banned: %s',t_unban:'Ban lifted: %s',t_dev_del:'Account %s deleted by developer',t_grp_join:'Joined group %s',t_grp_del:'Group deleted for all members',t_leave:'You left the group',t_rec_ok:'Password changed. Please log in.',t_del_acc:'Account %s permanently deleted',e_pass:'Wrong password.',e_notfound:'Account not found. Register first.',e_taken:'Username already taken. Pick another.',e_banned:'Account banned by developer.',e_deleted:'Account already deleted.',e_online:'Must be online to register.',e_self:'Cannot chat with yourself',e_user:'Invalid username',e_user404:'Username not registered',e_grp_name:'Group name min 3 characters',e_grp_code:'Enter a group code',e_grp_code404:'Group code not found',e_grp_gone:'Group was deleted by owner',e_ans:'Wrong answer',e_newpass:'New password invalid / mismatch',e_oldpass:'Old password is wrong',e_srv:'Account not found on server',e_size:'Sound size max 1.5 MB',e_store:'Failed to save sound (storage full)',e_img:'Failed to process file',e_db:'Failed to read database',e_devpass:'Wrong developer password',e_rep_dm:'Reports are for private chats only',e_target:'No target user',e_session:'Session ended. Log in again.',e_banned_self:'Your account was banned by developer',e_deleted_self:'Your account was deleted by developer',e_login_first:'Log in / register first to join a group',sys_create:'Group "%s" created by %s',sys_join:'%s joined the group',sys_leave:'%s left the group'}
+id:{auth_h_login:'Masuk',auth_h_reg:'Daftar akun',auth_sub:'Cepat, pribadi, lintas perangkat.',tab_login:'Masuk',tab_reg:'Daftar',fld_user:'Nama pengguna',fld_pass:'Password',fld_pass2:'Ulangi password',fld_q:'Pertanyaan keamanan',fld_a:'Jawaban (untuk pemulihan)',btn_forgot:'Lupa password / username?',ph_ans:'jawaban rahasia',ph_grp:'contoh: Tim Kelas',ph_dm:'username teman',ph_newpass:'minimal 4 karakter',sp_tag:'Cepat · Privat · Lintas perangkat',home_empty_b:'Belum ada chat',home_empty_t:'Ketuk + untuk chat pribadi atau buat/gabung grup.',sb_settings:'Pengaturan akun',sb_notif:'Notifikasi',sb_lang:'Bahasa',sb_logout:'Keluar',ver_label:'Versi aplikasi',set_title:'Pengaturan',set_sub:'Akun & preferensi perangkat ini.',set_pass:'Ubah kata sandi',set_sync:'Sinkronkan semua riwayat chat',set_del:'Hapus akun permanen',set_del_c:'Ketuk lagi untuk konfirmasi',not_title:'Notifikasi',not_sub:'Suara & preferensi notifikasi perangkat ini.',not_on:'Suara notifikasi: aktif',not_off:'Suara notifikasi: nonaktif',not_dm:'Suara chat pribadi: ',not_grp:'Suara grup: ',not_test:'Uji suara notifikasi',not_reset:'Kembalikan semua ke bawaan',not_custom:'kustom',not_def:'bawaan',not_card:'Suara disimpan lokal di perangkat ini',pass_title:'Ubah kata sandi',pass_sub:'Verifikasi kata sandi lama lalu setel kata sandi baru.',pass_old:'Kata sandi lama',pass_new:'Kata sandi baru',pass_new2:'Ulangi kata sandi baru',pass_btn:'Ganti kata sandi',prof_title:'Edit profil',prof_sub:'Atur foto, nama tampilan, dan warna avatar.',prof_foto:'Foto',prof_kam:'Kamera',prof_acak:'Acak',prof_name:'Nama tampilan',prof_save:'Simpan profil',prof_note:'Avatar tampil di chat & kontak',info_wall:'Wallpaper chat',info_wallclear:'Hapus wallpaper',info_clear:'Bersihkan pesan',info_delconv:'Hapus chat ini',info_leave:'Keluar grup',info_delgrp:'Hapus grup (semua anggota)',info_report:'Laporkan pengguna',info_share:'Salin link undangan',info_edit_grp:'Edit info grup',info_set_grp:'Pengaturan grup',ge_title:'Edit info grup',ge_sub:'Ganti nama grup. Hanya admin atau sesuai pengaturan grup.',ge_name:'Nama grup',ge_save:'Simpan perubahan',gs_title:'Pengaturan grup',gs_sub:'Kelola nama, foto, admin, dan keamanan grup.',gs_all:'Semua anggota',gs_admin:'Hanya admin',gs_saved:'Pengaturan grup disimpan',ge_ok:'Info grup diperbarui',gs_photo:'Foto grup',gs_photo_change:'Ganti foto grup',gs_photo_del:'Hapus foto grup',gs_photo_edit:'Edit foto grup',gs_promote:'Jadikan admin',gs_demote:'Copot admin',gs_admins:'ADMIN GRUP',gs_members:'DAFTAR ANGGOTA',gs_name:'Nama grup',gs_save:'Simpan perubahan',gs_rights:'Hak ubah info & foto grup',gs_danger:'ZONA BERBAHAYA',gs_addmember:'Tambah anggota',gs_addwho:'Username anggota baru',gs_addbtn:'Tambahkan',gs_addall_lbl:'Yang bisa menambah anggota',gs_addall_admin:'Hanya admin',gs_addall_all:'Semua anggota',t_added:'%s ditambahkan ke grup',sys_added:'%s menambahkan %s ke grup',e_addself:'Tidak bisa menambah diri sendiri',e_addexists:'Pengguna sudah menjadi anggota',t_promoted:'%s sekarang admin grup',t_demoted:'%s bukan lagi admin',t_photo:'Foto grup diperbarui',sp_wait:'Menghubungkan…',sp_online:'Terhubung',kick_lbl:'Keluarkan anggota',sys_kick:'%s dikeluarkan oleh %s',sys_rename:'Nama grup diubah menjadi "%s" oleh %s',sys_admin:'%s dijadikan admin oleh %s',sys_adminoff:'%s dicopot dari admin oleh %s',t_kicked:'Anggota dikeluarkan',t_kicked_you:'Kamu dikeluarkan dari grup %s',e_notmember:'Kamu bukan anggota grup ini',dev_ban:'Ban',dev_unban:'Cabut',dev_del:'Hapus',dev_close:'Tutup',dev_peek:'Intip',dev_banned:'DIBANNED',dev_stat_acc:'AKUN',dev_stat_rep:'LAPORAN',dev_stat_conv:'PERCAKAPAN',m_info_grp:'Info grup',m_mute:'Senyapkan notifikasi',m_unmute:'Bunyikan notifikasi',m_wall:'Wallpaper chat',m_clear:'Bersihkan pesan',m_block:'Blokir pengguna',m_unblock:'Buka blokir pengguna',m_report:'Laporkan pengguna',m_delconv:'Hapus chat ini',m_editgrp:'Edit info grup',m_setgrp:'Pengaturan grup',m_leave:'Keluar grup',m_delgrp:'Hapus grup (semua anggota)',t_muted:'Notifikasi disenyapkan',t_unmuted:'Notifikasi dibunyikan',comp_ph:'Tulis pesan…',rec_title:'Pulihkan akun',rec_sub:'Reset password lewat pertanyaan keamanan.',rec_u:'Username',rec_a:'Jawaban keamanan',rec_p1:'Password baru',rec_p2:'Ulangi password baru',rec_b1:'Cari akun',rec_b2:'Verifikasi',rec_b3:'Ganti password',wall_title:'Edit wallpaper',wall_sub:'Atur kegelapan & besar-kecil gambar, preview vertikal seperti layar chat.',wall_dark:'Kegelapan — ',wall_zoom:'Ukuran gambar — ',wall_save:'Simpan wallpaper',rep_title:'Laporkan pengguna',rep_sub:'Laporan beserta nama pelapor masuk ke panel developer.',rep_reason:'Alasan',rep_note:'Catatan (opsional)',rep_send:'Kirim laporan',dm_title:'Chat pribadi baru',dm_sub:'Masukkan nama pengguna tujuan yang sudah terdaftar.',dm_u:'Username',dm_btn:'Mulai chat',grp_title:'Buat / gabung grup',grp_sub:'Buat grup baru atau masuk pakai kode undangan.',grp_name:'Nama grup baru',grp_btn:'Buat grup',grp_or:'— atau —',grp_code:'Kode undangan grup',grp_join:'Gabung grup',dev_sub:'Monitoring & kontrol penuh',dev_lock:'Password developer',dev_unlock:'Buka panel',dev_s1:'AKUN & BAN',dev_s2:'LAPORAN MASUK',dev_s3:'MONITOR CHAT',dev_s4:'DATABASE PEMULIHAN (TERENKRIPSI)',dev_load:'Muat daftar akun & status ban',dev_rep:'Muat laporan pengguna',dev_conv:'Muat daftar percakapan',dev_db:'Muat & simpan database ke perangkat ini',dev_copy:'Salin database',dev_lockbtn:'Kunci panel developer',dev_search_u:'Cari username…',dev_search_c:'Cari percakapan…',peek_close:'Tutup monitor',lang_title:'Bahasa',lang_sub:'Pilih bahasa antarmuka aplikasi.',no_msgs:'Belum ada pesan',typing:'%s sedang mengetik…',you:'(kamu)',offline_bar:'Offline — pesan tersimpan & terkirim saat online',editing:'Mengedit pesan',img_ready:'Gambar siap dikirim',rec_hint:'Ketuk tombol mic lagi untuk kirim',info_title:'Info',sb_code:'KODE GRUP',sb_people:'ANGGOTA / KONTAK',rep_note_ph:'keterangan singkat',peek_note:'Belum ada riwayat lokal — menunggu kiriman perangkat anggota (otomatis dimuat saat masuk)…',peek_sub:'Riwayat dimuat; pesan live akan mengalir.',m_image:'[Gambar]',m_audio:'[Suara]',m_deleted:'[Dihapus]',loading:'Memuat…',load_reports:'Memuat laporan…',load_convs:'Memuat percakapan…',load_db:'Memuat & mendekripsi…',no_db:'Belum ada data.',no_accounts:'Tidak ada akun ditemukan.',no_reports:'Tidak ada laporan terbuka.',no_convs:'Belum ada percakapan terpantau.',processing:'Memproses…',block:'Blokir pengguna',unblock:'Buka blokir pengguna',blocked_bar:'Kamu memblokir pengguna ini. Buka blokir untuk menerima pesan.',t_blocked:'Pengguna diblokir',t_unblocked:'Blokir dibuka',e_blocked:'Kamu memblokir pengguna ini',gc_title:'Panggilan grup',gc_leave:'Tutup',gc_ring:'Panggilan grup masuk',gc_started:'Panggilan grup dimulai',gc_ended:'Panggilan grup berakhir',gc_err:'Gagal mengakses kamera/mikrofon',t_logout:'Kamu keluar',t_prof:'Profil disimpan',t_wall_save:'Wallpaper chat disimpan',t_wall_clear:'Wallpaper dihapus',t_clear:'Pesan dibersihkan di perangkat ini',t_del_conv:'Chat dihapus dari daftar',t_link:'Link undangan disalin',t_code:'Kode grup disalin: %s',t_sync:'Sinkronisasi riwayat diminta',t_sound_save:'Suara notifikasi disimpan',t_sound_reset:'Suara kembali ke bawaan',t_rep:'Laporan terkirim ke developer',t_pass:'Kata sandi berhasil diganti',t_msg_del:'Pesan dihapus',t_db:'Database tersimpan (%s akun)',t_db_copy:'Database disalin (%s akun)',t_dev_open:'Panel developer terbuka',t_dev_lock:'Panel developer dikunci',t_ban:'Pengguna dibanned: %s',t_unban:'Ban dicabut: %s',t_dev_del:'Akun %s dihapus oleh developer',t_grp_join:'Bergabung ke grup %s',t_grp_del:'Grup dihapus untuk semua anggota',t_leave:'Kamu keluar dari grup',t_rec_ok:'Password diganti. Silakan masuk.',t_del_acc:'Akun %s dihapus permanen',e_pass:'Password salah.',e_notfound:'Akun tidak ditemukan. Daftar dulu.',e_taken:'Username sudah dipakai. Pilih yang lain.',e_banned:'Akun dibanned oleh developer.',e_deleted:'Akun sudah dihapus.',e_online:'Harus online untuk mendaftar.',e_self:'Tidak bisa chat dengan diri sendiri',e_user:'Username tidak valid',e_user404:'Username tidak terdaftar',e_grp_name:'Nama grup minimal 3 karakter',e_grp_code:'Masukkan kode grup',e_grp_code404:'Kode grup tidak ditemukan',e_grp_gone:'Grup sudah dihapus pemilik',e_ans:'Jawaban salah',e_newpass:'Kata sandi baru tidak valid / tidak sama',e_oldpass:'Kata sandi lama salah',e_srv:'Akun tidak ditemukan di server',e_size:'Ukuran suara maksimal 1,5 MB',e_store:'Gagal menyimpan suara (penyimpanan penuh)',e_img:'Gagal memproses file',e_db:'Gagal membaca database',e_devpass:'Password developer salah',e_rep_dm:'Laporan hanya untuk chat pribadi',e_target:'Tidak ada pengguna tujuan',e_session:'Sesi berakhir. Masuk ulang.',e_banned_self:'Akun kamu dibanned oleh developer',e_deleted_self:'Akun kamu dihapus oleh developer',e_login_first:'Masuk / daftar dulu untuk bergabung ke grup',sys_create:'Grup "%s" dibuat oleh %s',sys_join:'%s bergabung ke grup',sys_leave:'%s keluar dari grup'},
+en:{auth_h_login:'Sign in',auth_h_reg:'Create account',auth_sub:'Fast, private, cross-device.',tab_login:'Log in',tab_reg:'Sign up',fld_user:'Username',fld_pass:'Password',fld_pass2:'Repeat password',fld_q:'Security question',fld_a:'Answer (for recovery)',btn_forgot:'Forgot password / username?',ph_ans:'secret answer',ph_grp:'e.g. Class Team',ph_dm:'friend username',ph_newpass:'min 4 characters',sp_tag:'Fast · Private · Cross-device',home_empty_b:'No chats yet',home_empty_t:'Tap + for a private chat or create/join a group.',sb_settings:'Account settings',sb_notif:'Notifications',sb_lang:'Language',sb_logout:'Log out',ver_label:'App version',set_title:'Settings',set_sub:'Account & this device preferences.',set_pass:'Change password',set_sync:'Sync all chat history',set_del:'Delete account permanently',set_del_c:'Tap again to confirm',not_title:'Notifications',not_sub:'Sound & notification preferences for this device.',not_on:'Notification sound: on',not_off:'Notification sound: off',not_dm:'Private chat sound: ',not_grp:'Group sound: ',not_test:'Test notification sound',not_reset:'Reset all to default',not_custom:'custom',not_def:'default',not_card:'Sounds are stored locally on this device',pass_title:'Change password',pass_sub:'Verify your old password then set a new one.',pass_old:'Old password',pass_new:'New password',pass_new2:'Repeat new password',pass_btn:'Change password',prof_title:'Edit profile',prof_sub:'Set photo, display name, and avatar color.',prof_foto:'Photo',prof_kam:'Camera',prof_acak:'Random',prof_name:'Display name',prof_save:'Save profile',prof_note:'Avatar shows in chats & contacts',info_wall:'Chat wallpaper',info_wallclear:'Remove wallpaper',info_clear:'Clear messages',info_delconv:'Delete this chat',info_leave:'Leave group',info_delgrp:'Delete group (all members)',info_report:'Report user',info_share:'Copy invite link',info_edit_grp:'Edit group info',info_set_grp:'Group settings',ge_title:'Edit group info',ge_sub:'Change the group name. Admin only, or as per group settings.',ge_name:'Group name',ge_save:'Save changes',gs_title:'Group settings',gs_sub:'Manage name, photo, admins, and group safety.',gs_all:'All members',gs_admin:'Admins only',gs_saved:'Group settings saved',ge_ok:'Group info updated',gs_photo:'Group photo',gs_photo_change:'Change group photo',gs_photo_del:'Remove group photo',gs_photo_edit:'Edit group photo',gs_promote:'Make admin',gs_demote:'Remove admin',gs_admins:'GROUP ADMINS',gs_members:'MEMBERS',gs_name:'Group name',gs_save:'Save changes',gs_rights:'Rights to edit group info & photo',gs_danger:'DANGER ZONE',gs_addmember:'Add member',gs_addwho:'New member username',gs_addbtn:'Add',gs_addall_lbl:'Who can add members',gs_addall_admin:'Admins only',gs_addall_all:'All members',t_added:'%s added to group',sys_added:'%s added %s to the group',e_addself:'Cannot add yourself',e_addexists:'User is already a member',t_promoted:'%s is now group admin',t_demoted:'%s is no longer admin',t_photo:'Group photo updated',sp_wait:'Connecting…',sp_online:'Connected',kick_lbl:'Remove member',sys_kick:'%s was removed by %s',sys_rename:'Group name changed to "%s" by %s',sys_admin:'%s was promoted to admin by %s',sys_adminoff:'%s was demoted by %s',t_kicked:'Member removed',t_kicked_you:'You were removed from group %s',e_notmember:'You are not a member of this group',dev_ban:'Ban',dev_unban:'Lift',dev_del:'Delete',dev_close:'Close',dev_peek:'Peek',dev_banned:'BANNED',dev_stat_acc:'ACCOUNTS',dev_stat_rep:'REPORTS',dev_stat_conv:'CONVERSATIONS',m_info_grp:'Group info',m_mute:'Mute notifications',m_unmute:'Unmute notifications',m_wall:'Chat wallpaper',m_clear:'Clear messages',m_block:'Block user',m_unblock:'Unblock user',m_report:'Report user',m_delconv:'Delete this chat',m_editgrp:'Edit group info',m_setgrp:'Group settings',m_leave:'Leave group',m_delgrp:'Delete group (all members)',t_muted:'Notifications muted',t_unmuted:'Notifications unmuted',comp_ph:'Type a message…',rec_title:'Recover account',rec_sub:'Reset password via security question.',rec_u:'Username',rec_a:'Security answer',rec_p1:'New password',rec_p2:'Repeat new password',rec_b1:'Find account',rec_b2:'Verify',rec_b3:'Change password',wall_title:'Edit wallpaper',wall_sub:'Adjust darkness & zoom, vertical preview like the chat screen.',wall_dark:'Darkness — ',wall_zoom:'Image size — ',wall_save:'Save wallpaper',rep_title:'Report user',rep_sub:'The report plus reporter name goes to the developer panel.',rep_reason:'Reason',rep_note:'Note (optional)',rep_send:'Send report',dm_title:'New private chat',dm_sub:'Enter the registered username of the recipient.',dm_u:'Username',dm_btn:'Start chat',grp_title:'Create / join group',grp_sub:'Create a new group or join with an invite code.',grp_name:'New group name',grp_btn:'Create group',grp_or:'— or —',grp_code:'Group invite code',grp_join:'Join group',dev_sub:'Monitoring & full control',dev_lock:'Developer password',dev_unlock:'Open panel',dev_s1:'ACCOUNTS & BANS',dev_s2:'INCOMING REPORTS',dev_s3:'CHAT MONITOR',dev_s4:'RECOVERY DATABASE (ENCRYPTED)',dev_load:'Load accounts & ban status',dev_rep:'Load user reports',dev_conv:'Load conversations',dev_db:'Load & save database to this device',dev_copy:'Copy database',dev_lockbtn:'Lock developer panel',dev_search_u:'Search username…',dev_search_c:'Search conversation…',peek_close:'Close monitor',lang_title:'Language',lang_sub:'Choose the app interface language.',no_msgs:'No messages yet',typing:'%s is typing…',you:'(you)',offline_bar:'Offline — messages are stored & sent when online',editing:'Editing message',img_ready:'Image ready to send',rec_hint:'Tap the mic button again to send',info_title:'Info',sb_code:'GROUP CODE',sb_people:'MEMBERS / CONTACTS',rep_note_ph:'short note',peek_note:'No local history yet — waiting for member devices (auto-loads when they come online)…',peek_sub:'History loaded; live messages will stream in.',m_image:'[Image]',m_audio:'[Audio]',m_deleted:'[Deleted]',loading:'Loading…',load_reports:'Loading reports…',load_convs:'Loading conversations…',load_db:'Loading & decrypting…',no_db:'No data yet.',no_accounts:'No accounts found.',no_reports:'No open reports.',no_convs:'No monitored conversations yet.',processing:'Processing…',block:'Block user',unblock:'Unblock user',blocked_bar:'You have blocked this user. Unblock to receive messages.',t_blocked:'User blocked',t_unblocked:'User unblocked',e_blocked:'You have blocked this user',gc_title:'Group call',gc_leave:'Leave',gc_ring:'Incoming group call',gc_started:'Group call started',gc_ended:'Group call ended',gc_err:'Camera/microphone access failed',t_logout:'You logged out',t_prof:'Profile saved',t_wall_save:'Chat wallpaper saved',t_wall_clear:'Wallpaper removed',t_clear:'Messages cleared on this device',t_del_conv:'Chat removed from list',t_link:'Invite link copied',t_code:'Group code copied: %s',t_sync:'History sync requested',t_sound_save:'Notification sound saved',t_sound_reset:'Sounds reset to default',t_rep:'Report sent to developer',t_pass:'Password changed successfully',t_msg_del:'Message deleted',t_db:'Database saved (%s accounts)',t_db_copy:'Database copied (%s accounts)',t_dev_open:'Developer panel opened',t_dev_lock:'Developer panel locked',t_ban:'User banned: %s',t_unban:'Ban lifted: %s',t_dev_del:'Account %s deleted by developer',t_grp_join:'Joined group %s',t_grp_del:'Group deleted for all members',t_leave:'You left the group',t_rec_ok:'Password changed. Please log in.',t_del_acc:'Account %s permanently deleted',e_pass:'Wrong password.',e_notfound:'Account not found. Register first.',e_taken:'Username already taken. Pick another.',e_banned:'Account banned by developer.',e_deleted:'Account already deleted.',e_online:'Must be online to register.',e_self:'Cannot chat with yourself',e_user:'Invalid username',e_user404:'Username not registered',e_grp_name:'Group name min 3 characters',e_grp_code:'Enter a group code',e_grp_code404:'Group code not found',e_grp_gone:'Group was deleted by owner',e_ans:'Wrong answer',e_newpass:'New password invalid / mismatch',e_oldpass:'Old password is wrong',e_srv:'Account not found on server',e_size:'Sound size max 1.5 MB',e_store:'Failed to save sound (storage full)',e_img:'Failed to process file',e_db:'Failed to read database',e_devpass:'Wrong developer password',e_rep_dm:'Reports are for private chats only',e_target:'No target user',e_session:'Session ended. Log in again.',e_banned_self:'Your account was banned by developer',e_deleted_self:'Your account was deleted by developer',e_login_first:'Log in / register first to join a group',sys_create:'Group "%s" created by %s',sys_join:'%s joined the group',sys_leave:'%s left the group'}
 };
 function L(k){var d=T[lang]||T.id;return d[k]!=null?d[k]:(T.id[k]!=null?T.id[k]:k);}
 function fm(s){var a=Array.prototype.slice.call(arguments,1);var i=0;return String(s).replace(/%s/g,function(){return a[i++]!=null?a[i-1]:'';});}
@@ -254,6 +255,8 @@ bell:'F:<path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.6
 bellOff:'F:<path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/><path d="M2.81 2.81L1.4 4.22l20.38 20.37 1.41-1.41z"/>',
 music:'F:<path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>',
 camflip:'F:<path d="M20 5h-3.17L15 3H9L7.17 5H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-5 11.5V13H9v2l-3-3.5L9 8v2h6V8l3 3.5-3 3.5z"/>',
+video2:'F:<path d="M14 6H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2zm4.5 4.7 3-2.2c.3-.2.5 0 .5.3v6.4c0 .3-.2.5-.5.3l-3-2.2v-2.6z"/>',
+endbar:'F:<path d="M12 9.5c2.6 0 5.1.5 7.4 1.5.6.3 1 .9 1 1.6V15c0 .6-.4 1-1 1h-3c-.6 0-1-.4-1-1v-1.7c-1.1-.3-2.2-.4-3.4-.4s-2.3.1-3.4.4V15c0 .6-.4 1-1 1h-3c-.6 0-1-.4-1-1v-2.4c0-.7.4-1.3 1-1.6 2.3-1 4.8-1.5 7.4-1.5z"/>',
 endcall:'F:<path transform="rotate(135 12 12)" d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>',
 globe:'F:<path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm7.93 9h-3.02a15.7 15.7 0 0 0-1.1-5.36A8.03 8.03 0 0 1 19.93 11zM12 4.04c.83 1.2 1.64 3.11 1.9 6.96h-3.8c.26-3.85 1.07-5.76 1.9-6.96zM4.07 13h3.02c.06 1.9.4 3.7 1.1 5.36A8.03 8.03 0 0 1 4.07 13zm3.02-2H4.07a8.03 8.03 0 0 1 4.12-5.36A15.7 15.7 0 0 0 7.09 11zM12 19.96c-.83-1.2-1.64-3.11-1.9-6.96h3.8c-.26 3.85-1.07 5.76-1.9 6.96zm2.81-1.6c.7-1.66 1.04-3.46 1.1-5.36h3.02a8.03 8.03 0 0 1-4.12 5.36z"/>',
 dev:'F:<path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>',
@@ -442,6 +445,11 @@ function canEditGrp(c,u){
 if(!c)return false;
 return isAdminOf(c,u)||!!c.editAll;
 }
+function canAddMember(c,u){
+if(!c)return false;
+if(isAdminOf(c,u))return true;
+return !!c.addAll;
+}
 function isMember(c){
 if(!c)return false;
 if(c.type!=='group')return true;
@@ -457,19 +465,27 @@ var send=function(){gcSend({k:'gc-ring',from:S.me,conv:GC.group,video:GC.video,n
 send();
 GC.ringRep=setInterval(send,3000);
 }
+function gcAttachVideo(v,stream,isLocal){
+v.srcObject=stream;
+if(isLocal){v.muted=true;v.play().catch(function(){});return;}
+v.muted=true;
+var p=v.play();
+if(p&&p.then)p.then(function(){v.muted=false;}).catch(function(){v.muted=false;});
+else v.muted=false;
+}
 function gcTile(id,name,stream,isLocal){
 var g=el('gcGrid');if(!g)return;
 var t=GC.tiles[id];
 if(!t){
 t=document.createElement('div');t.className='gc-tile'+(isLocal?' me':'');
-var v=document.createElement('video');v.autoplay=true;v.playsInline=true;v.muted=!!isLocal;
+var v=document.createElement('video');v.autoplay=true;v.playsInline=true;
 var tag=document.createElement('span');tag.className='gc-tag';tag.textContent=name||id;
 t.appendChild(v);t.appendChild(tag);
 t.onclick=function(){t.classList.toggle('big');};
 g.appendChild(t);
 GC.tiles[id]=t;
 }
-if(stream)t.querySelector('video').srcObject=stream;
+if(stream)gcAttachVideo(t.querySelector('video'),stream,isLocal);
 if(name)t.querySelector('.gc-tag').textContent=name;
 }
 function gcRemoveTile(id){var t=GC.tiles[id];if(t){t.remove();delete GC.tiles[id];}}
@@ -486,7 +502,7 @@ pc.createOffer().then(function(o){return pc.setLocalDescription(o).then(function
 return pc;
 }
 function gcMedia(video){
-return navigator.mediaDevices.getUserMedia({audio:true,video:video?{facingMode:GC.facing,width:{ideal:640},height:{ideal:480}}:false});
+return navigator.mediaDevices.getUserMedia({audio:true,video:video?{facingMode:GC.facing,width:{ideal:720},height:{ideal:1280}}:false});
 }
 function gcBegin(key,video,isJoin){
 if(GC.active)return;
@@ -507,12 +523,12 @@ function gcStart(key,video){gcBegin(key,video,false);}
 function gcPaintCtrl(){
 put('gcMute',icon('mic',20));
 el('gcMute').classList.toggle('on',GC.muted);
-put('gcCam',icon('video',20));
+put('gcCam',icon('video2',20));
 el('gcCam').classList.toggle('off',GC.camOff);
 el('gcCam').style.display=GC.video?'':'none';
 put('gcFlip',icon('camflip',20));
 el('gcFlip').style.display=GC.video?'':'none';
-put('gcLeave',icon('endcall',22));
+put('gcLeave',icon('endbar',22));
 }
 function gcRingHide(){el('gcRing').classList.add('hidden');GC.ring=null;clearTimeout(GC.ringT);}
 function gcSignal(d){
@@ -523,7 +539,7 @@ GC.ring={conv:d.conv,from:d.from,name:d.name,video:d.video};
 put('gcRingName',d.name||d.from);
 put('gcRingSub',L('gc_ring'));
 put('gcAccept',icon('phone',24));
-put('gcDecline',icon('endcall',24));
+put('gcDecline',icon('endbar',24));
 el('gcRing').classList.remove('hidden');
 Sound.play('call');
 clearTimeout(GC.ringT);
@@ -583,7 +599,7 @@ var sn=null;var ss=GC.pcs[id].getSenders();
 for(var j=0;j<ss.length;j++){if(ss[j].track&&ss[j].track.kind==='video'){sn=ss[j];break;}}
 if(sn)sn.replaceTrack(nv);
 }
-var lt=GC.tiles[S.me];if(lt)lt.querySelector('video').srcObject=GC.stream;
+var lt=GC.tiles[S.me];if(lt)gcAttachVideo(lt.querySelector('video'),GC.stream,true);
 if(old)old.stop();
 }).catch(function(){});
 }
@@ -619,6 +635,17 @@ var w2=wild||'+';
 return new Promise(function(res){whenConnected(8000).then(function(ok){if(!ok)return res([]);var out=[],seen={};var h=function(t,p){if(t.indexOf(prefix)===0&&p&&p.length&&!seen[t]){seen[t]=1;try{out.push(JSON.parse(p.toString()));}catch(e){}}};clients.forEach(function(c){if(c&&c.connected){c.on('message',h);try{c.subscribe(prefix+w2);}catch(e){}}});setTimeout(function(){clients.forEach(function(c){if(c){try{c.removeListener('message',h);}catch(e){}try{c.unsubscribe(prefix+w2);}catch(e){}}});res(out);},ms||2500);});});
 }
 function checkBan(u){return fetchRetained(banT(u),1500).then(function(b){return !!(b&&b.banned);});}
+var wakeLock=null;
+function wlRequest(){
+try{
+if(navigator.wakeLock&&navigator.wakeLock.request){
+navigator.wakeLock.request('screen').then(function(l){wakeLock=l;}).catch(function(){});
+}
+}catch(e){}
+}
+function wlRelease(){
+try{if(wakeLock){wakeLock.release();wakeLock=null;}}catch(e){}
+}
 var lastRestart=0;
 function reconnectAll(){var t=now();if(t-lastRestart<5000)return;lastRestart=t;clients.forEach(function(c){try{c.end(true);}catch(e){}});clients=[];connectAll();}
 function connectAll(){
@@ -1064,6 +1091,7 @@ setupHomeSubs();publishProfile();startPresence();
 syncSelfPointers();
 loadBlocks(u);
 loadWins(u);
+wlRequest();
 S.convs.forEach(function(c){publishTo(convTopic(c.key),{k:'hist-req',from:S.me,conv:c.key});});
 renderAcc();
 var vs=null;try{vs=JSON.parse(localStorage.getItem('qc-view-'+u)||'null');}catch(e){}
@@ -1074,6 +1102,7 @@ function logout(){
 if(S.me)publishRetained(presT(S.me),{k:'pres',from:S.me,seen:now(),online:false});
 stopPresence();Object.keys(subs).forEach(unsub);
 if(GC.active)gcLeave();
+wlRelease();
 S.me=null;S.conv=null;S.convs=[];S.msgs=[];S.peek=null;
 blocked={};blockWins={};blkWin={};
 localStorage.removeItem('qc-session');
@@ -1185,7 +1214,7 @@ put('accUser','@'+S.me);
 function loadConvs(){S.convs=JSON.parse(localStorage.getItem('qc-convs-'+S.me)||'[]');S.lastRead=JSON.parse(localStorage.getItem('qc-read-'+S.me)||'{}');S.unread=JSON.parse(localStorage.getItem('qc-unread-'+S.me)||'{}');}
 function saveConvs(){localStorage.setItem('qc-convs-'+S.me,JSON.stringify(S.convs));localStorage.setItem('qc-read-'+S.me,JSON.stringify(S.lastRead));localStorage.setItem('qc-unread-'+S.me,JSON.stringify(S.unread));}
 function getConv(key){for(var i=0;i<S.convs.length;i++)if(S.convs[i].key===key)return S.convs[i];return null;}
-function upsertConv(meta){var c=getConv(meta.key);if(!c){c=meta;S.convs.push(c);}else{if(meta.name)c.name=meta.name;if(meta.members)c.members=meta.members;if(meta.type)c.type=meta.type;if(meta.owner)c.owner=meta.owner;if(meta.editAll!=null)c.editAll=!!meta.editAll;if(meta.admins)c.admins=meta.admins;if(meta.img!==undefined)c.img=meta.img;}saveConvs();return c;}
+function upsertConv(meta){var c=getConv(meta.key);if(!c){c=meta;S.convs.push(c);}else{if(meta.name)c.name=meta.name;if(meta.members)c.members=meta.members;if(meta.type)c.type=meta.type;if(meta.owner)c.owner=meta.owner;if(meta.editAll!=null)c.editAll=!!meta.editAll;if(meta.addAll!=null)c.addAll=!!meta.addAll;if(meta.admins)c.admins=meta.admins;if(meta.img!==undefined)c.img=meta.img;}saveConvs();return c;}
 function msgsKey(key){return 'qc-msgs-'+S.me+'-'+key;}
 function loadMsgs(key){return JSON.parse(localStorage.getItem(msgsKey(key))||'[]');}
 function loadMsgsFor(u,key){return JSON.parse(localStorage.getItem('qc-msgs-'+u+'-'+key)||'[]');}
@@ -1199,10 +1228,10 @@ function sendDeliv(key){publishTo(convTopic(key),{k:'deliv',from:S.me,conv:key,t
 function sendRead(key){publishTo(convTopic(key),{k:'read',from:S.me,conv:key,t:now()});}
 function publishGmeta(c){
 if(!c||c.type!=='group')return;
-publishRetained(gmetaT(c.key.slice(4)),{id:c.key.slice(4),name:c.name,owner:c.owner,members:c.members||[],admins:c.admins||[],img:c.img||null,created:c.created||now(),editAll:!!c.editAll});
+publishRetained(gmetaT(c.key.slice(4)),{id:c.key.slice(4),name:c.name,owner:c.owner,members:c.members||[],admins:c.admins||[],img:c.img||null,created:c.created||now(),editAll:!!c.editAll,addAll:!!c.addAll});
 }
 function broadcastGmeta(c){
-publishTo(convTopic(c.key),{k:'grp-meta',conv:c.key,name:c.name,members:c.members||[],admins:c.admins||[],img:c.img||null,owner:c.owner,editAll:!!c.editAll});
+publishTo(convTopic(c.key),{k:'grp-meta',conv:c.key,name:c.name,members:c.members||[],admins:c.admins||[],img:c.img||null,owner:c.owner,editAll:!!c.editAll,addAll:!!c.addAll});
 }
 function recalcUnread(key){
 var lr=S.lastRead[key]||0;
@@ -1272,6 +1301,15 @@ if(m.time<=peerRead(S.conv.key)){e.textContent='✓✓';e.className='m-tick read
 else if(m.time<=peerDeliv(S.conv.key)){e.textContent='✓✓';e.className='m-tick deliv';}
 else{e.textContent='✓';e.className='m-tick';}
 }
+}
+function hideTyping(){
+var tr=el('typingRow');
+if(tr)tr.classList.remove('on');
+clearTimeout(S._tt);
+}
+function sendTyping(stop){
+if(!S.conv)return;
+publishTo(convTopic(S.conv.key),{k:'type',from:S.me,conv:S.conv.key,stop:stop?1:0});
 }
 function getWall(){
 var raw=localStorage.getItem('qc-wall');
@@ -1460,9 +1498,11 @@ localStorage.setItem('qc-react-'+S.me+'-'+key,JSON.stringify(S.reactRaw));
 S.unread[key]=0;markRead(key);
 showView('chat');
 applyWall();
+hideTyping();
+wlRequest();
 sub(convTopic(key));sub(callT(key));
 if(c.type==='dm'){sub(presT(c.peer));ensureProfile(c.peer);}
-else{fetchRetained(gmetaT(key.slice(4)),1600).then(function(meta){if(meta&&meta.deleted){toast(L('e_grp_gone'));removeConv(key);backHome();return;}if(meta&&meta.members){c.members=meta.members;c.name=meta.name;c.owner=meta.owner;c.editAll=!!meta.editAll;c.admins=meta.admins||[];c.img=meta.img||null;saveConvs();if(c.members.indexOf(S.me)<0){removeConv(key);toast(L('e_notmember'));backHome();return;}renderSidebar();renderChatHeader();renderHome();}});}
+else{fetchRetained(gmetaT(key.slice(4)),1600).then(function(meta){if(meta&&meta.deleted){toast(L('e_grp_gone'));removeConv(key);backHome();return;}if(meta&&meta.members){c.members=meta.members;c.name=meta.name;c.owner=meta.owner;c.editAll=!!meta.editAll;c.addAll=!!meta.addAll;c.admins=meta.admins||[];c.img=meta.img||null;saveConvs();if(c.members.indexOf(S.me)<0){removeConv(key);toast(L('e_notmember'));backHome();return;}renderSidebar();renderChatHeader();renderHome();}});}
 renderChatHeader();renderMsgs();updateTicks();applyBlockUI();
 setTimeout(function(){sendRead(key);requestSync(key);},60);
 }
@@ -1470,6 +1510,7 @@ function backHome(){
 if(S.conv){unsub(convTopic(S.conv.key));unsub(callT(S.conv.key));}
 S.conv=null;S.msgs=[];
 closeDotMenu();
+hideTyping();
 S.convs.forEach(function(c){recalcUnread(c.key);});
 saveConvs();
 showView('home');renderHome();
@@ -1523,6 +1564,28 @@ saveConvs();
 publishGmeta(c);
 broadcastGmeta(c);
 renderGsModal();renderSidebar();renderChatHeader();renderHome();
+}
+function addMemberSubmit(){
+var c=S.conv;
+if(!c||c.type!=='group')return;
+if(!canAddMember(c,S.me))return;
+var u=(el('gsAddName').value||'').trim().toLowerCase();
+if(!validUser(u)){toast(L('e_user'));return;}
+if(u===S.me){toast(L('e_addself'));return;}
+if((c.members||[]).indexOf(u)>=0){toast(L('e_addexists'));return;}
+fetchRetained(userT(u),2200).then(function(rec){
+if(!rec||!rec.u||rec.deleted){toast(L('e_user404'));return;}
+c.members=(c.members||[]).slice();
+c.members.push(u);
+saveConvs();
+publishGmeta(c);
+broadcastGmeta(c);
+publishRetained(inT(u,c.key),{conv:c.key,type:'group',name:c.name,peer:null,members:c.members,owner:c.owner,from:S.me,preview:'',time:now()});
+writeMsg({type:'system',text:fm(L('sys_added'),S.me,u)});
+el('gsAddName').value='';
+renderGsModal();renderSidebar();renderChatHeader();renderHome();
+toast(fm(L('t_added'),u));
+});
 }
 function renderSidebar(){
 var c=S.conv;if(!c)return;
@@ -1632,6 +1695,13 @@ ba.innerHTML=(all?icon('check',13):icon('users',13))+' '+L('gs_all');
 bb.className=!all?'on':'';
 bb.innerHTML=(!all?icon('check',13):icon('lock',13))+' '+L('gs_admin');
 }
+function updateGsAddSeg(a,b){
+var all=!!(S.conv&&S.conv.addAll);
+a.className=!all?'on':'';
+a.innerHTML=(!all?icon('check',13):icon('lock',13))+' '+L('gs_addall_admin');
+b.className=all?'on':'';
+b.innerHTML=(all?icon('check',13):icon('users',13))+' '+L('gs_addall_all');
+}
 function renderGsModal(){
 var c=S.conv;
 var body=el('gsBody');
@@ -1663,6 +1733,14 @@ sv.onclick=saveGsName;
 nr.appendChild(inp);nr.appendChild(sv);
 body.appendChild(nr);
 }
+if(canAddMember(c,me)){
+var ar=document.createElement('div');ar.className='gs-addrow';
+var ai=document.createElement('input');ai.id='gsAddName';ai.className='gs-inp';ai.maxLength=16;ai.placeholder=L('gs_addwho');
+var ab=document.createElement('button');ab.className='icon-btn';ab.type='button';ab.title=L('gs_addmember');ab.innerHTML=icon('userPlus',16);
+ab.onclick=addMemberSubmit;
+ar.appendChild(ai);ar.appendChild(ab);
+body.appendChild(ar);
+}
 if(isOwn){
 var seg=document.createElement('div');seg.className='gs-seg';
 var ba=document.createElement('button');ba.type='button';
@@ -1672,6 +1750,16 @@ bb.onclick=function(){setGrpEditAll(false);};
 seg.appendChild(ba);seg.appendChild(bb);
 body.appendChild(seg);
 updateGsSeg(ba,bb);
+var lb1=document.createElement('div');lb1.className='sb-label';lb1.style.marginTop='12px';lb1.textContent=L('gs_addall_lbl');
+body.appendChild(lb1);
+var seg2=document.createElement('div');seg2.className='gs-seg';
+var ca=document.createElement('button');ca.type='button';
+var cb2=document.createElement('button');cb2.type='button';
+ca.onclick=function(){setGrpAddAll(false);};
+cb2.onclick=function(){setGrpAddAll(true);};
+seg2.appendChild(ca);seg2.appendChild(cb2);
+body.appendChild(seg2);
+updateGsAddSeg(ca,cb2);
 }
 var lb2=document.createElement('div');lb2.className='sb-label';lb2.style.marginTop='14px';lb2.textContent=L('gs_members');
 body.appendChild(lb2);
@@ -1737,6 +1825,16 @@ broadcastGmeta(c);
 renderGsModal();
 toast(L('gs_saved'));
 }
+function setGrpAddAll(v){
+var c=S.conv;
+if(!c||c.type!=='group'||c.owner!==S.me)return;
+c.addAll=!!v;
+saveConvs();
+publishGmeta(c);
+broadcastGmeta(c);
+renderGsModal();
+toast(L('gs_saved'));
+}
 function onConvMsg(d){
 if(!d)return;
 if(d.k==='msg')applyMsg(d.data);
@@ -1761,7 +1859,13 @@ updateTicks();
 }
 else if(d.k==='type'&&d.from!==S.me){
 if(isBlocked(d.from))return;
-var tr2=el('typingRow');if(tr2){tr2.textContent=fm(L('typing'),displayName(d.from));tr2.classList.add('on');clearTimeout(S._tt);S._tt=setTimeout(function(){tr2.classList.remove('on');},2500);}
+var tr2=el('typingRow');
+if(!tr2)return;
+if(d.stop){hideTyping();return;}
+tr2.textContent=fm(L('typing'),displayName(d.from));
+tr2.classList.add('on');
+clearTimeout(S._tt);
+S._tt=setTimeout(function(){tr2.classList.remove('on');},2500);
 }
 else if(d.k==='hist-req'&&d.from!==S.me){publishTo(convTopic(S.conv.key),{k:'hist-res',to:d.from,conv:S.conv.key,msgs:S.msgs.slice(-200)});}
 else if(d.k==='hist-res'&&d.to===S.me){
@@ -1784,6 +1888,7 @@ if(d.owner)c3.owner=d.owner;
 if(d.admins)c3.admins=d.admins;
 if(d.img!==undefined)c3.img=d.img;
 if(d.editAll!=null)c3.editAll=!!d.editAll;
+if(d.addAll!=null)c3.addAll=!!d.addAll;
 saveConvs();
 if(c3.members&&c3.members.indexOf(S.me)<0&&S.conv&&S.conv.key===d.conv){
 removeConv(d.conv);backHome();return;
@@ -1866,6 +1971,7 @@ if(d.owner)c5.owner=d.owner;
 if(d.admins)c5.admins=d.admins;
 if(d.img!==undefined)c5.img=d.img;
 if(d.editAll!=null)c5.editAll=!!d.editAll;
+if(d.addAll!=null)c5.addAll=!!d.addAll;
 saveConvs();
 if(c5.members&&c5.members.indexOf(S.me)<0){removeConv(key);}
 if(S.view==='home')renderHome();
@@ -1886,8 +1992,9 @@ if(!m||!m.id)return;
 if(m.user&&isBlocked(m.user))return;
 if(inBlkWin(m.user,m.time))return;
 var prev=findMsg(m.id);
-if(prev){Object.assign(prev,m);saveMsgs(S.conv.key,S.msgs);updateMsgDOM(prev);return;}
+if(prev){Object.assign(prev,m);saveMsgs(S.conv.key,S.msgs);updateMsgDOM(prev);if(m.user!==S.me)hideTyping();return;}
 S.msgs.push(m);saveMsgs(S.conv.key,S.msgs);renderMsgs();updateTicks();
+if(m.user!==S.me)hideTyping();
 if(m.user&&m.user!==S.me&&S.conv){
 sendDeliv(S.conv.key);
 notifyRecv(S.conv.type,S.conv.key);
@@ -2069,10 +2176,10 @@ function sendMessage(){
 if(S.conv&&S.conv.type==='dm'&&isBlocked(S.conv.peer)){toast(L('e_blocked'));return;}
 if(S.conv&&S.conv.type==='group'&&!isMember(S.conv)){toast(L('e_notmember'));return;}
 var ta=el('input');if(!ta)return;var text=ta.value.trim().slice(0,2000);
-if(S.editId){var m=findMsg(S.editId);if(m&&text){m.text=text;m.editedAt=now();saveMsgs(S.conv.key,S.msgs);updateMsgDOM(m);publishTo(convTopic(S.conv.key),{k:'msg',conv:S.conv.key,from:S.me,data:m});}S.editId=null;el('editBar').classList.remove('on');ta.value='';updateSendBtn();return;}
-if(S.pendingImage){writeMsg({type:'image',image:S.pendingImage,text:text});S.pendingImage=null;el('composePreview').classList.remove('on');ta.value='';updateSendBtn();Sound.play('send');return;}
+if(S.editId){var m=findMsg(S.editId);if(m&&text){m.text=text;m.editedAt=now();saveMsgs(S.conv.key,S.msgs);updateMsgDOM(m);publishTo(convTopic(S.conv.key),{k:'msg',conv:S.conv.key,from:S.me,data:m});}S.editId=null;el('editBar').classList.remove('on');ta.value='';updateSendBtn();sendTyping(true);return;}
+if(S.pendingImage){writeMsg({type:'image',image:S.pendingImage,text:text});S.pendingImage=null;el('composePreview').classList.remove('on');ta.value='';updateSendBtn();Sound.play('send');sendTyping(true);return;}
 if(!text)return;
-writeMsg({text:text});Sound.play('send');ta.value='';updateSendBtn();
+writeMsg({text:text});Sound.play('send');ta.value='';updateSendBtn();sendTyping(true);
 }
 function updateSendBtn(){var ta=el('input');var bl=S.conv&&S.conv.type==='dm'&&isBlocked(S.conv.peer);var has=ta?(ta.value.trim().length>0||!!S.pendingImage):false;var b=el('btnSend');if(b)b.disabled=bl||!has;}
 function autoGrow(){var t=el('input');if(!t)return;t.style.height='auto';t.style.height=Math.min(t.scrollHeight,130)+'px';}
@@ -2111,7 +2218,7 @@ openConv(key);
 function createGroup(name){
 name=(name||'').trim();if(name.length<3){toast(L('e_grp_name'));return;}
 var id=newGroupCode();var key=grpKey(id);
-var c=upsertConv({key:key,type:'group',name:name,members:[S.me],admins:[],img:null,peer:null,owner:S.me,created:now(),editAll:false,last:null});
+var c=upsertConv({key:key,type:'group',name:name,members:[S.me],admins:[],img:null,peer:null,owner:S.me,created:now(),editAll:false,addAll:false,last:null});
 publishGmeta(c);
 subscribeConvPassive(c);
 syncSelfPointers();
@@ -2125,7 +2232,7 @@ fetchRetained(gmetaT(code),2500).then(function(meta){
 if(!meta||!meta.id||meta.deleted){toast(L('e_grp_code404'));return;}
 var key=grpKey(meta.id);
 var members=(meta.members||[]).slice();if(members.indexOf(S.me)<0)members.push(S.me);
-var c=upsertConv({key:key,type:'group',name:meta.name,members:members,admins:meta.admins||[],img:meta.img||null,peer:null,owner:meta.owner,created:meta.created,editAll:!!meta.editAll,last:null});
+var c=upsertConv({key:key,type:'group',name:meta.name,members:members,admins:meta.admins||[],img:meta.img||null,peer:null,owner:meta.owner,created:meta.created,editAll:!!meta.editAll,addAll:!!meta.addAll,last:null});
 publishGmeta(c);
 subscribeConvPassive(c);
 syncSelfPointers();
@@ -2239,7 +2346,7 @@ put('btnNotif',icon('bell')+' '+L('sb_notif'));
 put('btnLang',icon('globe')+' '+L('sb_lang'));
 put('btnAccLogout',icon('logout')+' '+L('sb_logout'));
 put('btnEditProf',icon('edit',14));
-put('btnBack',icon('back'));put('btnInfo',icon('vdots'));put('btnCall',icon('video'));put('btnCallAudio',icon('phone'));
+put('btnBack',icon('back'));put('btnInfo',icon('vdots'));put('btnCall',icon('video2'));put('btnCallAudio',icon('phone'));
 put('btnSbCopy',icon('copy'));put('btnSbShare',icon('link')+' '+L('info_share'));
 put('fabGroup',icon('usersCool',23));put('fabDM',icon('addCool',23));
 put('btnAttach',icon('attach'));put('btnMic',icon('mic'));put('btnEmoji',icon('smile'));put('btnSend',icon('send'));put('cpClear',icon('x'));put('btnCancelEdit',icon('x'));put('mmClose',icon('x'));
@@ -2253,6 +2360,7 @@ put('btnDevConvX',icon('x',14));
 put('btnPassOpen',icon('key')+' '+L('set_pass'));
 put('btnSetSync',icon('download')+' '+L('set_sync'));
 put('devLogo',icon('dev',24));
+setTxt('#spTag',L('sp_tag'));
 setTxt('#authSub',L('auth_sub'));
 setTxt('#fldUser > span',L('fld_user'));
 setTxt('#fldPass > span',L('fld_pass'));
@@ -2315,8 +2423,6 @@ if(S.conv){renderSidebar();renderChatHeader();applyBlockUI();}
 
 function init(){
 var GCSS='';
-GCSS+='.gc{position:fixed;inset:0;z-index:320;background:#05070d;display:flex;flex-direction:column}';
-GCSS+='.gc-stage{flex:1;position:relative;overflow:hidden}';
 GCSS+='.gc-grid{position:absolute;inset:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));grid-auto-rows:1fr;align-content:stretch;gap:6px;padding:6px;overflow-y:auto}';
 GCSS+='.gc-tile{position:relative;border-radius:14px;overflow:hidden;background:#0b0f18;border:1px solid var(--line);min-height:0;height:100%}';
 GCSS+='.gc-tile video{width:100%;height:100%;object-fit:cover;display:block}';
@@ -2341,6 +2447,7 @@ GCSS+='.gs-head{display:flex;gap:12px;align-items:center;margin-bottom:12px}';
 GCSS+='.gs-headtxt b{display:block;font-size:15px}';
 GCSS+='.gs-headtxt span{color:var(--muted);font-size:11.5px}';
 GCSS+='.gs-namerow{display:flex;gap:8px;align-items:center;margin-bottom:10px}';
+GCSS+='.gs-addrow{display:flex;gap:8px;align-items:center;margin-bottom:12px}';
 GCSS+='.gs-seg{display:flex;gap:6px;margin-bottom:4px}';
 GCSS+='.gs-seg button{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:9px 10px;border:1px solid var(--line);border-radius:11px;background:rgba(255,255,255,.04);color:var(--muted);font-weight:700;font-size:12.5px;cursor:pointer}';
 GCSS+='.gs-seg button.on{background:rgba(0,168,132,.14);border-color:rgba(0,168,132,.45);color:var(--lime)}';
@@ -2352,6 +2459,7 @@ GCSS+='.gs-act svg{width:17px;height:17px}';
 GCSS+='.gs-phwrap{position:relative;width:52px;height:52px;flex:none}';
 GCSS+='.gs-phbadge{position:absolute;right:-5px;bottom:-5px;width:26px;height:26px;border-radius:50%;border:1px solid rgba(255,255,255,.22);background:#20262B;color:#CFD8DD;display:grid;place-items:center;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.4)}';
 GCSS+='.gs-phbadge svg{width:12px;height:12px}';
+GCSS+='#splash .sp-tag{color:var(--muted);font:600 10.5px var(--mono);letter-spacing:.14em;text-transform:uppercase}';
 var gst=document.createElement('style');
 gst.textContent=GCSS;
 document.head.appendChild(gst);
@@ -2437,6 +2545,7 @@ if(!GC.ring)return;
 var r=GC.ring;
 gcRingHide();
 sub(callT(r.conv));
+wlRequest();
 gcBegin(r.conv,r.video!==false,true);
 });
 on('gcDecline','click',gcRingHide);
@@ -2500,11 +2609,13 @@ on('btnSbCopy','click',function(){if(S.conv&&S.conv.type==='group'){var c=S.conv
 on('btnSbShare','click',function(){if(S.conv&&S.conv.type==='group'){var link=location.href.split(/[?#]/)[0]+'?g='+S.conv.key.slice(4);if(navigator.clipboard)navigator.clipboard.writeText(link);toast(L('t_link'));}});
 on('btnCall','click',function(){
 if(!S.conv)return;
+wlRequest();
 if(S.conv.type==='dm'){if(window.QC&&QC.startCall)QC.startCall(S.conv.peer,true);}
 else{if(!isMember(S.conv)){toast(L('e_notmember'));return;}gcStart(S.conv.key,true);}
 });
 on('btnCallAudio','click',function(){
 if(!S.conv)return;
+wlRequest();
 if(S.conv.type==='dm'){if(window.QC&&QC.startCall)QC.startCall(S.conv.peer,false);}
 else{if(!isMember(S.conv)){toast(L('e_notmember'));return;}gcStart(S.conv.key,false);}
 });
@@ -2514,8 +2625,9 @@ on('btnCancelEdit','click',function(){S.editId=null;el('editBar').classList.remo
 on('btnSend','click',sendMessage);
 var ta=el('input');
 if(ta){
-ta.addEventListener('input',function(){autoGrow();updateSendBtn();if(S.conv)publishTo(convTopic(S.conv.key),{k:'type',from:S.me,conv:S.conv.key});});
+ta.addEventListener('input',function(){autoGrow();updateSendBtn();if(S.conv)sendTyping(ta.value.trim().length===0);});
 ta.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}});
+ta.addEventListener('blur',function(){sendTyping(true);});
 ta.addEventListener('focus',function(){setTimeout(pinChat,200);setTimeout(pinChat,500);});
 }
 var ms=el('msgScroll');
@@ -2548,6 +2660,7 @@ publishPresence();
 renderNet();
 killPan();
 Sound.unlock();
+wlRequest();
 syncAllConvs();
 }
 });
@@ -2577,7 +2690,7 @@ window.QC={get me(){return S.me;},get uid(){return uid;},get S(){return S;},icon
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
 </script>
-<script src="media.js?v=23"></script>
+<script src="media.js?v=24"></script>
 </body>
 </html>
-<!-- END index.html v56 -->
+<!-- END index.html v57 -->
