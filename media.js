@@ -1,4 +1,4 @@
-/* media.js v24 — emoji, gambar, suara, call + flip/swap/glass/autoplay-fix (lengkap) */
+/* media.js v25 — emoji, gambar, suara, call WA-style + rotate/flip fix (lengkap) */
 (function(){
 'use strict';
 if(!window.QC)return;
@@ -14,6 +14,7 @@ var cp=em.codePointAt(0);
 if(cp>=0x1F1E6&&cp<=0x1F1FF&&em.length<4)return true;
 return false;
 }
+var ROTSVG='<svg viewBox="0 0 24 24" width="21" height="21" fill="currentColor"><path d="M12 5V2L8 6l4 4V7c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 16.03 20 14.57 20 13c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 8.74C4.46 9.97 4 11.43 4 13c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>';
 try{
 var C='';
 C+='.emoji-pop{display:flex;flex-direction:column;';
@@ -87,22 +88,22 @@ C+='color:#fff;font:600 14px var(--body)}';
 C+='.call-info small{display:block;';
 C+='color:rgba(255,255,255,.8);font-size:12px}';
 C+='.call-ctrl{display:flex;justify-content:center;';
-C+='align-items:center;gap:14px;';
-C+='padding:16px calc(16px + env(safe-area-inset-bottom));';
+C+='align-items:center;gap:12px;';
+C+='padding:14px calc(14px + env(safe-area-inset-bottom));';
 C+='background:rgba(10,14,24,.55);';
 C+='backdrop-filter:blur(18px) saturate(1.4);';
 C+='-webkit-backdrop-filter:blur(18px) saturate(1.4)}';
-C+='.call-ctrl button{width:54px;height:54px;';
+C+='.call-ctrl button{width:50px;height:50px;';
 C+='border-radius:50%;border:1px solid rgba(255,255,255,.16);';
 C+='background:rgba(255,255,255,.10);';
 C+='backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);';
 C+='color:#fff;cursor:pointer;display:grid;place-items:center;';
 C+='box-shadow:inset 0 1px 0 rgba(255,255,255,.18)}';
-C+='.call-ctrl button svg{width:21px;height:21px}';
+C+='.call-ctrl button svg{width:20px;height:20px}';
 C+='.c-mute.on,.c-vid.off,.c-flip.on{background:rgba(255,255,255,.88);';
 C+='color:#081018}';
 C+='.c-end{background:#EF5350;border-color:transparent;';
-C+='width:64px;height:64px;';
+C+='width:60px;height:60px;';
 C+='box-shadow:0 6px 18px rgba(239,83,80,.4)}';
 C+='.call-status{position:absolute;top:50%;left:50%;';
 C+='transform:translate(-50%,-50%);color:#fff;';
@@ -135,7 +136,6 @@ C+='box-shadow:0 6px 18px rgba(239,83,80,.4)}';
 var stx=document.createElement('style');
 stx.textContent=C;
 document.head.appendChild(stx);
-/* v22+: listener error AUDIO penyebab toast palsu TIDAK ADA lagi */
 var CATS=[];
 function cat(k,i){
 var o={k:k,i:i,l:[]};
@@ -535,6 +535,8 @@ H+='<button id="ctrlVideo" class="c-vid" type="button">';
 H+=icon('video2')+'</button>';
 H+='<button id="ctrlFlip" class="c-flip" type="button">';
 H+=icon('camflip')+'</button>';
+H+='<button id="ctrlRotate" class="c-rot" type="button">';
+H+=ROTSVG+'</button>';
 H+='<button id="ctrlEnd" class="c-end" type="button">';
 H+=icon('endbar')+'</button>';
 H+='</div></div>';
@@ -551,7 +553,7 @@ H+='</div></div>';
 document.body.insertAdjacentHTML('beforeend',H);
 var pc=null,ls=null,active=false,answered=false;
 var partner=null,incoming=null,ctmr=null,sec=0;
-var callMode='video',facing='user';
+var callMode='video',facing='user',remRot=0;
 var ICE={iceServers:[
 {urls:'stun:stun.l.google.com:19302'},
 {urls:'stun:stun1.l.google.com:19302'},
@@ -588,6 +590,40 @@ p.then(function(){rv.muted=false;}).catch(function(){rv.muted=false;});
 rv.muted=false;
 }
 }
+function applyRemoteRot(){
+var rv=gid('remoteVideo');
+var box=gid('callRemoteBox');
+if(!rv||!box)return;
+if(!remRot){
+rv.style.position='';
+rv.style.left='';
+rv.style.top='';
+rv.style.width='';
+rv.style.height='';
+rv.style.transform='';
+return;
+}
+var bw=box.clientWidth,bh=box.clientHeight;
+var swapDims=remRot%180!==0;
+rv.style.position='absolute';
+rv.style.left='50%';
+rv.style.top='50%';
+rv.style.width=(swapDims?bh:bw)+'px';
+rv.style.height=(swapDims?bw:bh)+'px';
+rv.style.transform='translate(-50%,-50%) rotate('+remRot+'deg)';
+rv.style.objectFit='cover';
+}
+function autoOrient(){
+var rv=gid('remoteVideo');
+var box=gid('callRemoteBox');
+if(!rv||!box||!rv.videoWidth)return;
+var trackLand=rv.videoWidth>rv.videoHeight;
+var boxLand=box.clientWidth>box.clientHeight;
+if(trackLand!==boxLand&&remRot===0){
+remRot=90;
+applyRemoteRot();
+}
+}
 function csendTo(to,o){
 if(!to)return;
 var pair=[QC.me,to].sort().join('~');
@@ -612,16 +648,12 @@ rv.style.opacity='0';
 rv.style.left='-8px';
 rv.style.top='-8px';
 }else{
-rv.style.position='';
-rv.style.width='';
-rv.style.height='';
-rv.style.opacity='';
-rv.style.left='';
-rv.style.top='';
+applyRemoteRot();
 }
 }
 function openUI(name,ans,mode){
 callMode=mode||'video';
+remRot=0;
 gid('callModal').classList.remove('hidden');
 setAvByName(gid('callBigAv'),name,56);
 gid('callBigName').textContent=nm2(name);
@@ -638,6 +670,8 @@ callMode==='audio'?'none':'';
 gid('ctrlVideo').style.display=
 callMode==='audio'?'none':'';
 gid('ctrlFlip').style.display=
+callMode==='audio'?'none':'';
+gid('ctrlRotate').style.display=
 callMode==='audio'?'none':'';
 styleRemote();
 }
@@ -656,18 +690,19 @@ gid('callTimer').textContent=m+':'+d;
 }
 function getMedia(video,face){
 var va={echoCancellation:true,noiseSuppression:true};
-if(video){
-var vc={facingMode:face||'user',width:{ideal:720},height:{ideal:1280}};
-return navigator.mediaDevices
-.getUserMedia({video:vc,audio:va})
+if(!video)return navigator.mediaDevices.getUserMedia({audio:va});
+var vcExact={facingMode:{exact:face||'user'},width:{ideal:720},height:{ideal:1280},frameRate:{ideal:30}};
+var vcIdeal={facingMode:face||'user',width:{ideal:720},height:{ideal:1280},frameRate:{ideal:30}};
+return navigator.mediaDevices.getUserMedia({video:vcExact,audio:va})
+.catch(function(){
+return navigator.mediaDevices.getUserMedia({video:vcIdeal,audio:va});
+})
 .catch(function(){
 return navigator.mediaDevices.getUserMedia({video:true,audio:va});
 })
 .catch(function(){
 return navigator.mediaDevices.getUserMedia({audio:va});
 });
-}
-return navigator.mediaDevices.getUserMedia({audio:va});
 }
 function wirePC(){
 pc=new RTCPeerConnection(ICE);
@@ -796,9 +831,11 @@ if(partner&&!silent)csend({type:'end'});
 active=false;
 answered=false;
 partner=null;
+remRot=0;
 gid('callModal').classList.add('hidden');
 gid('callRemoteBox').classList.remove('swap');
-gid('remoteVideo').srcObject=null;
+var rv=gid('remoteVideo');
+if(rv){rv.style.position='';rv.style.transform='';rv.style.width='';rv.style.height='';rv.style.left='';rv.style.top='';rv.srcObject=null;}
 gid('localVideo').srcObject=null;
 }
 function flipCam(){
@@ -811,6 +848,8 @@ var old=ls?ls.getVideoTracks()[0]:null;
 if(ls){
 if(old)ls.removeTrack(old);
 ls.addTrack(nv);
+}else{
+ls=st;
 }
 if(pc){
 var sn=null;
@@ -819,12 +858,17 @@ if(s2.track&&s2.track.kind==='video')sn=s2;
 });
 if(sn)sn.replaceTrack(nv);
 }
-gid('localVideo').srcObject=ls||st;
+gid('localVideo').srcObject=ls;
 if(old)old.stop();
 gid('ctrlFlip').classList.toggle('on',facing==='environment');
 }).catch(function(){
 toast(tr('Gagal mengganti kamera','Failed to switch camera'));
 });
+}
+function rotateRemote(){
+remRot=(remRot+90)%360;
+gid('callRemoteBox').classList.remove('swap');
+applyRemoteRot();
 }
 QC.onCallSignal=function(d){
 if(!d||d.from===QC.me||d.to!==QC.me)return;
@@ -876,11 +920,17 @@ QC.endCall=endCall;
 gid('icOk').onclick=accept;
 gid('icNo').onclick=decline;
 gid('callLocal').onclick=function(){
+if(remRot)return;
 gid('callRemoteBox').classList.toggle('swap');
 };
 gid('remoteVideo').onclick=function(){
+if(remRot)return;
 gid('callRemoteBox').classList.toggle('swap');
 };
+gid('remoteVideo').addEventListener('loadedmetadata',autoOrient);
+window.addEventListener('resize',function(){
+if(active&&remRot)applyRemoteRot();
+});
 gid('ctrlMute').onclick=function(){
 if(!ls)return;
 var a=ls.getAudioTracks()[0];
@@ -903,6 +953,7 @@ v.enabled=!v.enabled;
 this.classList.toggle('off',!v.enabled);
 };
 gid('ctrlFlip').onclick=flipCam;
+gid('ctrlRotate').onclick=rotateRemote;
 gid('ctrlEnd').onclick=function(){
 endCall(false);
 };
@@ -916,4 +967,4 @@ try{QC.toast(tr('Modul media gagal: ','Media module failed: ')+e.message);}catch
 if(window.console)console.error(e);
 }
 })();
-/* END media.js v24 */
+/* END media.js v25 */
