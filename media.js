@@ -1,4 +1,4 @@
-/* media.js v26 — emoji, gambar, suara, call WA-style (kamera aman, tanpa rotasi) */
+/* media.js v27 — emoji, gambar, suara, call WA-style (layout inline, swap tap, flip iOS-safe) */
 (function(){
 'use strict';
 if(!window.QC)return;
@@ -59,35 +59,24 @@ C+='color:var(--lime,#00A884)}';
 C+='.call-modal{position:fixed;inset:0;z-index:300;';
 C+='background:#000;display:flex;flex-direction:column}';
 C+='.call-remote{flex:1;position:relative;';
-C+='background:#0a0a0a;display:grid;';
-C+='place-items:center;overflow:hidden}';
-C+='.call-remote video{width:100%;height:100%;';
-C+='object-fit:cover}';
-C+='.call-remote.swap #remoteVideo{position:absolute;';
-C+='inset:auto;bottom:16px;right:16px;width:100px;height:150px;';
-C+='border-radius:12px;border:2px solid rgba(255,255,255,.2);';
-C+='object-fit:cover}';
-C+='.call-remote.swap .call-local{position:absolute;inset:0;';
-C+='width:100%;height:100%;border-radius:0;border:0}';
-C+='.call-ph{display:flex;flex-direction:column;';
-C+='align-items:center;gap:12px;color:var(--muted)}';
-C+='.call-ph .big-av{width:100px;height:100px;';
+C+='background:#0a0a0a;overflow:visible}';
+C+='.call-ph{position:absolute;left:50%;top:42%;';
+C+='transform:translate(-50%,-50%);';
+C+='display:flex;flex-direction:column;';
+C+='align-items:center;gap:12px;color:var(--muted);z-index:2}';
+C+='.call-ph .big-av{width:96px;height:96px;';
 C+='border-radius:50%;display:grid;place-items:center;';
 C+='color:#DFE7EA;overflow:hidden}';
-C+='.call-ph .big-av svg{width:56px;height:56px}';
+C+='.call-ph .big-av svg{width:52px;height:52px}';
 C+='.big-av img,.ic-av img{width:100%;height:100%;';
 C+='object-fit:cover;display:block}';
-C+='.call-local{position:absolute;bottom:16px;right:16px;';
-C+='width:100px;height:150px;border-radius:12px;';
-C+='overflow:hidden;';
-C+='border:2px solid rgba(255,255,255,.2);background:#111}';
-C+='.call-local video{width:100%;height:100%;';
-C+='object-fit:cover;transform:scaleX(-1)}';
-C+='.call-info{position:absolute;top:16px;left:16px;';
-C+='color:#fff;font:600 14px var(--body)}';
+C+='.call-info{position:absolute;top:14px;left:16px;';
+C+='color:#fff;font:600 14px var(--body);z-index:7;';
+C+='text-shadow:0 1px 6px rgba(0,0,0,.6)}';
 C+='.call-info small{display:block;';
 C+='color:rgba(255,255,255,.8);font-size:12px}';
-C+='.call-ctrl{display:flex;justify-content:center;';
+C+='.call-ctrl{position:relative;z-index:8;';
+C+='display:flex;justify-content:center;';
 C+='align-items:center;gap:14px;';
 C+='padding:14px calc(14px + env(safe-area-inset-bottom));';
 C+='background:rgba(10,14,24,.55);';
@@ -107,7 +96,7 @@ C+='width:60px;height:60px;';
 C+='box-shadow:0 6px 18px rgba(239,83,80,.4)}';
 C+='.call-status{position:absolute;top:50%;left:50%;';
 C+='transform:translate(-50%,-50%);color:#fff;';
-C+='font:700 17px var(--body)}';
+C+='font:700 17px var(--body);z-index:3}';
 C+='.in-call{position:fixed;top:16px;right:16px;';
 C+='z-index:350;min-width:260px;';
 C+='border:1px solid rgba(255,255,255,.14);border-radius:18px;';
@@ -551,7 +540,7 @@ H+='</div></div>';
 document.body.insertAdjacentHTML('beforeend',H);
 var pc=null,ls=null,active=false,answered=false;
 var partner=null,incoming=null,ctmr=null,sec=0;
-var callMode='video',facing='user';
+var callMode='video',facing='user',swapped=false;
 var ICE={iceServers:[
 {urls:'stun:stun.l.google.com:19302'},
 {urls:'stun:stun1.l.google.com:19302'},
@@ -588,6 +577,62 @@ p.then(function(){rv.muted=false;}).catch(function(){rv.muted=false;});
 rv.muted=false;
 }
 }
+function applyLayout(){
+var box=gid('callRemoteBox'),loc=gid('callLocal');
+var rv=gid('remoteVideo'),lv=gid('localVideo');
+if(!box||!loc||!rv||!lv)return;
+box.style.position='static';
+box.style.overflow='visible';
+loc.style.position='static';
+loc.style.overflow='visible';
+loc.style.width='0';
+loc.style.height='0';
+loc.style.border='0';
+loc.style.background='transparent';
+loc.style.borderRadius='0';
+if(callMode==='audio'){
+rv.style.display='none';
+lv.style.display='none';
+return;
+}
+rv.style.display='';
+lv.style.display='';
+var bigV=swapped?lv:rv;
+var pipV=swapped?rv:lv;
+[rv,lv].forEach(function(v){
+v.style.position='absolute';
+v.style.objectFit='cover';
+v.style.zIndex='1';
+});
+lv.style.transform='scaleX(-1)';
+rv.style.transform='none';
+bigV.style.left='0';
+bigV.style.top='0';
+bigV.style.width='100%';
+bigV.style.height='calc(100% - 84px)';
+bigV.style.right='';
+bigV.style.bottom='';
+bigV.style.borderRadius='0';
+bigV.style.border='0';
+bigV.style.boxShadow='none';
+bigV.style.zIndex='1';
+pipV.style.left='auto';
+pipV.style.top='auto';
+pipV.style.right='14px';
+pipV.style.bottom='98px';
+pipV.style.width='112px';
+pipV.style.height='150px';
+pipV.style.borderRadius='14px';
+pipV.style.border='2px solid rgba(255,255,255,.28)';
+pipV.style.boxShadow='0 6px 20px rgba(0,0,0,.5)';
+pipV.style.background='#111';
+pipV.style.zIndex='6';
+}
+function toggleSwap(){
+if(callMode==='audio')return;
+swapped=!swapped;
+applyLayout();
+}
 function csendTo(to,o){
 if(!to)return;
 var pair=[QC.me,to].sort().join('~');
@@ -601,27 +646,9 @@ function csend(o){
 if(!partner)return;
 csendTo(partner,o);
 }
-function styleRemote(){
-var rv=gid('remoteVideo');
-if(!rv)return;
-if(callMode==='audio'){
-rv.style.position='absolute';
-rv.style.width='2px';
-rv.style.height='2px';
-rv.style.opacity='0';
-rv.style.left='-8px';
-rv.style.top='-8px';
-}else{
-rv.style.position='';
-rv.style.width='';
-rv.style.height='';
-rv.style.opacity='';
-rv.style.left='';
-rv.style.top='';
-}
-}
 function openUI(name,ans,mode){
 callMode=mode||'video';
+swapped=false;
 gid('callModal').classList.remove('hidden');
 setAvByName(gid('callBigAv'),name,56);
 gid('callBigName').textContent=nm2(name);
@@ -633,13 +660,13 @@ callMode==='audio'
 gid('callStatus').textContent=tr('Memanggil…','Calling…');
 gid('callPh').style.display='';
 gid('callStatus').style.display=ans?'none':'';
-gid('callLocal').style.display=
-callMode==='audio'?'none':'';
 gid('ctrlVideo').style.display=
 callMode==='audio'?'none':'';
 gid('ctrlFlip').style.display=
 callMode==='audio'?'none':'';
-styleRemote();
+gid('callLocal').style.display=
+callMode==='audio'?'none':'';
+applyLayout();
 }
 function timer(){
 answered=true;
@@ -657,7 +684,10 @@ gid('callTimer').textContent=m+':'+d;
 function getMedia(video,face){
 var va={echoCancellation:true,noiseSuppression:true};
 if(!video)return navigator.mediaDevices.getUserMedia({audio:va});
-return navigator.mediaDevices.getUserMedia({video:{facingMode:face||'user'},audio:va})
+return navigator.mediaDevices.getUserMedia({video:{facingMode:{exact:face||'user'}},audio:va})
+.catch(function(){
+return navigator.mediaDevices.getUserMedia({video:{facingMode:face||'user'},audio:va});
+})
 .catch(function(){
 return navigator.mediaDevices.getUserMedia({video:true,audio:va});
 })
@@ -676,6 +706,7 @@ gid('callPh').style.display='none';
 }
 var s=gid('callStatus');
 if(s)s.style.display='none';
+applyLayout();
 if(!answered)timer();
 };
 pc.onicecandidate=function(e){
@@ -794,34 +825,40 @@ if(partner&&!silent)csend({type:'end'});
 active=false;
 answered=false;
 partner=null;
+swapped=false;
 gid('callModal').classList.add('hidden');
-gid('callRemoteBox').classList.remove('swap');
 gid('remoteVideo').srcObject=null;
 gid('localVideo').srcObject=null;
 }
 function flipCam(){
 if(callMode==='audio'||!active)return;
-facing=facing==='user'?'environment':'user';
-getMedia(true,facing).then(function(st){
+var next=facing==='user'?'environment':'user';
+getMedia(true,next).then(function(st){
 var nv=st.getVideoTracks()[0];
-if(!nv)return;
+if(!nv){
+st.getTracks().forEach(function(t){t.stop();});
+toast(tr('Gagal mengganti kamera','Failed to switch camera'));
+return;
+}
 var old=ls?ls.getVideoTracks()[0]:null;
+if(old)old.stop();
 if(ls){
 if(old)ls.removeTrack(old);
 ls.addTrack(nv);
 }else{
 ls=st;
 }
+var lv=gid('localVideo');
+lv.srcObject=null;
+lv.srcObject=ls;
 if(pc){
-var sn=null;
 pc.getSenders().forEach(function(s2){
-if(s2.track&&s2.track.kind==='video')sn=s2;
+if(s2.track&&s2.track.kind==='video')s2.replaceTrack(nv);
 });
-if(sn)sn.replaceTrack(nv);
 }
-gid('localVideo').srcObject=ls;
-if(old)old.stop();
+facing=next;
 gid('ctrlFlip').classList.toggle('on',facing==='environment');
+applyLayout();
 }).catch(function(){
 toast(tr('Gagal mengganti kamera','Failed to switch camera'));
 });
@@ -875,12 +912,8 @@ QC.startCall=startCall;
 QC.endCall=endCall;
 gid('icOk').onclick=accept;
 gid('icNo').onclick=decline;
-gid('callLocal').onclick=function(){
-gid('callRemoteBox').classList.toggle('swap');
-};
-gid('remoteVideo').onclick=function(){
-gid('callRemoteBox').classList.toggle('swap');
-};
+gid('remoteVideo').onclick=toggleSwap;
+gid('localVideo').onclick=toggleSwap;
 gid('ctrlMute').onclick=function(){
 if(!ls)return;
 var a=ls.getAudioTracks()[0];
@@ -906,6 +939,12 @@ gid('ctrlFlip').onclick=flipCam;
 gid('ctrlEnd').onclick=function(){
 endCall(false);
 };
+window.addEventListener('resize',function(){
+if(active)applyLayout();
+});
+window.addEventListener('orientationchange',function(){
+if(active)setTimeout(applyLayout,120);
+});
 window.addEventListener('pagehide',function(){
 if(active)endCall(true);
 if(incoming)hideIncoming();
@@ -916,4 +955,4 @@ try{QC.toast(tr('Modul media gagal: ','Media module failed: ')+e.message);}catch
 if(window.console)console.error(e);
 }
 })();
-/* END media.js v26 */
+/* END media.js v27 */
