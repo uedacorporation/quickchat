@@ -91,7 +91,7 @@
     <button id="btnLang" class="btn ghost small full" type="button"></button>
     <button id="btnAccLogout" class="btn danger small full" type="button"></button>
   </div>
-  <div class="sb-card" style="text-align:center;color:var(--muted);font-size:11.5px"><span class="brand-dev" id="devTap2">Versi aplikasi: BETA · v63</span></div>
+  <div class="sb-card" style="text-align:center;color:var(--muted);font-size:11.5px"><span class="brand-dev" id="devTap2">Versi aplikasi: BETA · v64</span></div>
 </aside>
 <div id="accScrim" class="scrim"></div>
 
@@ -141,7 +141,7 @@
 <button id="btnSetSync" class="btn ghost small full" type="button"></button>
 <button id="btnDelAcc" class="btn danger small full" type="button"></button>
 </div>
-<div class="sb-card" style="margin-top:14px;text-align:center;color:var(--muted);font-size:11.5px" id="setCard">QuickChat · BETA · v63</div>
+<div class="sb-card" style="margin-top:14px;text-align:center;color:var(--muted);font-size:11.5px" id="setCard">QuickChat · BETA · v64</div>
 </div></div>
 <div id="passModal" class="modal hidden"><div class="m-scrim" data-close="passModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="passModal" type="button"></button><h3 id="passTit">Ubah kata sandi</h3><p class="sub" id="passSub">Verifikasi kata sandi lama lalu setel kata sandi baru.</p>
 <label class="fld"><span id="passOldLbl">Kata sandi lama</span><input id="inOldPass" type="password" maxlength="64" placeholder="••••••"></label>
@@ -194,7 +194,7 @@
 (function(){
 'use strict';
 var DEV_PASS='ryoxd666#';
-var APP_VER='v63';
+var APP_VER='v64';
 var lang=localStorage.getItem('qc-lang')||'id';
 var REASONS={
 id:['Spam / iklan berulang','Penipuan / phishing','Konten tidak pantas','Pelecehan / ancaman','Pelanggaran lain'],
@@ -654,9 +654,9 @@ function fetchWild(prefix,ms,wild){
 var w2=wild||'+';
 return new Promise(function(res){whenConnected(8000).then(function(ok){if(!ok)return res([]);var out=[],seen={};var h=function(t,p){if(t.indexOf(prefix)===0&&p&&p.length&&!seen[t]){seen[t]=1;try{out.push(JSON.parse(p.toString()));}catch(e){}}};clients.forEach(function(c){if(c&&c.connected){c.on('message',h);try{c.subscribe(prefix+w2);}catch(e){}}});setTimeout(function(){clients.forEach(function(c){if(c){try{c.removeListener('message',h);}catch(e){}try{c.unsubscribe(prefix+w2);}catch(e){}}});res(out);},ms||2500);});});
 }
-/* === END PART 1 v63 — tempel BAGIAN 2 v63 tepat di bawah baris ini === */
-function checkBan(u){return fetchRetained(banT(u),1500).then(function(b){return !!(b&&b.banned);});}
-APP_VER='v63';
+/* === END PART 1 v64 — tempel BAGIAN 2 v64 tepat di bawah baris ini === */
+ function checkBan(u){return fetchRetained(banT(u),1500).then(function(b){return !!(b&&b.banned);});}
+APP_VER='v64';
 var wakeLock=null;
 function wlRequest(){
 try{
@@ -2754,7 +2754,7 @@ window.QC={get me(){return S.me;},get uid(){return uid;},get S(){return S;},icon
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
 </script>
-<script src="media.js?v=33"></script>
+<script src="media.js?v=29"></script>
 </body>
 </html>
-<!-- END index.html v63 -->
+<!-- END index.html v64 -->
