@@ -1,11 +1,26 @@
-/* media.js v32 — emoji, gambar, suara, call WA-style (adaptive fit, anti-zoom, anti-delay) */
+/* media.js v33 — emoji, gambar, suara, call WA-style (syntax fix, toast lokal, adaptive fit) */
 (function(){
 'use strict';
 if(!window.QC)return;
 var QC=window.QC,S=QC.S;
-var icon=QC.icon,toast=QC.toast;
+var icon=QC.icon;
 function gid(i){return document.getElementById(i);}
 function tr(a,b){return document.documentElement.lang==='en'?b:a;}
+function toast(m){
+try{
+var wrap=gid('toasts');
+if(!wrap)return;
+var d=document.createElement('div');
+d.className='toast';
+d.textContent=m;
+wrap.appendChild(d);
+requestAnimationFrame(function(){d.classList.add('in');});
+setTimeout(function(){
+d.classList.remove('in');
+setTimeout(function(){if(d.parentNode)d.parentNode.removeChild(d);},300);
+},2600);
+}catch(e){}
+}
 function badEm(em){
 if(!em)return true;
 if(em==='\uFE0F'||em==='\u200D')return true;
@@ -474,7 +489,8 @@ var um=(mr.mimeType||'audio/mp4').split(';')[0];
 var rd=new FileReader();
 rd.onload=function(){
 QC.writeMsg({type:'audio',audio:rd.result,dur:dur,mime:um});
-QC.Sound.play('send');
+var snd=QC.Sound;
+if(snd&&snd.play)snd.play('send');
 };
 rd.readAsDataURL(new Blob(chunks,{type:mr.mimeType||'audio/mp4'}));
 };
@@ -807,10 +823,6 @@ if(active){
 toast(tr('Sedang dalam panggilan','Already in a call'));
 return;
 }
-if(!S.presence||!S.presence[u]){
-toast(tr('Pengguna tidak online','User is not online'));
-return;
-}
 partner=u;
 answered=false;
 facing='user';
@@ -825,13 +837,6 @@ return pc.createOffer().then(function(of){
 return pc.setLocalDescription(of).then(function(){
 csend({type:'offer',sdp:of,mode:callMode});
 active=true;
-setTimeout(function(){
-if(active&&!answered&&pc){
-if(pc.signalingState==='have-local-offer'){
-toast(tr('Peer belum merespons sinyal panggilan','Peer has not responded to call signal'));
-}
-}
-},12000);
 setTimeout(function(){
 if(!answered&&active){
 endCall(true);
@@ -952,10 +957,10 @@ incoming.mode==='audio'
 ?tr('Panggilan suara masuk…','Incoming voice call…')
 :tr('Panggilan video masuk…','Incoming video call…');
 gid('incomingCall').classList.remove('hidden');
-QC.Sound.play('call');
+if(QC.Sound&&QC.Sound.play)QC.Sound.play('call');
 setTimeout(function(){
 if(incoming&&incoming.from===d.from){
-csendTo(d.from,{type:'decline');
+csendTo(d.from,{type:'decline'});
 hideIncoming();
 }
 },30000);
@@ -1028,8 +1033,8 @@ if(incoming)hideIncoming();
 });
 window.QC_MEDIA=true;
 }catch(e){
-try{QC.toast(tr('Modul media gagal: ','Media module failed: ')+e.message);}catch(x){}
+try{toast(tr('Modul media gagal: ','Media module failed: ')+e.message);}catch(x){}
 if(window.console)console.error(e);
 }
 })();
-/* END media.js v32 */
+/* END media.js v33 */
