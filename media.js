@@ -1,2760 +1,1001 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover,interactive-widget=resizes-content">
-<meta name="theme-color" content="#05070D">
-<title>QuickChat — by Ryo XD</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect x='2' y='2' width='44' height='44' rx='13' fill='%2300A884'/%3E%3Cpath d='M14 11h20a7 7 0 0 1 7 7v9a7 7 0 0 1-7 7h-9l-8 7v-7h-3a7 7 0 0 1-7-7v-9a7 7 0 0 1 7-7z' fill='%2304120E'/%3E%3Cpath d='M27 15l-8 11h5l-2 8 8-11h-5l2-8z' fill='%2300A884'/%3E%3C/svg%3E">
-<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
-</head>
-<body>
-<div id="splash">
-<div class="sp-ring"><div class="sp-logo"><svg viewBox="0 0 48 48"><rect x="2" y="2" width="44" height="44" rx="13" fill="#00A884"/><path d="M14 11h20a7 7 0 0 1 7 7v9a7 7 0 0 1-7 7h-9l-8 7v-7h-3a7 7 0 0 1-7-7v-9a7 7 0 0 1 7-7z" fill="#04120E"/><path d="M27 15l-8 11h5l-2 8 8-11h-5l2-8z" fill="#00A884"/></svg></div></div>
-<div class="sp-word">Quick<b>Chat</b></div>
-<div class="sp-tag" id="spTag">Cepat · Privat · Lintas perangkat</div>
-<div class="sp-net"><i></i><span id="spNet">Menghubungkan…</span></div>
-<div class="sp-bar"><i></i></div>
-<div class="sp-hint">ketuk untuk lewati</div>
-</div>
-<div class="bg"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div><div class="gridlines"></div></div>
-
-<main id="authView" class="view">
-  <div class="top"><div class="brand"><svg viewBox="0 0 48 48"><rect x="2" y="2" width="44" height="44" rx="13" fill="#00A884"/><path d="M14 11h20a7 7 0 0 1 7 7v9a7 7 0 0 1-7 7h-9l-8 7v-7h-3a7 7 0 0 1-7-7v-9a7 7 0 0 1 7-7z" fill="#04120E"/><path d="M27 15l-8 11h5l-2 8 8-11h-5l2-8z" fill="#00A884"/></svg><div><div class="wordmark">Quick<b>Chat</b></div><div class="brand-dev" id="devTap">Developer: Ryo XD</div></div></div><button id="btnAuthLang" class="icon-btn" type="button" aria-label="Bahasa"></button><span id="netChipAuth" class="net-chip wait"><i></i>Menyambung</span></div>
-  <div class="auth-wrap">
-    <div class="auth-card">
-      <h1 id="authTitle">Masuk</h1>
-      <p class="sub" id="authSub">Cepat, pribadi, lintas perangkat.</p>
-      <div class="tabs" id="authTabs"><i class="thumb"></i><button id="tabLogin" class="on" type="button">Masuk</button><button id="tabReg" type="button">Daftar</button></div>
-      <label class="fld" id="fldUser"><span>Nama pengguna</span><input id="inUser" maxlength="16" placeholder="username" autocomplete="username"><small class="err">3-16 karakter: huruf kecil, angka, atau _</small></label>
-      <label class="fld" id="fldPass"><span>Password</span><input id="inPass" type="password" maxlength="64" placeholder="••••••"><small class="err">Password minimal 4 karakter</small></label>
-      <label class="fld hidden" id="fldPass2"><span>Ulangi password</span><input id="inPass2" type="password" maxlength="64" placeholder="••••••"><small class="err">Password tidak sama</small></label>
-      <label class="fld hidden" id="fldQ"><span>Pertanyaan keamanan</span><select id="inQ"></select></label>
-      <label class="fld hidden" id="fldAns"><span>Jawaban (untuk pemulihan)</span><input id="inAns" maxlength="32" placeholder="jawaban rahasia"><small class="err">Jawaban minimal 2 karakter</small></label>
-      <button id="btnAuth" class="btn primary full" type="button">Masuk</button>
-      <button id="btnForgot" class="mini-btn full" type="button" style="margin-top:10px;justify-content:center">Lupa password?</button>
-    </div>
-  </div>
-</main>
-
-<main id="homeView" class="view hidden">
-  <div class="top">
-    <button id="btnMenu" class="icon-btn" type="button" aria-label="Menu akun"></button>
-    <div class="brand" style="margin:0"><svg viewBox="0 0 48 48"><rect x="2" y="2" width="44" height="44" rx="13" fill="#00A884"/><path d="M14 11h20a7 7 0 0 1 7 7v9a7 7 0 0 1-7 7h-9l-8 7v-7h-3a7 7 0 0 1-7-7v-9a7 7 0 0 1 7-7z" fill="#04120E"/><path d="M27 15l-8 11h5l-2 8 8-11h-5l2-8z" fill="#00A884"/></svg><div class="wordmark">Quick<b>Chat</b></div></div>
-    <span id="netChipHome" class="net-chip wait small"><i></i>Menyambung</span>
-  </div>
-  <div id="convList" class="home-list"></div>
-  <div class="fabs">
-    <button id="fabGroup" class="fab alt" type="button" title="Buat / gabung grup"></button>
-    <button id="fabDM" class="fab" type="button" title="Chat pribadi baru"></button>
-  </div>
-</main>
-
-<main id="chatView" class="view hidden">
-  <div class="chat-top">
-    <button id="btnBack" class="icon-btn" type="button" aria-label="Kembali"></button>
-    <div id="chatAv" class="chat-av">?</div>
-    <div class="chat-meta"><div class="chat-title" id="chatTitle">—</div><div class="chat-sub" id="chatSub"></div></div>
-    <button id="btnCallAudio" class="icon-btn" type="button" aria-label="Panggilan suara"></button>
-    <button id="btnCall" class="icon-btn" type="button" aria-label="Video call"></button>
-    <button id="btnInfo" class="icon-btn" type="button" aria-label="Menu"></button>
-  </div>
-  <div id="offlineBar" class="sys-pill hidden"><span id="offlineTxt">Offline — pesan tersimpan & terkirim saat online</span></div>
-  <div id="blockedBar" class="sys-pill hidden"><span id="blockedTxt">Kamu memblokir pengguna ini.</span></div>
-  <div id="msgScroll" class="msg-scroll"><div id="msgList" class="msg-list"></div></div>
-  <div class="typing-row" id="typingRow"></div>
-  <div id="editBar" class="compose-preview"><span id="editLbl" style="flex:1">Mengedit pesan</span><button id="btnCancelEdit" class="icon-btn sm" type="button"></button></div>
-  <div id="composePreview" class="compose-preview"><img id="cpImg" alt=""><span id="cpLabel">Gambar siap dikirim</span><button id="cpClear" class="icon-btn sm" type="button"></button></div>
-  <div class="composer" id="composer">
-    <button id="btnAttach" class="attach-btn" type="button" aria-label="Lampiran"></button>
-    <button id="btnEmoji" class="icon-btn" type="button" aria-label="Emoji"></button>
-    <div id="emojiPop" class="emoji-pop hidden"></div>
-    <div class="rec-indicator" id="recIndicator"><span class="rec-dot"></span><span id="recTime">0:00</span><span style="flex:1"></span><span id="recHint" style="font-size:11px;color:var(--muted);font-weight:500">Ketuk tombol mic lagi untuk kirim</span></div>
-    <textarea id="input" rows="1" maxlength="2000" placeholder="Tulis pesan…"></textarea>
-    <button id="btnMic" class="mic-btn" type="button" aria-label="Rekam"></button>
-    <button id="btnSend" class="send-btn" type="button" disabled aria-label="Kirim"></button>
-  </div>
-</main>
-
-<aside id="accSidebar" class="sidebar left">
-  <div class="sb-top"><b>Akun</b><button id="btnCloseAcc" class="icon-btn sm" type="button"></button></div>
-  <div class="sb-card acc-card" id="accCard">
-    <span id="accAv" style="display:contents"></span>
-    <span style="flex:1;min-width:0"><b id="accName" style="display:block;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">—</b><span id="accUser" style="color:var(--muted);font-size:11px;font-family:var(--mono)">—</span></span>
-    <button id="btnEditProf" class="icon-btn sm" type="button" title="Edit profil"></button>
-    <span class="p-dot" id="accDot"></span>
-  </div>
-  <div class="sb-card sb-actions">
-    <button id="btnAccSettings" class="btn ghost small full" type="button"></button>
-    <button id="btnNotif" class="btn ghost small full" type="button"></button>
-    <button id="btnLang" class="btn ghost small full" type="button"></button>
-    <button id="btnAccLogout" class="btn danger small full" type="button"></button>
-  </div>
-  <div class="sb-card" style="text-align:center;color:var(--muted);font-size:11.5px"><span class="brand-dev" id="devTap2">Versi aplikasi: BETA · v64</span></div>
-</aside>
-<div id="accScrim" class="scrim"></div>
-
-<aside id="sidebar" class="sidebar">
-  <div class="sb-top"><b id="sbTitle">Info</b><button id="btnCloseSb" class="icon-btn sm" type="button"></button></div>
-  <div class="sb-card" id="sbGroupCard"><span class="sb-label" id="sbCodeLbl">KODE GRUP</span><div style="display:flex;align-items:center;gap:8px"><code id="sbCode" style="font:700 14px var(--disp);flex:1">—</code><button id="btnSbCopy" class="icon-btn sm" type="button"></button></div><button id="btnSbShare" class="btn ghost full small" type="button" style="margin-top:10px">Salin link undangan</button></div>
-  <div class="sb-card" id="sbPeopleCard"><span class="sb-label" id="sbPeopleLbl">ANGGOTA / KONTAK</span><ul id="peopleList" class="people"></ul></div>
-</aside>
-<div id="sbScrim" class="scrim"></div>
-<input id="wallInput" type="file" accept="image/*" hidden>
-<input id="gsFile" type="file" accept="image/*" hidden>
-
-<div id="gcOverlay" class="gc hidden">
-  <div class="gc-stage" id="gcStage">
-    <div id="gcGrid" class="gc-grid"></div>
-    <div class="gc-info"><span id="gcTitle">Panggilan grup</span><small id="gcTimer">00:00</small></div>
-  </div>
-  <div class="gc-ctrl">
-    <button id="gcMute" class="gc-b" type="button"></button>
-    <button id="gcCam" class="gc-b" type="button"></button>
-    <button id="gcFlip" class="gc-b" type="button"></button>
-    <button id="gcLeave" class="gc-b end" type="button"></button>
-  </div>
-</div>
-<div id="gcRing" class="gc-ring hidden"><div class="gc-ring-card"><b id="gcRingName">—</b><span id="gcRingSub">Panggilan grup masuk</span><div class="gc-ring-acts"><button id="gcDecline" class="gc-decline" type="button"></button><button id="gcAccept" class="gc-accept" type="button"></button></div></div></div>
-
-<div id="dmModal" class="modal hidden"><div class="m-scrim" data-close="dmModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="dmModal" type="button"></button><h3 id="dmTit">Chat pribadi baru</h3><p class="sub" id="dmSub">Masukkan nama pengguna tujuan yang sudah terdaftar.</p><label class="fld"><span id="dmUserLbl">Username</span><input id="inDM" maxlength="16" placeholder="username teman"></label><button id="btnDM" class="btn primary full" type="button">Mulai chat</button></div></div>
-<div id="grpModal" class="modal hidden"><div class="m-scrim" data-close="grpModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="grpModal" type="button"></button><h3 id="grpTit">Buat / gabung grup</h3><p class="sub" id="grpSub">Buat grup baru atau masuk pakai kode undangan.</p><label class="fld"><span id="grpNameLbl">Nama grup baru</span><input id="inGrp" maxlength="24" placeholder="contoh: Tim Kelas"></label><button id="btnGrp" class="btn primary full" type="button">Buat grup</button><div style="margin:12px 0;text-align:center;color:var(--muted);font-size:12px" id="grpOr">— atau —</div><label class="fld"><span id="grpCodeLbl">Kode undangan grup</span><input id="inGrpCode" maxlength="32" placeholder="XXX-XXX-XXX"></label><button id="btnGrpJoin" class="btn ghost full" type="button">Gabung grup</button></div></div>
-<div id="reportModal" class="modal hidden"><div class="m-scrim" data-close="reportModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="reportModal" type="button"></button><h3 id="repTit">Laporkan pengguna</h3><p class="sub" id="repSub">Laporan beserta nama pelapor masuk ke panel developer.</p>
-<label class="fld"><span id="repReasonLbl">Alasan</span><select id="repReason"></select></label>
-<label class="fld"><span id="repNoteLbl">Catatan (opsional)</span><input id="repNote" maxlength="140" placeholder="keterangan singkat"></label>
-<button id="btnRepSend" class="btn danger full" type="button">Kirim laporan</button>
-</div></div>
-<div id="wallModal" class="modal hidden"><div class="m-scrim" data-close="wallModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="wallModal" type="button"></button><h3 id="wallTit">Edit wallpaper</h3><p class="sub" id="wallSub">Atur kegelapan & besar-kecil gambar, preview vertikal seperti layar chat.</p>
-<div id="wallPreview" class="wall-preview"></div>
-<label class="fld"><span id="wallDarkLbl">Kegelapan — <b id="wallDarkVal" style="color:var(--lime)">65%</b></span><input id="wallDark" type="range" min="0" max="90" step="1" value="65"></label>
-<label class="fld"><span id="wallZoomLbl">Ukuran gambar — <b id="wallZoomVal" style="color:var(--lime)">140%</b></span><input id="wallZoom" type="range" min="100" max="300" step="5" value="140"></label>
-<button id="btnWallSave" class="btn primary full" type="button">Simpan wallpaper</button>
-</div></div>
-<div id="profModal" class="modal hidden"><div class="m-scrim" data-close="profModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="profModal" type="button"></button><h3 id="profTit">Edit profil</h3><p class="sub" id="profSub">Atur foto, nama tampilan, dan warna avatar.</p><div class="profile-top"><div class="avatar-preview" id="avatarPreview"></div><div style="flex:1"><div id="profName" style="font-weight:700">—</div><div id="profNote" style="color:var(--muted);font-size:12px;margin-top:2px">Avatar tampil di chat & kontak</div></div><div style="display:flex;flex-direction:column;gap:6px"><button id="btnUploadAvatar" class="mini-btn" type="button"></button><button id="btnCamAvatar" class="mini-btn" type="button"></button><button id="btnRandomAvatar" class="mini-btn" type="button"></button></div><input id="avatarInput" type="file" accept="image/*" hidden><input id="avatarCam" type="file" accept="image/*" capture="environment" hidden></div>
-<label class="fld"><span id="profNameLbl">Nama tampilan</span><input id="inpDisplayName" maxlength="24"></label>
-<div class="color-row" id="colorRow"></div><button id="btnSaveProf" class="btn primary full" type="button">Simpan profil</button>
-</div></div>
-<div id="setModal" class="modal hidden"><div class="m-scrim" data-close="setModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="setModal" type="button"></button><h3 id="setTit">Pengaturan</h3><p class="sub" id="setSub">Akun & preferensi perangkat ini.</p>
-<div class="sb-actions">
-<button id="btnPassOpen" class="btn ghost small full" type="button"></button>
-<button id="btnSetSync" class="btn ghost small full" type="button"></button>
-<button id="btnDelAcc" class="btn danger small full" type="button"></button>
-</div>
-<div class="sb-card" style="margin-top:14px;text-align:center;color:var(--muted);font-size:11.5px" id="setCard">QuickChat · BETA · v64</div>
-</div></div>
-<div id="passModal" class="modal hidden"><div class="m-scrim" data-close="passModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="passModal" type="button"></button><h3 id="passTit">Ubah kata sandi</h3><p class="sub" id="passSub">Verifikasi kata sandi lama lalu setel kata sandi baru.</p>
-<label class="fld"><span id="passOldLbl">Kata sandi lama</span><input id="inOldPass" type="password" maxlength="64" placeholder="••••••"></label>
-<label class="fld"><span id="passNewLbl">Kata sandi baru</span><input id="inNewPass" type="password" maxlength="64" placeholder="minimal 4 karakter"></label>
-<label class="fld"><span id="passNew2Lbl">Ulangi kata sandi baru</span><input id="inNewPass2" type="password" maxlength="64" placeholder="••••••"></label>
-<button id="btnChangePass" class="btn primary full" type="button">Ganti kata sandi</button>
-</div></div>
-<div id="notModal" class="modal hidden"><div class="m-scrim" data-close="notModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="notModal" type="button"></button><h3 id="notTit">Notifikasi</h3><p class="sub" id="notSub">Suara & preferensi notifikasi perangkat ini.</p>
-<div class="sb-actions">
-<button id="btnSetSound" class="btn ghost small full" type="button"></button>
-<button id="btnPickDm" class="btn ghost small full" type="button"></button>
-<button id="btnPickGrp" class="btn ghost small full" type="button"></button>
-<button id="btnTestSound" class="btn ghost small full" type="button"></button>
-<button id="btnResetSound" class="btn ghost small full" type="button"></button>
-</div>
-<input id="nsoundInput" type="file" accept="audio/*" hidden>
-<div class="sb-card" style="margin-top:14px;text-align:center;color:var(--muted);font-size:11.5px" id="notCard">Suara disimpan lokal di perangkat ini</div>
-</div></div>
-<div id="langModal" class="modal hidden"><div class="m-scrim" data-close="langModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="langModal" type="button"></button><h3 id="langTit">Bahasa</h3><p class="sub" id="langSub">Pilih bahasa antarmuka aplikasi.</p>
-<div class="sb-actions">
-<button id="btnLangId" class="btn ghost small full" type="button">Indonesia</button>
-<button id="btnLangEn" class="btn ghost small full" type="button">English</button>
-</div>
-</div></div>
-<div id="recModal" class="modal hidden"><div class="m-scrim" data-close="recModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="recModal" type="button"></button><h3 id="recTit">Pulihkan akun</h3><p class="sub" id="recSub">Reset password lewat pertanyaan keamanan.</p>
-<div id="recStep1"><label class="fld"><span id="recUserLbl">Username</span><input id="recUser" maxlength="16"></label><button id="btnRec1" class="btn primary full" type="button">Cari akun</button></div>
-<div id="recStep2" class="hidden"><p class="sub" id="recQ" style="color:var(--text);font-weight:600"></p><label class="fld"><span id="recAnsLbl">Jawaban keamanan</span><input id="recAns" maxlength="32"></label><button id="btnRec2" class="btn primary full" type="button">Verifikasi</button></div>
-<div id="recStep3" class="hidden"><label class="fld"><span id="recP1Lbl">Password baru</span><input id="recPass" type="password" maxlength="64"></label><label class="fld"><span id="recP2Lbl">Ulangi password baru</span><input id="recPass2" type="password" maxlength="64"></label><button id="btnRec3" class="btn primary full" type="button">Ganti password</button></div>
-</div></div>
-<div id="devModal" class="modal hidden"><div class="m-scrim" data-close="devModal"></div><div class="dialog dev-dialog"><button class="icon-btn sm d-close" data-close="devModal" type="button"></button>
-<div class="dev-head"><div class="dev-logo" id="devLogo"></div><div><h3 style="margin:0">Panel Developer</h3><p class="sub" style="margin:2px 0 0" id="devHeadSub">Monitoring & kontrol penuh</p></div></div>
-<div id="devLock"><label class="fld"><span id="devLockLbl">Password developer</span><input id="inDevPass" type="password" placeholder="••••••"></label><button id="btnDevUnlock" class="btn primary full" type="button">Buka panel</button></div>
-<div id="devBody" class="hidden">
-<div class="dev-stats" id="devStats"></div>
-<div class="dev-sec"><span class="sb-label" id="devS1">AKUN & BAN</span><div class="dev-btnrow"><button id="btnDevLoad" class="btn ghost small" type="button">Muat daftar akun & status ban</button><button id="btnDevLoadX" class="icon-btn sm" type="button" title="Tutup daftar"></button></div><input id="devAccSearch" class="dev-search" placeholder="Cari username…" autocomplete="off"><div id="devList" style="margin-top:8px"></div></div>
-<div class="dev-sec"><span class="sb-label" id="devS2">LAPORAN MASUK</span><div class="dev-btnrow"><button id="btnDevReports" class="btn ghost small" type="button">Muat laporan pengguna</button><button id="btnDevRepX" class="icon-btn sm" type="button" title="Tutup daftar"></button></div><div id="devRepList" style="margin-top:10px"></div></div>
-<div class="dev-sec"><span class="sb-label" id="devS3">MONITOR CHAT</span><div class="dev-btnrow"><button id="btnDevConvs" class="btn ghost small" type="button">Muat daftar percakapan</button><button id="btnDevConvX" class="icon-btn sm" type="button" title="Tutup daftar"></button></div><input id="devConvSearch" class="dev-search" placeholder="Cari percakapan…" autocomplete="off"><div id="devConvList" style="margin-top:8px"></div></div>
-<div class="dev-sec"><span class="sb-label" id="devS4">DATABASE PEMULIHAN (TERENKRIPSI)</span>
-<button id="btnDevDb" class="btn ghost full small" type="button"></button>
-<button id="btnDevCopy" class="btn ghost full small" type="button" style="margin-top:8px"></button>
-<div id="devDbList" style="margin-top:10px"></div></div>
-<button id="btnDevLock" class="btn danger full small" type="button" style="margin-top:4px"></button>
-</div></div></div>
-<div id="peekModal" class="modal hidden" style="z-index:260"><div class="m-scrim" data-close="peekModal"></div><div class="dialog" style="width:min(460px,100%)"><button class="icon-btn sm d-close" data-close="peekModal" type="button"></button><h3 id="peekTitle">Monitor</h3><p class="sub" id="peekSub">Riwayat dimuat; pesan live akan mengalir.</p><div id="peekFeed" class="peek-feed"></div><button id="btnPeekClose" class="btn ghost full small" type="button">Tutup monitor</button></div></div>
-<div id="mediaModal" class="modal hidden" style="z-index:250;background:rgba(0,0,0,.94)"><button id="mmClose" class="icon-btn" type="button" style="position:absolute;top:14px;right:14px;z-index:2"></button><img id="mmImg" alt="" style="max-width:92vw;max-height:92vh;border-radius:10px"></div>
-<div id="toasts" class="toasts"></div>
-
-<script src="https://cdn.jsdelivr.net/npm/mqtt@5.10.1/dist/mqtt.min.js"></script>
-<script>
+/* media.js v30 — emoji, gambar, suara, call WA-style (syntax fix + FOV terlebar) */
 (function(){
 'use strict';
-var DEV_PASS='ryoxd666#';
-var APP_VER='v64';
-var lang=localStorage.getItem('qc-lang')||'id';
-var REASONS={
-id:['Spam / iklan berulang','Penipuan / phishing','Konten tidak pantas','Pelecehan / ancaman','Pelanggaran lain'],
-en:['Spam / repeated ads','Scam / phishing','Inappropriate content','Harassment / threats','Other violation']
+if(!window.QC)return;
+var QC=window.QC,S=QC.S;
+var icon=QC.icon,toast=QC.toast;
+function gid(i){return document.getElementById(i);}
+function tr(a,b){return document.documentElement.lang==='en'?b:a;}
+function badEm(em){
+if(!em)return true;
+if(em==='\uFE0F'||em==='\u200D')return true;
+if(em.indexOf('?')>=0)return true;
+var cp=em.codePointAt(0);
+if(cp>=0x1F1E6&&cp<=0x1F1FF&&em.length<4)return true;
+return false;
+}
+var FLIPSVG='<svg viewBox="0 0 24 24" width="21" height="21" fill="currentColor"><path d="M20 5h-3.17L15 3H9L7.17 5H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2Zm-8 14a6 6 0 0 1-6-6h1.5a4.5 4.5 0 0 0 4.5 4.5v-2.06l3.06 3.06L12 21.56V19Zm4.5-6a4.5 4.5 0 0 0-4.5-4.5V10.6L8.94 7.5 12 4.44V6a6 6 0 0 1 6 6h-1.5Z"/></svg>';
+function widenTrack(t){
+if(!t||t.kind!=='video')return;
+try{
+var caps=t.getCapabilities?t.getCapabilities():null;
+if(!caps)return;
+var adv=[];
+if(caps.zoom){
+var zmin=caps.zoom.min!=null?caps.zoom.min:(Array.isArray(caps.zoom)?caps.zoom[0]:1);
+adv.push({zoom:zmin});
+}
+if(caps.fieldOfView){
+var fmax=caps.fieldOfView.max!=null?caps.fieldOfView.max:(Array.isArray(caps.fieldOfView)?caps.fieldOfView[caps.fieldOfView.length-1]:null);
+if(fmax!=null)adv.push({fieldOfView:fmax});
+}
+if(caps.pan)adv.push({pan:0});
+if(caps.tilt)adv.push({tilt:0});
+if(adv.length)t.applyConstraints({advanced:adv}).catch(function(){});
+}catch(e){}
+}
+try{
+if(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia){
+var origGUM=navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
+navigator.mediaDevices.getUserMedia=function(c){
+return origGUM(c).then(function(st){
+st.getVideoTracks().forEach(widenTrack);
+return st;
+});
 };
-function QUEST(){
-return lang==='en'
-?['Your first pet\'s name?','Your favorite teacher\'s name?','Your city of birth?','Your favorite food?','Your childhood friend\'s name?']
-:['Nama hewan peliharaanmu?','Nama guru favoritmu?','Kota kelahiranmu?','Makanan favoritmu?','Nama teman masa kecilmu?'];
 }
-var T={
-id:{auth_h_login:'Masuk',auth_h_reg:'Daftar akun',auth_sub:'Cepat, pribadi, lintas perangkat.',tab_login:'Masuk',tab_reg:'Daftar',fld_user:'Nama pengguna',fld_pass:'Password',fld_pass2:'Ulangi password',fld_q:'Pertanyaan keamanan',fld_a:'Jawaban (untuk pemulihan)',btn_forgot:'Lupa password?',ph_ans:'jawaban rahasia',ph_grp:'contoh: Tim Kelas',ph_dm:'username teman',ph_newpass:'minimal 4 karakter',sp_tag:'Cepat · Privat · Lintas perangkat',home_empty_b:'Belum ada chat',home_empty_t:'Ketuk + untuk chat pribadi atau buat/gabung grup.',sb_settings:'Pengaturan akun',sb_notif:'Notifikasi',sb_lang:'Bahasa',sb_logout:'Keluar',ver_label:'Versi aplikasi',set_title:'Pengaturan',set_sub:'Akun & preferensi perangkat ini.',set_pass:'Ubah kata sandi',set_sync:'Sinkronkan semua riwayat chat',set_del:'Hapus akun permanen',set_del_c:'Ketuk lagi untuk konfirmasi',not_title:'Notifikasi',not_sub:'Suara & preferensi notifikasi perangkat ini.',not_on:'Suara notifikasi: aktif',not_off:'Suara notifikasi: nonaktif',not_dm:'Suara chat pribadi: ',not_grp:'Suara grup: ',not_test:'Uji suara notifikasi',not_reset:'Kembalikan semua ke bawaan',not_custom:'kustom',not_def:'bawaan',not_card:'Suara disimpan lokal di perangkat ini',pass_title:'Ubah kata sandi',pass_sub:'Verifikasi kata sandi lama lalu setel kata sandi baru.',pass_old:'Kata sandi lama',pass_new:'Kata sandi baru',pass_new2:'Ulangi kata sandi baru',pass_btn:'Ganti kata sandi',prof_title:'Edit profil',prof_sub:'Atur foto, nama tampilan, dan warna avatar.',prof_foto:'Foto',prof_kam:'Kamera',prof_acak:'Acak',prof_name:'Nama tampilan',prof_save:'Simpan profil',prof_note:'Avatar tampil di chat & kontak',info_wall:'Wallpaper chat',info_wallclear:'Hapus wallpaper',info_clear:'Bersihkan pesan',info_delconv:'Hapus chat ini',info_leave:'Keluar grup',info_delgrp:'Hapus grup (semua anggota)',info_report:'Laporkan pengguna',info_share:'Salin link undangan',info_edit_grp:'Edit info grup',info_set_grp:'Pengaturan grup',ge_title:'Edit info grup',ge_sub:'Ganti nama grup. Hanya admin atau sesuai pengaturan grup.',ge_name:'Nama grup',ge_save:'Simpan perubahan',gs_title:'Pengaturan grup',gs_sub:'Kelola nama, foto, admin, dan keamanan grup.',gs_all:'Semua anggota',gs_admin:'Hanya admin',gs_saved:'Pengaturan grup disimpan',ge_ok:'Info grup diperbarui',gs_photo:'Foto grup',gs_photo_change:'Ganti foto grup',gs_photo_del:'Hapus foto grup',gs_photo_edit:'Edit foto grup',gs_promote:'Jadikan admin',gs_demote:'Copot admin',gs_admins:'ADMIN GRUP',gs_members:'DAFTAR ANGGOTA',gs_name:'Nama grup',gs_save:'Simpan perubahan',gs_rights:'Hak ubah info & foto grup',gs_danger:'ZONA BERBAHAYA',gs_addmember:'Tambah anggota',gs_addwho:'Username anggota baru',gs_addbtn:'Tambahkan',gs_addall_lbl:'Yang bisa menambah anggota',gs_addall_admin:'Hanya admin',gs_addall_all:'Semua anggota',t_added:'%s ditambahkan ke grup',sys_added:'%s menambahkan %s ke grup',e_addself:'Tidak bisa menambah diri sendiri',e_addexists:'Pengguna sudah menjadi anggota',t_promoted:'%s sekarang admin grup',t_demoted:'%s bukan lagi admin',t_photo:'Foto grup diperbarui',sp_wait:'Menghubungkan…',sp_online:'Terhubung',kick_lbl:'Keluarkan anggota',sys_kick:'%s dikeluarkan oleh %s',sys_rename:'Nama grup diubah menjadi "%s" oleh %s',sys_admin:'%s dijadikan admin oleh %s',sys_adminoff:'%s dicopot dari admin oleh %s',t_kicked:'Anggota dikeluarkan',t_kicked_you:'Kamu dikeluarkan dari grup %s',e_notmember:'Kamu bukan anggota grup ini',dev_ban:'Ban',dev_unban:'Cabut',dev_del:'Hapus',dev_close:'Tutup',dev_peek:'Intip',dev_banned:'DIBANNED',dev_stat_acc:'AKUN',dev_stat_rep:'LAPORAN',dev_stat_conv:'PERCAKAPAN',m_info_grp:'Info grup',m_mute:'Senyapkan notifikasi',m_unmute:'Bunyikan notifikasi',m_wall:'Wallpaper chat',m_clear:'Bersihkan pesan',m_block:'Blokir pengguna',m_unblock:'Buka blokir pengguna',m_report:'Laporkan pengguna',m_delconv:'Hapus chat ini',m_editgrp:'Edit info grup',m_setgrp:'Pengaturan grup',m_leave:'Keluar grup',m_delgrp:'Hapus grup (semua anggota)',t_muted:'Notifikasi disenyapkan',t_unmuted:'Notifikasi dibunyikan',comp_ph:'Tulis pesan…',rec_title:'Pulihkan akun',rec_sub:'Reset password lewat pertanyaan keamanan.',rec_u:'Username',rec_a:'Jawaban keamanan',rec_p1:'Password baru',rec_p2:'Ulangi password baru',rec_b1:'Cari akun',rec_b2:'Verifikasi',rec_b3:'Ganti password',wall_title:'Edit wallpaper',wall_sub:'Atur kegelapan & besar-kecil gambar, preview vertikal seperti layar chat.',wall_dark:'Kegelapan — ',wall_zoom:'Ukuran gambar — ',wall_save:'Simpan wallpaper',rep_title:'Laporkan pengguna',rep_sub:'Laporan beserta nama pelapor masuk ke panel developer.',rep_reason:'Alasan',rep_note:'Catatan (opsional)',rep_send:'Kirim laporan',dm_title:'Chat pribadi baru',dm_sub:'Masukkan nama pengguna tujuan yang sudah terdaftar.',dm_u:'Username',dm_btn:'Mulai chat',grp_title:'Buat / gabung grup',grp_sub:'Buat grup baru atau masuk pakai kode undangan.',grp_name:'Nama grup baru',grp_btn:'Buat grup',grp_or:'— atau —',grp_code:'Kode undangan grup',grp_join:'Gabung grup',dev_sub:'Monitoring & kontrol penuh',dev_lock:'Password developer',dev_unlock:'Buka panel',dev_s1:'AKUN & BAN',dev_s2:'LAPORAN MASUK',dev_s3:'MONITOR CHAT',dev_s4:'DATABASE PEMULIHAN (TERENKRIPSI)',dev_load:'Muat daftar akun & status ban',dev_rep:'Muat laporan pengguna',dev_conv:'Muat daftar percakapan',dev_db:'Muat & simpan database ke perangkat ini',dev_copy:'Salin database',dev_lockbtn:'Kunci panel developer',dev_search_u:'Cari username…',dev_search_c:'Cari percakapan…',peek_close:'Tutup monitor',lang_title:'Bahasa',lang_sub:'Pilih bahasa antarmuka aplikasi.',no_msgs:'Belum ada pesan',typing:'%s sedang mengetik…',you:'(kamu)',offline_bar:'Offline — pesan tersimpan & terkirim saat online',editing:'Mengedit pesan',img_ready:'Gambar siap dikirim',rec_hint:'Ketuk tombol mic lagi untuk kirim',info_title:'Info',sb_code:'KODE GRUP',sb_people:'ANGGOTA / KONTAK',rep_note_ph:'keterangan singkat',peek_note:'Belum ada riwayat lokal — menunggu kiriman perangkat anggota (otomatis dimuat saat masuk)…',peek_sub:'Riwayat dimuat; pesan live akan mengalir.',m_image:'[Gambar]',m_audio:'[Suara]',m_deleted:'[Dihapus]',loading:'Memuat…',load_reports:'Memuat laporan…',load_convs:'Memuat percakapan…',load_db:'Memuat & mendekripsi…',no_db:'Belum ada data.',no_accounts:'Tidak ada akun ditemukan.',no_reports:'Tidak ada laporan terbuka.',no_convs:'Belum ada percakapan terpantau.',processing:'Memproses…',block:'Blokir pengguna',unblock:'Buka blokir pengguna',blocked_bar:'Kamu memblokir pengguna ini. Buka blokir untuk menerima pesan.',t_blocked:'Pengguna diblokir',t_unblocked:'Blokir dibuka',e_blocked:'Kamu memblokir pengguna ini',gc_title:'Panggilan grup',gc_leave:'Tutup',gc_ring:'Panggilan grup masuk',gc_started:'Panggilan grup dimulai',gc_ended:'Panggilan grup berakhir',gc_err:'Gagal mengakses kamera/mikrofon',gc_full:'Panggilan grup penuh (maksimal 50 peserta)',t_logout:'Kamu keluar',t_prof:'Profil disimpan',t_wall_save:'Wallpaper chat disimpan',t_wall_clear:'Wallpaper dihapus',t_clear:'Pesan dibersihkan di perangkat ini',t_del_conv:'Chat dihapus dari daftar',t_link:'Link undangan disalin',t_code:'Kode grup disalin: %s',t_sync:'Sinkronisasi riwayat diminta',t_sound_save:'Suara notifikasi disimpan',t_sound_reset:'Suara kembali ke bawaan',t_rep:'Laporan terkirim ke developer',t_pass:'Kata sandi berhasil diganti',t_msg_del:'Pesan dihapus',t_db:'Database tersimpan (%s akun)',t_db_copy:'Database disalin (%s akun)',t_dev_open:'Panel developer terbuka',t_dev_lock:'Panel developer dikunci',t_ban:'Pengguna dibanned: %s',t_unban:'Ban dicabut: %s',t_dev_del:'Akun %s dihapus oleh developer',t_grp_join:'Bergabung ke grup %s',t_grp_del:'Grup dihapus untuk semua anggota',t_leave:'Kamu keluar dari grup',t_rec_ok:'Password diganti. Silakan masuk.',t_del_acc:'Akun %s dihapus permanen',e_pass:'Password salah.',e_notfound:'Akun tidak ditemukan. Daftar dulu.',e_taken:'Username sudah dipakai. Pilih yang lain.',e_banned:'Akun dibanned oleh developer.',e_deleted:'Akun sudah dihapus.',e_online:'Harus online untuk mendaftar.',e_self:'Tidak bisa chat dengan diri sendiri',e_user:'Username tidak valid',e_user404:'Username tidak terdaftar',e_grp_name:'Nama grup minimal 3 karakter',e_grp_code:'Masukkan kode grup',e_grp_code404:'Kode grup tidak ditemukan',e_grp_gone:'Grup sudah dihapus pemilik',e_ans:'Jawaban salah',e_newpass:'Kata sandi baru tidak valid / tidak sama',e_oldpass:'Kata sandi lama salah',e_srv:'Akun tidak ditemukan di server',e_size:'Ukuran suara maksimal 1,5 MB',e_store:'Gagal menyimpan suara (penyimpanan penuh)',e_img:'Gagal memproses file',e_db:'Gagal membaca database',e_devpass:'Password developer salah',e_rep_dm:'Laporan hanya untuk chat pribadi',e_target:'Tidak ada pengguna tujuan',e_session:'Sesi berakhir. Masuk ulang.',e_banned_self:'Akun kamu dibanned oleh developer',e_deleted_self:'Akun kamu dihapus oleh developer',e_login_first:'Masuk / daftar dulu untuk bergabung ke grup',sys_create:'Grup "%s" dibuat oleh %s',sys_join:'%s bergabung ke grup',sys_leave:'%s keluar dari grup'},
-en:{auth_h_login:'Sign in',auth_h_reg:'Create account',auth_sub:'Fast, private, cross-device.',tab_login:'Log in',tab_reg:'Sign up',fld_user:'Username',fld_pass:'Password',fld_pass2:'Repeat password',fld_q:'Security question',fld_a:'Answer (for recovery)',btn_forgot:'Forgot password?',ph_ans:'secret answer',ph_grp:'e.g. Class Team',ph_dm:'friend username',ph_newpass:'min 4 characters',sp_tag:'Fast · Private · Cross-device',home_empty_b:'No chats yet',home_empty_t:'Tap + for a private chat or create/join a group.',sb_settings:'Account settings',sb_notif:'Notifications',sb_lang:'Language',sb_logout:'Log out',ver_label:'App version',set_title:'Settings',set_sub:'Account & this device preferences.',set_pass:'Change password',set_sync:'Sync all chat history',set_del:'Delete account permanently',set_del_c:'Tap again to confirm',not_title:'Notifications',not_sub:'Sound & notification preferences for this device.',not_on:'Notification sound: on',not_off:'Notification sound: off',not_dm:'Private chat sound: ',not_grp:'Group sound: ',not_test:'Test notification sound',not_reset:'Reset all to default',not_custom:'custom',not_def:'default',not_card:'Sounds are stored locally on this device',pass_title:'Change password',pass_sub:'Verify your old password then set a new one.',pass_old:'Old password',pass_new:'New password',pass_new2:'Repeat new password',pass_btn:'Change password',prof_title:'Edit profile',prof_sub:'Set photo, display name, and avatar color.',prof_foto:'Photo',prof_kam:'Camera',prof_acak:'Random',prof_name:'Display name',prof_save:'Save profile',prof_note:'Avatar shows in chats & contacts',info_wall:'Chat wallpaper',info_wallclear:'Remove wallpaper',info_clear:'Clear messages',info_delconv:'Delete this chat',info_leave:'Leave group',info_delgrp:'Delete group (all members)',info_report:'Report user',info_share:'Copy invite link',info_edit_grp:'Edit group info',info_set_grp:'Group settings',ge_title:'Edit group info',ge_sub:'Change the group name. Admin only, or as per group settings.',ge_name:'Group name',ge_save:'Save changes',gs_title:'Group settings',gs_sub:'Manage name, photo, admins, and group safety.',gs_all:'All members',gs_admin:'Admins only',gs_saved:'Group settings saved',ge_ok:'Group info updated',gs_photo:'Group photo',gs_photo_change:'Change group photo',gs_photo_del:'Remove group photo',gs_photo_edit:'Edit group photo',gs_promote:'Make admin',gs_demote:'Remove admin',gs_admins:'GROUP ADMINS',gs_members:'MEMBERS',gs_name:'Group name',gs_save:'Save changes',gs_rights:'Rights to edit group info & photo',gs_danger:'DANGER ZONE',gs_addmember:'Add member',gs_addwho:'New member username',gs_addbtn:'Add',gs_addall_lbl:'Who can add members',gs_addall_admin:'Admins only',gs_addall_all:'All members',t_added:'%s added to group',sys_added:'%s added %s to the group',e_addself:'Cannot add yourself',e_addexists:'User is already a member',t_promoted:'%s is now group admin',t_demoted:'%s is no longer admin',t_photo:'Group photo updated',sp_wait:'Connecting…',sp_online:'Connected',kick_lbl:'Remove member',sys_kick:'%s was removed by %s',sys_rename:'Group name changed to "%s" by %s',sys_admin:'%s was promoted to admin by %s',sys_adminoff:'%s was demoted by %s',t_kicked:'Member removed',t_kicked_you:'You were removed from group %s',e_notmember:'You are not a member of this group',dev_ban:'Ban',dev_unban:'Lift',dev_del:'Delete',dev_close:'Close',dev_peek:'Peek',dev_banned:'BANNED',dev_stat_acc:'ACCOUNTS',dev_stat_rep:'REPORTS',dev_stat_conv:'CONVERSATIONS',m_info_grp:'Group info',m_mute:'Mute notifications',m_unmute:'Unmute notifications',m_wall:'Chat wallpaper',m_clear:'Clear messages',m_block:'Block user',m_unblock:'Unblock user',m_report:'Report user',m_delconv:'Delete this chat',m_editgrp:'Edit group info',m_setgrp:'Group settings',m_leave:'Leave group',m_delgrp:'Delete group (all members)',t_muted:'Notifications muted',t_unmuted:'Notifications unmuted',comp_ph:'Type a message…',rec_title:'Recover account',rec_sub:'Reset password via security question.',rec_u:'Username',rec_a:'Security answer',rec_p1:'New password',rec_p2:'Repeat new password',rec_b1:'Find account',rec_b2:'Verify',rec_b3:'Change password',wall_title:'Edit wallpaper',wall_sub:'Adjust darkness & zoom, vertical preview like the chat screen.',wall_dark:'Darkness — ',wall_zoom:'Image size — ',wall_save:'Save wallpaper',rep_title:'Report user',rep_sub:'The report plus reporter name goes to the developer panel.',rep_reason:'Reason',rep_note:'Note (optional)',rep_send:'Send report',dm_title:'New private chat',dm_sub:'Enter the registered username of the recipient.',dm_u:'Username',dm_btn:'Start chat',grp_title:'Create / join group',grp_sub:'Create a new group or join with an invite code.',grp_name:'New group name',grp_btn:'Create group',grp_or:'— or —',grp_code:'Group invite code',grp_join:'Join group',dev_sub:'Monitoring & full control',dev_lock:'Developer password',dev_unlock:'Open panel',dev_s1:'ACCOUNTS & BANS',dev_s2:'INCOMING REPORTS',dev_s3:'CHAT MONITOR',dev_s4:'RECOVERY DATABASE (ENCRYPTED)',dev_load:'Load accounts & ban status',dev_rep:'Load user reports',dev_conv:'Load conversations',dev_db:'Load & save database to this device',dev_copy:'Copy database',dev_lockbtn:'Lock developer panel',dev_search_u:'Search username…',dev_search_c:'Search conversation…',peek_close:'Close monitor',lang_title:'Language',lang_sub:'Choose the app interface language.',no_msgs:'No messages yet',typing:'%s is typing…',you:'(you)',offline_bar:'Offline — messages are stored & sent when online',editing:'Editing message',img_ready:'Image ready to send',rec_hint:'Tap the mic button again to send',info_title:'Info',sb_code:'GROUP CODE',sb_people:'MEMBERS / CONTACTS',rep_note_ph:'short note',peek_note:'No local history yet — waiting for member devices (auto-loads when they come online)…',peek_sub:'History loaded; live messages will stream in.',m_image:'[Image]',m_audio:'[Audio]',m_deleted:'[Deleted]',loading:'Loading…',load_reports:'Loading reports…',load_convs:'Loading conversations…',load_db:'Loading & decrypting…',no_db:'No data yet.',no_accounts:'No accounts found.',no_reports:'No open reports.',no_convs:'No monitored conversations yet.',processing:'Processing…',block:'Block user',unblock:'Unblock user',blocked_bar:'You have blocked this user. Unblock to receive messages.',t_blocked:'User blocked',t_unblocked:'User unblocked',e_blocked:'You have blocked this user',gc_title:'Group call',gc_leave:'Leave',gc_ring:'Incoming group call',gc_started:'Group call started',gc_ended:'Group call ended',gc_err:'Camera/microphone access failed',gc_full:'Group call is full (max 50 participants)',t_logout:'You logged out',t_prof:'Profile saved',t_wall_save:'Chat wallpaper saved',t_wall_clear:'Wallpaper removed',t_clear:'Messages cleared on this device',t_del_conv:'Chat removed from list',t_link:'Invite link copied',t_code:'Group code copied: %s',t_sync:'History sync requested',t_sound_save:'Notification sound saved',t_sound_reset:'Sounds reset to default',t_rep:'Report sent to developer',t_pass:'Password changed successfully',t_msg_del:'Message deleted',t_db:'Database saved (%s accounts)',t_db_copy:'Database copied (%s accounts)',t_dev_open:'Developer panel opened',t_dev_lock:'Developer panel locked',t_ban:'User banned: %s',t_unban:'Ban lifted: %s',t_dev_del:'Account %s deleted by developer',t_grp_join:'Joined group %s',t_grp_del:'Group deleted for all members',t_leave:'You left the group',t_rec_ok:'Password changed. Please log in.',t_del_acc:'Account %s permanently deleted',e_pass:'Wrong password.',e_notfound:'Account not found. Register first.',e_taken:'Username already taken. Pick another.',e_banned:'Account banned by developer.',e_deleted:'Account already deleted.',e_online:'Must be online to register.',e_self:'Cannot chat with yourself',e_user:'Invalid username',e_user404:'Username not registered',e_grp_name:'Group name min 3 characters',e_grp_code:'Enter a group code',e_grp_code404:'Group code not found',e_grp_gone:'Group was deleted by owner',e_ans:'Wrong answer',e_newpass:'New password invalid / mismatch',e_oldpass:'Old password is wrong',e_srv:'Account not found on server',e_size:'Sound size max 1.5 MB',e_store:'Failed to save sound (storage full)',e_img:'Failed to process file',e_db:'Failed to read database',e_devpass:'Wrong developer password',e_rep_dm:'Reports are for private chats only',e_target:'No target user',e_session:'Session ended. Log in again.',e_banned_self:'Your account was banned by developer',e_deleted_self:'Your account was deleted by developer',e_login_first:'Log in / register first to join a group',sys_create:'Group "%s" created by %s',sys_join:'%s joined the group',sys_leave:'%s left the group'}
+}catch(e){}
+try{
+var C='';
+C+='.emoji-pop{display:flex;flex-direction:column;';
+C+='max-height:320px;overflow:hidden}';
+C+='.emoji-head{display:flex;gap:6px;margin-bottom:7px}';
+C+='.emoji-search{flex:1;min-width:0;';
+C+='border:1px solid var(--line);border-radius:10px;';
+C+='background:rgba(148,170,220,.06);padding:7px 11px;';
+C+='color:var(--text);font-size:13px}';
+C+='.emoji-close{width:36px;height:36px;flex:none;';
+C+='border:1px solid var(--line);border-radius:10px;';
+C+='background:var(--glass);color:var(--muted);';
+C+='cursor:pointer;display:grid;place-items:center}';
+C+='.emoji-cats{display:flex;gap:2px;margin-bottom:5px;';
+C+='padding-bottom:5px;';
+C+='border-bottom:1px solid var(--line);overflow-x:auto}';
+C+='.emoji-cats button{flex:none;padding:4px 8px;border:0;';
+C+='border-radius:8px;background:none;font-size:15px;';
+C+='cursor:pointer;opacity:.5}';
+C+='.emoji-cats button.on{opacity:1;';
+C+='background:rgba(0,168,132,.14)}';
+C+='.emoji-grid{flex:1;min-height:150px;max-height:190px;';
+C+='overflow-y:auto;display:grid;';
+C+='grid-template-columns:repeat(8,1fr);gap:2px}';
+C+='.emoji-grid button{height:32px;border:0;';
+C+='border-radius:8px;background:none;font-size:19px;';
+C+='cursor:pointer}';
+C+='.attach-menu{position:absolute;';
+C+='bottom:calc(100% + 8px);left:0;z-index:28;';
+C+='display:none;flex-direction:column;gap:4px;';
+C+='min-width:170px;border:1px solid rgba(255,255,255,.14);';
+C+='border-radius:14px;background:rgba(11,17,32,.92);';
+C+='backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);';
+C+='padding:6px}';
+C+='.attach-menu.on{display:flex}';
+C+='.attach-menu button{display:flex;align-items:center;';
+C+='gap:9px;padding:9px 11px;border:0;border-radius:10px;';
+C+='background:none;color:var(--text);font-size:13px;';
+C+='cursor:pointer;text-align:left}';
+C+='.attach-menu button svg{width:17px;height:17px;';
+C+='color:var(--lime,#00A884)}';
+C+='.call-modal{position:fixed;inset:0;z-index:300;';
+C+='background:#000;display:flex;flex-direction:column}';
+C+='.call-remote{flex:1;position:relative;';
+C+='background:#000;overflow:visible}';
+C+='.call-remote video{background:#000}';
+C+='.call-ph{position:absolute;left:50%;top:42%;';
+C+='transform:translate(-50%,-50%);';
+C+='display:flex;flex-direction:column;';
+C+='align-items:center;gap:12px;color:var(--muted);z-index:2}';
+C+='.call-ph .big-av{width:96px;height:96px;';
+C+='border-radius:50%;display:grid;place-items:center;';
+C+='color:#DFE7EA;overflow:hidden}';
+C+='.call-ph .big-av svg{width:52px;height:52px}';
+C+='.big-av img,.ic-av img{width:100%;height:100%;';
+C+='object-fit:cover;display:block}';
+C+='.call-info{position:absolute;top:14px;left:16px;';
+C+='color:#fff;font:600 14px var(--body);z-index:7;';
+C+='text-shadow:0 1px 6px rgba(0,0,0,.6)}';
+C+='.call-info small{display:block;';
+C+='color:rgba(255,255,255,.8);font-size:12px}';
+C+='.call-ctrl{position:relative;z-index:8;';
+C+='display:flex;justify-content:center;';
+C+='align-items:center;gap:14px;';
+C+='padding:14px calc(14px + env(safe-area-inset-bottom));';
+C+='background:rgba(10,14,24,.55);';
+C+='backdrop-filter:blur(18px) saturate(1.4);';
+C+='-webkit-backdrop-filter:blur(18px) saturate(1.4)}';
+C+='.call-ctrl button{width:52px;height:52px;';
+C+='border-radius:50%;border:1px solid rgba(255,255,255,.16);';
+C+='background:rgba(255,255,255,.10);';
+C+='backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);';
+C+='color:#fff;cursor:pointer;display:grid;place-items:center;';
+C+='box-shadow:inset 0 1px 0 rgba(255,255,255,.18)}';
+C+='.call-ctrl button svg{width:20px;height:20px}';
+C+='.c-mute.on,.c-vid.off,.c-flip.on{background:rgba(255,255,255,.88);';
+C+='color:#081018}';
+C+='.c-end{background:#EF5350;border-color:transparent;';
+C+='width:60px;height:60px;';
+C+='box-shadow:0 6px 18px rgba(239,83,80,.4)}';
+C+='.call-status{position:absolute;top:50%;left:50%;';
+C+='transform:translate(-50%,-50%);color:#fff;';
+C+='font:700 17px var(--body);z-index:3}';
+C+='.in-call{position:fixed;top:16px;right:16px;';
+C+='z-index:350;min-width:260px;';
+C+='border:1px solid rgba(255,255,255,.14);border-radius:18px;';
+C+='background:rgba(12,16,28,.88);';
+C+='backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);';
+C+='padding:12px;box-shadow:0 10px 30px rgba(0,0,0,.45)}';
+C+='.ic-top{display:flex;align-items:center;gap:10px;';
+C+='margin-bottom:9px}';
+C+='.ic-av{width:40px;height:40px;border-radius:50%;';
+C+='display:grid;place-items:center;color:#DFE7EA;';
+C+='overflow:hidden}';
+C+='.ic-av svg{width:22px;height:22px}';
+C+='.ic-nm{flex:1;font-weight:700;font-size:13.5px}';
+C+='.ic-nm small{display:block;font-weight:500;';
+C+='font-size:10.5px;color:var(--lime,#00A884)}';
+C+='.ic-act{display:flex;gap:8px;';
+C+='justify-content:flex-end}';
+C+='.ic-act button{width:42px;height:42px;';
+C+='border-radius:50%;border:0;cursor:pointer;';
+C+='display:grid;place-items:center;color:#fff}';
+C+='.ic-act button svg{width:18px;height:18px}';
+C+='.ic-ok{background:var(--lime,#00A884);color:#04120E;';
+C+='box-shadow:0 6px 18px rgba(0,168,132,.4)}';
+C+='.ic-no{background:#EF5350;';
+C+='box-shadow:0 6px 18px rgba(239,83,80,.4)}';
+var stx=document.createElement('style');
+stx.textContent=C;
+document.head.appendChild(stx);
+var CATS=[];
+function cat(k,i){
+var o={k:k,i:i,l:[]};
+CATS.push(o);
+return o.l;
+}
+var L;
+L=cat('Smileys','😀');
+L.push('😀 😃 😄 😆 😅 😂 🙂 🙃');
+L.push('😉 😊 😇 🥰 😍 😜 🤪 😎 🥳');
+L.push('🤩 🥺 😭 🤫 🤯 😱 😨 😰 😥');
+L.push('😢 😣 😩 🥱 😤 😡 😠 🤬 😈');
+L.push('👿 💀 💩 👹 👺 👻 👽 👾 🤖');
+L=cat('Gestur','👋');
+L.push('👋 🤚 🖐 ✋ 🖖 👌 🤌 ✌️');
+L.push('🤟 🤘 🤙 👈 👉 🖕 👇');
+L.push('👍 👎 ✊ 👊 🤛 🤜 👏 🙌 🫶');
+L.push('👐 🤲 🤝 🙏 💅 💪 🦵');
+L.push('🦶 👂 🦻 👃 🧠 🫀 🫁 🦷 🦴 👀');
+L.push('👁 👅 👄');
+L=cat('Hewan','🐶');
+L.push('🐶 🐱 🐭 🐹 🐰 🦊 🐻 🐼 🐨 🐯');
+L.push('🦁 🐮 🐷 🐸 🐵 🙈 🙉 🙊 🐒 🐔');
+L.push('🐧 🐦 🐤 🐣 🐥 🦆 🦅 🦉 🦇 🐺');
+L.push('🐗 🐴 🦄 🐝 🐛 🦋 🐌 🐞 🐜 🐢');
+L.push('🐍 🦎 🦖 🦕 🐙 🦑 🦐 🦞 🦀 🐡');
+L.push('🐠 🐬 🐳 🐋 🦈 🐊 🐅 🐆 🦓');
+L.push('🦍 🦧 🐘 🦛 🦏 🐫 🦒 🦘 🐃');
+L.push('🐂 🐄 🐎 🐖 🐏 🐑 🦙 🐐 🐕');
+L.push('🐩 🐈 🐇 🦝 🦨 🦡 🦫 🦦 🦥 🐁');
+L.push('🐀 🐿 🦔');
+L=cat('Makanan','🍎');
+L.push('🍏 🍎 🍐 🍊 🍋 🍌 🍉 🍇 🍓 🫐');
+L.push('🍈 🍒 🍑 🥭 🍍 🥥 🥝 🍅 🍆 🥑');
+L.push('🥦 🥬 🥒 🌶 🌽 🫒 🧅');
+L.push('🥔 🍠 🥐 🍞 🧀 🥚 🍳 🧈');
+L.push('🥞 🧇 🥓 🥩 🍗 🍖 🍔 🍟 🍕 🫓');
+L.push('🥪 🥙 🧆 🌮 🌯 🥗 🍝 🍜 🍲');
+L.push('🍛 🍣 🍱 🥟 🦪 🍤 🍙 🍚 🍘 🍥');
+L.push('🥠 🥮 🍢 🍡 🍧 🍨 🥧 🧁 🍰');
+L.push('🎂 🍮 🍬 🍫 🍿 🍩 🌰');
+L.push('🥛 🍼 🍵 🥤 🧋 🍶');
+L.push('🍺 🥂 🥃 🍹 🍾');
+L.push('🍴 🥣 🥢');
+L=cat('Aktivitas','⚽');
+L.push('⚽ 🏀 🏈 ⚾ 🎾 🏐 🏉 🥏 🎱');
+L.push('🪀 🏓 🏸 🏒 🏑 🥍 🏏 🪃 🥅 ⛳');
+L.push('🪁 🎣 🥊 🥋 🎽 🛹 🛼 🛷');
+L.push('⛸ 🎿 🏂 🏋️ 🤸');
+L.push('🏇 🧘 🏄 🏊 🚣 🧗 🚵 🚴 🏆');
+L.push('🥇 🥈 🥉 🏅 🎖 🏵 🎗 🎫 🎟 🎪');
+L.push('🤹 🎭 🩰 🎨 🎬 🎤 🎧 🎼 🎹 🥁');
+L.push('🪘 🎷 🎺 🪗 🎸 🪕 🎻 🎲 ♟ 🎯');
+L.push('🎳 🎰 🧩');
+L=cat('Travel','🚗');
+L.push('🚗 🚕 🚙 🚌 🚎 🚓 🚒 🚐');
+L.push('🛻 🚚 🚛 🚜 🛵 🛴 🛺 🚔');
+L.push('🚍 🚘 🚖 ✈️ 🛫 🛬 🛩 💺 🛰 🚀');
+L.push('🛸 🛶 🚤 🛥 🛳 ⛴ 🚢 ⚓');
+L.push('🪝 ⛽ 🚧 🚥 🚦 🗺 🗿 🗽 🗼 🏰');
+L.push('🏯 🏟 🎡 🎢 🎠 ⛲ ⛱ 🏖 🏝 🏜');
+L.push('🌋 🏔 🏕 ⛺ 🛖 🏠 🏡 🏘');
+L.push('🏚 🏗 🏭 🏢 🏬 🏣 🏤 🏥 🏦 🏨');
+L.push('🏪 🏫 🏩 💒 🏛 ⛪ 🕌 🕍 🛕 🕋');
+L.push('⛩ 🛤 🛣 🗾 🎑 🏞 🌅 🌄 🌠 🎇');
+L.push('🎆 🌇 🌆 🏙 🌃 🌌 🌉 🌁');
+L=cat('Objek','⌚');
+L.push('⌚ 📱 💻 🖥 🖨 🖱 🖲 🕹 🗜');
+L.push('💽 💾 💿 📀 📷 📹 📽');
+L.push('🎞 📞 ☎️ 📟 📠 📺 📻 🎙 🎚 🎛');
+L.push('🧭 ⏱ ⏲ ⏰ 🕰 ⌛ ⏳ 📡 🔋 🔌');
+L.push('💡 🔦 🪔 🧯 💸 💵 💴 💶');
+L.push('💷 🪙 💰 💳 💎 ⚖️ 🧰 🔧');
+L.push('🔨 ⚒ 🛠 ⛏ 🪚 🔩 ⚙️ 🪤 🧱 ⛓');
+L.push('🧲 🔫 💣 🧨 🪓 🔪 🗡 ⚔️ 🛡 🚬');
+L.push('⚰️ ⚱️ 📿 💈 ⚗️ 🔭');
+L.push('🔬 🕳 🩺 💊 💉 🩸 🧬 🦠 🧫');
+L.push('🧪 🧹 🧺 🚽 🚰 🚿 🛁');
+L.push('🛀 🧼 🪥 🪒 🪣 🛎 🔑 🗝');
+L.push('🚪 🪑 🛋 🛏 🛌 🧸 🪆 🖼 🪞 🪟');
+L.push('🛍 🛒 🎁 🎈 🎏 🎀 🪅 🎊 🎉');
+L.push('🎎 🏮 🎐 🧧 ✉️ 📩 📨 📧 💌');
+L.push('📥 📤 📦 🏷 🪧 📬 📭 📮');
+L.push('📯 📜 📃 📄 📑 🧾 📊 📈 📉 🗒');
+L.push('🗓 📅 📇 🗳 🗄 📋 📁');
+L.push('📂 🗂 🗞 📰 📓 📔 📒 📕 📗 📘');
+L.push('📙 📚 📖 🔖 🔗 🖇 📏');
+L.push('🧮 📌 📍 ✂️ 🖊 🖋 ✒️ 🖌 🖍 📝');
+L.push('✏️ 🔍 🔎 🔏 🔐 🔒 🔓');
+L=cat('Simbol','❤️');
+L.push('❤️ 🧡 💛 💚 💙 💜 🖤 🤍 🤎 💔');
+L.push('❣️ 💕 💞 💓 💗 💖 💘 💝 💟 ✨');
+L.push('⭐ 🌟 💫 ⚡ 🔥 💥 💦 🎵 🎶');
+L.push('✅ ❌ ⛔ 🚫 ❗ ❕ ❓ ❔ ‼️');
+L.push('⁉️ 🔔 🔕 📣 📢 💬 💭 💤 🌐 ♻️');
+L.push('🆗 🆕 🆓 🔢 🔟 ▶️ ⏸');
+L.push('0️⃣ 1️⃣ 2️⃣ 3️⃣ 4️⃣ 5️⃣ 6️⃣ 7️⃣ 8️⃣ 9️⃣');
+L.push('⏹ ⏺ ⏭ ⏮ ⏩ ⏪ 🔼 🔽 ➡️ ⬅️');
+L.push('⬆️ ↗️ ↘️ ↙️ ↖️ ↕️ ↔️ 🔄');
+L.push('🔂 🔀 ➕ ➖ ➗ ✖️ ♾ 💲 💱 ™️');
+L.push('©️ ®️ 〰️ ➰ ➿ 🔙 🔛 🔝 🔜');
+L.push('✔️ ☑️ 🔘 🔴 🟠 🟡 🟢 🔵 🟣 ⚫');
+L.push('⚪ 🟤 🔺 🔻 🔸 🔹 🔶 🔷 🔳 🔲');
+L.push('▪️ ▫️ ◾ ◽ ◼️ ◻️ 🟥 🟧 🟨 🟩');
+L.push('🟦 🟪 ⬛ 🟫');
+L=cat('Bendera','🏁');
+L.push('🏁 🚩 🎌 🏴 🏳 🇮🇩 🇲🇾 🇸🇬');
+L.push('🇧🇳 🇹🇱 🇯🇵 🇰🇷 🇹🇼 🇭🇰 🇮🇳 🇹🇭 🇻🇳');
+L.push('🇵🇭 🇦🇺 🇳🇿 🇺🇸 🇨🇦 🇲🇽 🇧🇷 🇦🇷 🇨🇱 🇨🇴');
+L.push('🇵🇪 🇫🇷 🇩🇪 🇮🇹 🇪🇸 🇵🇹 🇳🇱 🇧🇪 🇨🇭');
+L.push('🇹🇷 🇸🇪 🇳🇴 🇩🇰 🇫🇮 🇮🇪 🇵🇱 🇷🇺 🇬🇷');
+L.push('🇪🇬 🇿🇦 🇳🇬 🇰🇪 🇲🇦 🇸🇦 🇦🇪 🇮🇱 🇵🇰');
+L.push('🇧🇩 🇶🇦 🇰🇼 🇺🇦 🇰🇿');
+CATS.forEach(function(c){
+c.l=c.l.join(' ').split(' ');
+});
+var catIdx=0;
+function buildEmojiUI(){
+var pop=gid('emojiPop');
+if(!pop)return;
+pop.innerHTML='';
+var head=document.createElement('div');
+head.className='emoji-head';
+var si=document.createElement('input');
+si.id='emojiSearch';
+si.className='emoji-search';
+si.placeholder=tr('Cari emoji…','Search emoji…');
+si.autocomplete='off';
+var xb=document.createElement('button');
+xb.id='emojiClose';
+xb.className='emoji-close';
+xb.type='button';
+xb.innerHTML=icon('x',14);
+xb.onclick=function(e){
+e.stopPropagation();
+pop.classList.add('hidden');
 };
-function L(k){var d=T[lang]||T.id;return d[k]!=null?d[k]:(T.id[k]!=null?T.id[k]:k);}
-function fm(s){var a=Array.prototype.slice.call(arguments,1);var i=0;return String(s).replace(/%s/g,function(){return a[i++]!=null?a[i-1]:'';});}
-var $=function(s){return document.querySelector(s);};
-var el=function(i){return document.getElementById(i);};
-function put(i,h){var e=el(i);if(e)e.innerHTML=h;}
-function on(i,ev,fn){var e=el(i);if(e)e.addEventListener(ev,fn);}
-function setTxt(sel,txt){var e=sel.charAt(0)==='#'?document.querySelector(sel):el(sel);if(e)e.textContent=txt;}
-var esc=function(s){return String(s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});};
-var now=function(){return Date.now();};
-var AL='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-function rand(n){var b=new Uint8Array(n);crypto.getRandomValues(b);var o='';for(var i=0;i<n;i++)o+=AL[b[i]%AL.length];return o;}
-var COLORS=['#2C353D','#313B44','#36414B','#2E3841','#3A454F','#333D46','#38434D','#2B343C'];
-var IS_IOS=/iP(hone|ad|od)|Macintosh/i.test(navigator.userAgent)&&('ontouchend' in window);
-function hash(s){var h=0;s=String(s);for(var i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0;return h;}
-function colorOf(n){return COLORS[hash(String(n).toLowerCase())%COLORS.length];}
-function initials(n){var p=String(n).trim().split(/\s+/).slice(0,2),o='';for(var i=0;i<p.length;i++)o+=p[i].charAt(0).toUpperCase();return o||'?';}
-function pad(n){return(n<10?'0':'')+n;}
-function fmtTime(t){var d=new Date(t);return pad(d.getHours())+':'+pad(d.getMinutes());}
-function fmtDur(s){s=Math.max(0,Math.floor(s||0));return Math.floor(s/60)+':'+pad(s%60);}
-function dayKey(t){var d=new Date(t);return d.getFullYear()+'-'+d.getMonth()+'-'+d.getDate();}
-function dayLabel(t){var n=now();if(dayKey(t)===dayKey(n))return lang==='en'?'Today':'Hari ini';if(dayKey(t)===dayKey(n-86400000))return lang==='en'?'Yesterday':'Kemarin';return new Date(t).toLocaleDateString(lang==='en'?'en-GB':'id-ID',{day:'numeric',month:'long'});}
-function isTouch(){return matchMedia('(hover:none)').matches;}
-function sha256(s){return crypto.subtle.digest('SHA-256',new TextEncoder().encode(s)).then(function(b){return Array.prototype.map.call(new Uint8Array(b),function(x){return x.toString(16).padStart(2,'0');}).join('');});}
-function b64buf(buf){var b=new Uint8Array(buf),s='';for(var i=0;i<b.length;i++)s+=String.fromCharCode(b[i]);return btoa(s);}
-function bufb64(str){var bin=atob(str),a=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i);return a.buffer;}
-function buzz(ms){try{if(navigator.vibrate)navigator.vibrate(ms||120);}catch(e){}}
-function toast(msg){/* toast dinonaktifkan sejak v51 */}
-var IC={
-x:'F:<path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>',
-plus:'F:<path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>',
-menu:'F:<path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>',
-back:'F:<path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>',
-logout:'F:<path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>',
-users:'F:<path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>',
-usersCool:'F:<path d="M12 12.75c1.63 0 3.07.39 4.24.9 1.08.48 1.76 1.56 1.76 2.73V19H6v-2.62c0-1.17.68-2.25 1.76-2.73 1.17-.51 2.61-.9 4.24-.9zM12 5a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7z"/><path d="M19.5 12.5c.83 0 1.61.16 2.32.44.68.27 1.18.92 1.18 1.65V17h-3.5v-.62c0-1.44-.55-2.77-1.46-3.79.46-.06.95-.09 1.46-.09zM4.5 12.5c.51 0 1 .03 1.46.09A5.98 5.98 0 0 0 4.5 16.38V17H1v-2.41c0-.73.5-1.38 1.18-1.65.71-.28 1.49-.44 2.32-.44z"/>',
-addCool:'F:<path fill-rule="evenodd" d="M17.5 11a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9zm2 5h-1.5v1.5h-1V16h-1.5v-1H17v-1.5h1V15h1.5v1z"/><path d="M9.5 12.5a3.75 3.75 0 1 0 0-7.5 3.75 3.75 0 0 0 0 7.5zm0 1.5c-2.5 0-7.5 1.25-7.5 3.75V20h10.06a6.97 6.97 0 0 1-1.56-4.5c0-.94.06-1.84.53-2.66-.5-.06-1.02-.09-1.53-.09z"/>',
-userPlus:'F:<path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>',
-userX:'F:<path d="M14 8c0-2.21-1.79-4-4-4S6 5.79 6 8s1.79 4 4 4 4-1.79 4-4zm3 2v2h4v-2h-4zM10 14c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>',
-person:'F:<path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>',
-star:'F:<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>',
-eye:'F:<path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>',
-vdots:'F:<path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>',
-bell:'F:<path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>',
-bellOff:'F:<path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/><path d="M2.81 2.81L1.4 4.22l20.38 20.37 1.41-1.41z"/>',
-music:'F:<path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>',
-camflip:'F:<path d="M20 5h-3.17L15 3H9L7.17 5H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-5 11.5V13H9v2l-3-3.5L9 8v2h6V8l3 3.5-3 3.5z"/>',
-video2:'F:<path d="M14 6H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2zm4.5 4.7 3-2.2c.3-.2.5 0 .5.3v6.4c0 .3-.2.5-.5.3l-3-2.2v-2.6z"/>',
-endbar:'F:<path d="M12 9.5c2.6 0 5.1.5 7.4 1.5.6.3 1 .9 1 1.6V15c0 .6-.4 1-1 1h-3c-.6 0-1-.4-1-1v-1.7c-1.1-.3-2.2-.4-3.4-.4s-2.3.1-3.4.4V15c0 .6-.4 1-1 1h-3c-.6 0-1-.4-1-1v-2.4c0-.7.4-1.3 1-1.6 2.3-1 4.8-1.5 7.4-1.5z"/>',
-endcall:'F:<path transform="rotate(135 12 12)" d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>',
-globe:'F:<path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm7.93 9h-3.02a15.7 15.7 0 0 0-1.1-5.36A8.03 8.03 0 0 1 19.93 11zM12 4.04c.83 1.2 1.64 3.11 1.9 6.96h-3.8c.26-3.85 1.07-5.76 1.9-6.96zM4.07 13h3.02c.06 1.9.4 3.7 1.1 5.36A8.03 8.03 0 0 1 4.07 13zm3.02-2H4.07a8.03 8.03 0 0 1 4.12-5.36A15.7 15.7 0 0 0 7.09 11zM12 19.96c-.83-1.2-1.64-3.11-1.9-6.96h3.8c-.26 3.85-1.07 5.76-1.9 6.96zm2.81-1.6c.7-1.66 1.04-3.46 1.1-5.36h3.02a8.03 8.03 0 0 1-4.12 5.36z"/>',
-dev:'F:<path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>',
-key:'F:<path d="M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/>',
-download:'F:<path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>',
-lock:'F:<path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>',
-ban:'F:<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM4 12c0-4.42 3.58-8 8-8 1.85 0 3.55.63 4.9 1.69L5.69 16.9C4.63 15.55 4 13.85 4 12zm8 8c-1.85 0-3.55-.63-4.9-1.69L18.31 7.1C19.37 8.45 20 10.15 20 12c0 4.42-3.58 8-8 8z"/>',
-alert:'F:<path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/>',
-eraser:'F:<path d="M16.24 3.56l4.95 4.94c.78.79.78 2.05 0 2.84L12 20.53a4.01 4.01 0 0 1-5.66 0L2.81 17c-.78-.79-.78-2.05 0-2.84l10.6-10.6c.79-.78 2.05-.78 2.83 0M4.22 15.58l3.54 3.53c.78.79 2.04.79 2.83 0l3.53-3.53-4.95-4.95-4.95 4.95z"/>',
-restore:'F:<path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/>',
-smile:'F:<path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/>',
-send:'F:<path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>',
-attach:'F:<path d="M16.5 6v11.5c0 2.21-1.79 4-4 4s-4-1.79-4-4V5c0-1.38 1.12-2.5 2.5-2.5s2.5 1.12 2.5 2.5v10.5c0 .55-.45 1-1 1s-1-.45-1-1V6H10v9.5c0 1.38 1.12 2.5 2.5 2.5s2.5-1.12 2.5-2.5V5c0-2.21-1.79-4-4-4S7 2.79 7 5v12.5c0 3.04 2.46 5.5 5.5 5.5s5.5-2.46 5.5-5.5V6h-1.5z"/>',
-mic:'F:<path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.49 6-3.31 6-6.72h-1.7z"/>',
-camera:'F:<path d="M12 15.2c1.77 0 3.2-1.43 3.2-3.2s-1.43-3.2-3.2-3.2-3.2 1.43-3.2 3.2 1.43 3.2 3.2 3.2zM9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/>',
-image:'F:<path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>',
-play:'F:<path d="M8 5v14l11-7z"/>',
-pause:'F:<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>',
-edit:'F:<path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>',
-trash:'F:<path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>',
-copy:'F:<path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>',
-link:'F:<path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/>',
-video:'F:<path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/>',
-phone:'F:<path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>',
-phoneOff:'F:<path d="M12 9c-1.5 0-3 .15-4.5.45L3.34 6.66l-.09.08C2.45 7.55 2 8.6 2 9.75V15c0 .55.45 1 1 1h2c.55 0 1-.45 1-1v-2.32c1.87-.68 3.9-1.05 6-1.05s4.13.37 6 1.05V15c0 .55.45 1 1 1h2c.55 0 1-.45 1-1V9.75c0-1.15-.45-2.2-1.25-3.01l-.09-.08-4.16 2.79C15 9.15 13.5 9 12 9z"/>',
-dice:'F:<path fill-rule="evenodd" d="M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zm3.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm7 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM12 10.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM8.5 14a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm7 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>',
-check:'F:<path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>',
-info:'F:<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>'};
-function icon(n,s){
-var d=IC[n]||'';
-var filled=d.indexOf('F:')===0;
-if(filled)d=d.slice(2);
-return '<svg viewBox="0 0 24 24" width="'+(s||18)+'" height="'+(s||18)+'" fill="'+(filled?'currentColor':'none')+'" stroke="'+(filled?'none':'currentColor')+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+d+'</svg>';
-}
-var uid=sessionStorage.getItem('qc-uid');if(!uid){uid=rand(10);sessionStorage.setItem('qc-uid',uid);}
-var lastLP=0;
-var lastSyncAll=0;
-var Sound={ctx:null,on:localStorage.getItem('qc-sound')!=='0',
-cDm:localStorage.getItem('qc-nsound-dm')||localStorage.getItem('qc-nsound')||null,
-cGrp:localStorage.getItem('qc-nsound-grp')||null,
-audDm:null,audGrp:null,bufDm:null,bufGrp:null,
-ensure:function(){var A=window.AudioContext||window.webkitAudioContext;if(!this.ctx&&A){try{this.ctx=new A();}catch(e){}}if(this.ctx&&this.ctx.state==='suspended')this.ctx.resume().catch(function(){});},
-decode:function(which,data){
-var self=this;
-this.ensure();
-if(!this.ctx)return;
-try{
-var bin=atob(data.split(',')[1]);
-var arr=new Uint8Array(bin.length);
-for(var i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);
-this.ctx.decodeAudioData(arr.buffer,function(buf){if(which==='grp')self.bufGrp=buf;else self.bufDm=buf;},function(){});
-}catch(e){}
-},
-playBuf:function(buf){
-this.ensure();
-if(!this.ctx||!buf)return false;
-try{
-var src=this.ctx.createBufferSource();
-src.buffer=buf;
-var g=this.ctx.createGain();g.gain.value=1;
-src.connect(g);g.connect(this.ctx.destination);
-src.start(this.ctx.currentTime+0.01);
-return true;
-}catch(e){return false;}
-},
-preload:function(){try{if(this.cDm&&!this.audDm){this.audDm=new Audio(this.cDm);this.audDm.preload='auto';}if(this.cGrp&&!this.audGrp){this.audGrp=new Audio(this.cGrp);this.audGrp.preload='auto';}if(this.cDm&&!this.bufDm)this.decode('dm',this.cDm);if(this.cGrp&&!this.bufGrp)this.decode('grp',this.cGrp);}catch(e){}},
-unlock:function(){this.ensure();this.preload();},
-synth:function(k){this.ensure();var c=this.ctx;if(!c)return;var t=c.currentTime;function b(f0,f1,d,v,ty,dt){var st=t+(dt||0);var o=c.createOscillator(),g=c.createGain();o.type=ty;o.frequency.setValueAtTime(f0,st);o.frequency.exponentialRampToValueAtTime(Math.max(f1,1),st+d);g.gain.setValueAtTime(.0001,st);g.gain.exponentialRampToValueAtTime(v,st+.012);g.gain.exponentialRampToValueAtTime(.0001,st+d);o.connect(g);g.connect(c.destination);o.start(st);o.stop(st+d+.03);}if(k==='send'){b(540,820,.1,.06,'sine',0);}else if(k==='recv'){b(880,880,.08,.11,'sine',0);b(1320,1320,.12,.11,'sine',.09);}else if(k==='react'){b(950,1150,.06,.04,'triangle',0);}else if(k==='call'){b(880,880,.12,.05,'triangle',0);b(880,880,.12,.05,'triangle',.2);}},
-play:function(k,t){if(!this.on)return;if(k==='recv'){var buf=(t==='group')?this.bufGrp:this.bufDm;if(buf&&this.playBuf(buf))return;var a=(t==='group')?this.audGrp:this.audDm;if(a){try{a.currentTime=0;a.volume=1;var pr=a.play();if(pr&&pr.catch)pr.catch(function(){});return;}catch(e){}}}this.synth(k);},
-test:function(){var buf=this.bufDm||this.bufGrp;if(buf&&this.playBuf(buf))return;var a=this.audDm||this.audGrp;if(a){try{a.currentTime=0;a.volume=1;var pr=a.play();if(pr&&pr.catch)pr.catch(function(){});return;}catch(e){}}this.synth('recv');},
-toggle:function(){this.on=!this.on;localStorage.setItem('qc-sound',this.on?'1':'0');}};
-var mute={};
-function isMuted(key){return !!mute[key];}
-function notifyRecv(type,key){
-if(key&&isMuted(key))return;
-Sound.play('recv',type);
-buzz(120);
-}
-function syncHeight(){
-var vv=window.visualViewport;
-var h=vv?vv.height:window.innerHeight;
-if(h>0)document.documentElement.style.setProperty('--apph',Math.round(h)+'px');
-}
-function killPan(){
-try{window.scrollTo(0,0);}catch(e){}
-try{document.documentElement.scrollTop=0;document.body.scrollTop=0;}catch(e){}
-}
-var NS='qcx-v8/';
-function userT(u){return NS+'user/'+u;}
-function profT(u){return NS+'prof/'+u;}
-function presT(u){return NS+'pres/'+u;}
-function banT(u){return NS+'ban/'+u;}
-function blkT(me,u){return NS+'blk/'+me+'/'+u;}
-function inT(u,conv){return NS+'in/'+u+'/'+conv;}
-function inWild(u){return NS+'in/'+u+'/+';}
-function dmKey(a,b){return 'dm:'+([a,b].sort().join('~'));}
-function grpKey(id){return 'grp:'+id;}
-function convTopic(key){return key.indexOf('dm:')===0?NS+'dm/'+key.slice(3).replace('~','/'):NS+'grp/'+key.slice(4);}
-function topicToKey(t){
-if(t.indexOf(NS+'dm/')===0)return 'dm:'+t.slice((NS+'dm/').length).replace('/','~');
-if(t.indexOf(NS+'grp/')===0)return 'grp:'+t.slice((NS+'grp/').length);
-return null;
-}
-function callT(key){return NS+'call/'+key.replace(':','/').replace('~','/');}
-function gmetaT(id){return NS+'gmeta/'+id;}
-function vaultT(u){return NS+'vault/'+u;}
-function newGroupCode(){var p=rand(8);var h=0;for(var i=0;i<p.length;i++)h=(h*31+p.charCodeAt(i)*(i+7))>>>0;return p.slice(0,3)+'-'+p.slice(3,6)+'-'+p.slice(6,8)+AL[h%AL.length];}
-var S={me:null,hash:null,view:'auth',conv:null,convs:[],msgs:[],reactRaw:{},presence:{},profiles:{},unread:{},lastRead:{},editId:null,pendingImage:null,reactTarget:null,peek:null};
-var blocked={};
-var blockStart={};
-var blockWins={};
-var blkWin={};
-function isBlocked(u){return !!blocked[u];}
-function inBlkWin(u,t){
-var w=blkWin[u];
-if(!w)return false;
-return t>=(w.s||0)&&t<=(w.e==null?Infinity:w.e);
-}
-function saveBlkWin(){
-if(!S.me)return;
-try{localStorage.setItem('qc-blkwin-'+S.me,JSON.stringify(blkWin));}catch(e){}
-}
-function loadBlkWin(u){
-try{blkWin=JSON.parse(localStorage.getItem('qc-blkwin-'+u)||'{}')||{};}catch(e){blkWin={};}
-}
-function peerOfKey(key){
-if(key&&key.indexOf('dm:')===0){
-var p=key.slice(3).split('~');
-if(p[0]===S.me)return p[1];
-if(p[1]===S.me)return p[0];
-}
-return null;
-}
-function inBlockWin(peer,t){
-var w=blockWins[peer];
-if(!w)return false;
-return t>=(w.s||0)&&t<=(w.e==null?Infinity:w.e);
-}
-function applyBlkRec(r){
-if(!r||!r.by||r.u!==S.me)return;
-blockWins[r.by]={s:r.t||0,e:r.b?Infinity:(r.end||now())};
-if(S.conv)updateTicks();
-}
-function loadBlocks(u){
-return fetchWild(NS+'blk/'+u+'/',2200).then(function(recs){
-blocked={};
-(recs||[]).forEach(function(r){if(r&&r.u)blocked[r.u]=!!r.b;});
-if(S.conv){applyBlockUI();}
-});
-}
-function loadWins(u){
-return fetchWild(NS+'blk/',2500,'+/'+u).then(function(recs){
-(recs||[]).forEach(function(r){if(r&&r.u===u&&r.by){blockWins[r.by]={s:r.t||0,e:r.b?Infinity:(r.end||now())};}});
-if(S.conv)updateTicks();
-});
-}
-function setBlocked(u,b){
-if(b){blockStart[u]=now();blkWin[u]={s:blockStart[u],e:Infinity};}
-else{
-var s=blockStart[u]||(blkWin[u]&&blkWin[u].s)||0;
-blkWin[u]={s:s,e:now()};
-}
-saveBlkWin();
-var st=blkWin[u]?blkWin[u].s:now();
-blocked[u]=b;
-publishRetained(blkT(S.me,u),{u:u,b:b,t:st,end:b?null:now(),by:S.me});
-applyBlockUI();
-renderHome();
-}
-function applyBlockUI(){
-var c=S.conv;
-var bl=!!(c&&c.type==='dm'&&isBlocked(c.peer));
-var bb=el('blockedBar');if(bb)bb.classList.toggle('hidden',!bl);
-var ta=el('input');if(ta)ta.disabled=bl;
-var bs=el('btnSend');if(bs&&bl)bs.disabled=true;
-var bm=el('btnMic');if(bm)bm.style.display=bl?'none':'';
-var ba=el('btnAttach');if(ba)ba.style.display=bl?'none':'';
-var cp=el('composer');if(cp)cp.style.opacity=bl?'.5':'';
-}
-function isAdminOf(c,u){
-if(!c)return false;
-if(c.owner===u)return true;
-return !!((c.admins||[]).indexOf(u)>=0);
-}
-function canEditGrp(c,u){
-if(!c)return false;
-return isAdminOf(c,u)||!!c.editAll;
-}
-function canAddMember(c,u){
-if(!c)return false;
-if(isAdminOf(c,u))return true;
-return !!c.addAll;
-}
-function isMember(c){
-if(!c)return false;
-if(c.type!=='group')return true;
-if(!c.members)return true;
-return c.members.indexOf(S.me)>=0;
-}
-var GC_MAX=50;
-var GC={active:false,group:null,video:true,facing:'user',stream:null,pcs:{},tiles:{},members:{},t0:0,timer:null,ring:null,ringT:null,ringRep:null,muted:false,camOff:false};
-function gcSend(o){if(GC.group)publishTo(callT(GC.group),o);}
-function gcStopRing(){if(GC.ringRep){clearInterval(GC.ringRep);GC.ringRep=null;}}
-function gcStartRing(){
-gcStopRing();
-var send=function(){gcSend({k:'gc-ring',from:S.me,conv:GC.group,video:GC.video,name:displayName(S.me)});};
-send();
-GC.ringRep=setInterval(send,3000);
-}
-function updateGcLayout(){
-var g=el('gcGrid');if(!g)return;
-var n=Object.keys(GC.tiles).length||1;
-var cols=n<=2?1:(n<=4?2:(n<=9?3:(n<=16?4:5)));
-var rows=Math.ceil(n/cols);
-g.style.gridTemplateColumns='repeat('+cols+',1fr)';
-g.style.gridTemplateRows='repeat('+rows+',1fr)';
-}
-function gcAttachVideo(v,stream,isLocal){
-v.srcObject=stream;
-v.style.objectFit='cover';
-if(isLocal){v.muted=true;v.play().catch(function(){});return;}
-v.muted=true;
-var p=v.play();
-if(p&&p.then)p.then(function(){v.muted=false;}).catch(function(){v.muted=false;});
-else v.muted=false;
-}
-function gcTile(id,name,stream,isLocal){
-var g=el('gcGrid');if(!g)return;
-var t=GC.tiles[id];
-if(!t){
-t=document.createElement('div');t.className='gc-tile'+(isLocal?' me':'');
-var v=document.createElement('video');v.autoplay=true;v.playsInline=true;
-var tag=document.createElement('span');tag.className='gc-tag';tag.textContent=name||id;
-t.appendChild(v);t.appendChild(tag);
-t.onclick=function(){t.classList.toggle('big');};
-g.appendChild(t);
-GC.tiles[id]=t;
-updateGcLayout();
-}
-if(stream)gcAttachVideo(t.querySelector('video'),stream,isLocal);
-if(name)t.querySelector('.gc-tag').textContent=name;
-}
-function gcRemoveTile(id){var t=GC.tiles[id];if(t){t.remove();delete GC.tiles[id];updateGcLayout();}}
-function gcConnect(id,initiator){
-if(GC.pcs[id])return GC.pcs[id];
-var pc=new RTCPeerConnection({iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'},{urls:'turn:openrelay.metered.ca:80',username:'openrelayproject',credential:'openrelayproject'},{urls:'turn:openrelay.metered.ca:443?transport=tcp',username:'openrelayproject',credential:'openrelayproject'}]});
-GC.pcs[id]=pc;
-if(GC.stream)GC.stream.getTracks().forEach(function(tr){pc.addTrack(tr,GC.stream);});
-pc.onicecandidate=function(e){if(e.candidate)gcSend({k:'gc-ice',from:S.me,to:id,cand:e.candidate});};
-pc.ontrack=function(e){GC.members[id]=GC.members[id]||id;gcTile(id,GC.members[id],e.streams[0],false);};
-if(initiator){
-pc.createOffer().then(function(o){return pc.setLocalDescription(o).then(function(){gcSend({k:'gc-offer',from:S.me,to:id,sdp:o});});}).catch(function(){});
-}
-return pc;
-}
-function gcMedia(video){
-if(!video)return navigator.mediaDevices.getUserMedia({audio:true});
-return navigator.mediaDevices.getUserMedia({audio:true,video:{facingMode:GC.facing}})
-.catch(function(){return navigator.mediaDevices.getUserMedia({audio:true,video:true});});
-}
-function gcBegin(key,video,isJoin){
-if(GC.active)return;
-GC.group=key;GC.video=video;GC.active=true;GC.t0=now();GC.muted=false;GC.camOff=false;
-GC.members={};GC.members[S.me]=displayName(S.me);
-el('gcOverlay').classList.remove('hidden');
-put('gcTitle',L('gc_title'));
-gcPaintCtrl();
-updateGcLayout();
-gcStartRing();
-gcMedia(video).then(function(st){
-GC.stream=st;
-gcTile(S.me,displayName(S.me)+(lang==='en'?' (you)':' (kamu)'),st,true);
-gcSend({k:'gc-hello',from:S.me,name:displayName(S.me),video:video});
-GC.timer=setInterval(function(){var s=Math.floor((now()-GC.t0)/1000);put('gcTimer',pad(Math.floor(s/60))+':'+pad(s%60));},1000);
-}).catch(function(){GC.active=false;GC.group=null;gcStopRing();el('gcOverlay').classList.add('hidden');});
-}
-function gcStart(key,video){gcBegin(key,video,false);}
-function gcPaintCtrl(){
-put('gcMute',icon('mic',20));
-el('gcMute').classList.toggle('on',GC.muted);
-put('gcCam',icon('video2',20));
-el('gcCam').classList.toggle('off',GC.camOff);
-el('gcCam').style.display=GC.video?'':'none';
-put('gcFlip',icon('camflip',20));
-el('gcFlip').style.display=GC.video?'':'none';
-put('gcLeave',icon('endbar',22));
-}
-function gcRingHide(){el('gcRing').classList.add('hidden');GC.ring=null;clearTimeout(GC.ringT);}
-function gcSignal(d){
-if(!d||!S.me)return;
-if(d.k==='gc-ring'){
-if(GC.active||d.from===S.me)return;
-GC.ring={conv:d.conv,from:d.from,name:d.name,video:d.video};
-put('gcRingName',d.name||d.from);
-put('gcRingSub',L('gc_ring'));
-put('gcAccept',icon('phone',24));
-put('gcDecline',icon('endbar',24));
-el('gcRing').classList.remove('hidden');
-Sound.play('call');
-clearTimeout(GC.ringT);
-GC.ringT=setTimeout(gcRingHide,30000);
-return;
-}
-if(d.from===S.me)return;
-if(!GC.active)return;
-if(d.k==='gc-hello'){
-gcStopRing();
-if(!GC.members[d.from]&&Object.keys(GC.members).length>=GC_MAX){gcSend({k:'gc-full',from:S.me,to:d.from});return;}
-GC.members[d.from]=d.name||d.from;
-gcTile(d.from,GC.members[d.from],null,false);
-if(!GC.pcs[d.from])gcConnect(d.from,true);
-}
-else if(d.k==='gc-offer'&&d.to===S.me){
-gcStopRing();
-if(!GC.members[d.from]&&Object.keys(GC.members).length>=GC_MAX){gcSend({k:'gc-full',from:S.me,to:d.from});return;}
-GC.members[d.from]=GC.members[d.from]||d.from;
-gcTile(d.from,GC.members[d.from],null,false);
-var pc=gcConnect(d.from,false);
-pc.setRemoteDescription(new RTCSessionDescription(d.sdp)).then(function(){return pc.createAnswer();}).then(function(a){return pc.setLocalDescription(a).then(function(){gcSend({k:'gc-answer',from:S.me,to:d.from,sdp:a});});}).catch(function(){});
-}
-else if(d.k==='gc-answer'&&d.to===S.me){
-gcStopRing();
-var pc2=GC.pcs[d.from];if(pc2)pc2.setRemoteDescription(new RTCSessionDescription(d.sdp)).catch(function(){});
-}
-else if(d.k==='gc-ice'&&d.to===S.me){
-var pc3=GC.pcs[d.from];if(pc3&&d.cand)pc3.addIceCandidate(d.cand).catch(function(){});
-}
-else if(d.k==='gc-full'&&d.to===S.me){
-toast(L('gc_full'));
-gcLeave();
-}
-else if(d.k==='gc-leave'){
-var pc4=GC.pcs[d.from];if(pc4){try{pc4.close();}catch(e){}delete GC.pcs[d.from];}
-gcRemoveTile(d.from);
-delete GC.members[d.from];
-}
-}
-function gcLeave(){
-el('gcOverlay').classList.add('hidden');
-el('gcGrid').innerHTML='';
-gcSend({k:'gc-leave',from:S.me});
-gcStopRing();
-for(var id in GC.pcs){try{GC.pcs[id].close();}catch(e){}}
-GC.pcs={};GC.tiles={};GC.members={};
-if(GC.stream){GC.stream.getTracks().forEach(function(t){try{t.stop();}catch(e){}});GC.stream=null;}
-clearInterval(GC.timer);GC.timer=null;
-GC.active=false;GC.group=null;
-}
-function gcFlip(){
-if(!GC.active||!GC.video)return;
-GC.facing=GC.facing==='user'?'environment':'user';
-gcMedia(true).then(function(st){
-var nv=st.getVideoTracks()[0];
-if(!nv)return;
-var old=GC.stream?GC.stream.getVideoTracks()[0]:null;
-if(old)old.stop();
-if(GC.stream){if(old)GC.stream.removeTrack(old);GC.stream.addTrack(nv);}
-else{GC.stream=st;}
-for(var id in GC.pcs){
-var sn=null;var ss=GC.pcs[id].getSenders();
-for(var j=0;j<ss.length;j++){if(ss[j].track&&ss[j].track.kind==='video'){sn=ss[j];break;}}
-if(sn)sn.replaceTrack(nv);
-}
-var lt=GC.tiles[S.me];if(lt){var lv=lt.querySelector('video');lv.srcObject=null;lv.srcObject=GC.stream;lv.muted=true;lv.play().catch(function(){});}
-}).catch(function(){});
-}
-function gcMuteToggle(){
-if(!GC.stream)return;
-GC.muted=!GC.muted;
-GC.stream.getAudioTracks().forEach(function(t){t.enabled=!GC.muted;});
-gcPaintCtrl();
-}
-function gcCamToggle(){
-if(!GC.stream||!GC.video)return;
-GC.camOff=!GC.camOff;
-GC.stream.getVideoTracks().forEach(function(t){t.enabled=!GC.camOff;});
-gcPaintCtrl();
-}
-var pendingReport=null;
-var nsTarget='dm';
-var devCounts={acc:0,rep:0,conv:0};
-var clients=[],libTries=0,subs={};
-function curUser(){return S.me||localStorage.getItem('qc-lastuser')||null;}
-function anyConnected(){for(var i=0;i<clients.length;i++)if(clients[i]&&clients[i].connected)return true;return false;}
-function whenConnected(ms){return new Promise(function(res){if(anyConnected())return res(true);var done=false;function off(){clearTimeout(t);clients.forEach(function(c){if(c)c.removeListener('connect',h);});}function h(){if(done)return;done=true;off();res(true);}var t=setTimeout(function(){if(done)return;done=true;off();res(anyConnected());},ms||8000);clients.forEach(function(c){if(c)c.on('connect',h);});});}
-function outboxPush(topic,obj,ret){try{var ob=JSON.parse(localStorage.getItem('qc-ob')||'[]');ob.push({t:topic,o:obj,r:!!ret});if(ob.length>300)ob=ob.slice(-300);localStorage.setItem('qc-ob',JSON.stringify(ob));}catch(e){}}
-function flushOutbox(){if(!anyConnected())return;var ob=[];try{ob=JSON.parse(localStorage.getItem('qc-ob')||'[]');}catch(e){}if(!ob.length)return;localStorage.setItem('qc-ob','[]');ob.forEach(function(e2){clients.forEach(function(c){if(c&&c.connected){try{c.publish(e2.t,JSON.stringify(e2.o),{qos:e2.r?1:0,retain:!!e2.r});}catch(err){}}});});}
-function publishTo(topic,obj){var sent=false;clients.forEach(function(c){if(c&&c.connected){try{c.publish(topic,JSON.stringify(obj),{qos:0});sent=true;}catch(e){}}});if(!sent)outboxPush(topic,obj,false);}
-function publishRetained(topic,obj){var sent=false;clients.forEach(function(c){if(c&&c.connected){try{c.publish(topic,JSON.stringify(obj),{qos:1,retain:true});sent=true;}catch(e){}}});if(!sent)outboxPush(topic,obj,true);}
-function sub(topic){if(subs[topic])return;subs[topic]=true;clients.forEach(function(c){if(c&&c.connected){try{c.subscribe(topic);}catch(e){}}});}
-function unsub(topic){if(!subs[topic])return;delete subs[topic];clients.forEach(function(c){if(c&&c.connected){try{c.unsubscribe(topic);}catch(e){}}});}
-function subAll(){Object.keys(subs).forEach(function(t){clients.forEach(function(c){if(c&&c.connected){try{c.subscribe(t);}catch(e){}}});});}
-function fetchRetained(topic,ms){return new Promise(function(res){whenConnected(8000).then(function(ok){if(!ok)return res(null);var done=false;function cleanup(){clients.forEach(function(c){if(c){try{c.removeListener('message',h);}catch(e){}try{c.unsubscribe(topic);}catch(e){}}});}var h=function(t,p){if(t===topic&&p&&p.length){done=true;cleanup();try{res(JSON.parse(p.toString()));}catch(e){res(null);}}};clients.forEach(function(c){if(c&&c.connected){c.on('message',h);try{c.subscribe(topic);}catch(e){}}});setTimeout(function(){if(!done){cleanup();res(null);}},ms||2200);});});}
-function fetchWild(prefix,ms,wild){
-var w2=wild||'+';
-return new Promise(function(res){whenConnected(8000).then(function(ok){if(!ok)return res([]);var out=[],seen={};var h=function(t,p){if(t.indexOf(prefix)===0&&p&&p.length&&!seen[t]){seen[t]=1;try{out.push(JSON.parse(p.toString()));}catch(e){}}};clients.forEach(function(c){if(c&&c.connected){c.on('message',h);try{c.subscribe(prefix+w2);}catch(e){}}});setTimeout(function(){clients.forEach(function(c){if(c){try{c.removeListener('message',h);}catch(e){}try{c.unsubscribe(prefix+w2);}catch(e){}}});res(out);},ms||2500);});});
-}
-/* === END PART 1 v64 — tempel BAGIAN 2 v64 tepat di bawah baris ini === */
- function checkBan(u){return fetchRetained(banT(u),1500).then(function(b){return !!(b&&b.banned);});}
-APP_VER='v64';
-var wakeLock=null;
-function wlRequest(){
-try{
-if(navigator.wakeLock&&navigator.wakeLock.request){
-navigator.wakeLock.request('screen').then(function(l){wakeLock=l;}).catch(function(){});
-}
-}catch(e){}
-}
-function wlRelease(){
-try{if(wakeLock){wakeLock.release();wakeLock=null;}}catch(e){}
-}
-var lastRestart=0;
-function reconnectAll(){var t=now();if(t-lastRestart<5000)return;lastRestart=t;clients.forEach(function(c){try{c.end(true);}catch(e){}});clients=[];connectAll();}
-function connectAll(){
-if(typeof mqtt==='undefined'){if(libTries++<20)setTimeout(connectAll,500);renderNet();return;}
-var BR=['wss://broker.emqx.io:8084/mqtt','wss://broker.hivemq.com:8884/mqtt','wss://test.mosquitto.org:8081/mqtt','wss://mqtt.eclipseprojects.io:443/ws'];
-clients=BR.map(function(url,i){
-var c;try{c=mqtt.connect(url,{clientId:'qc_'+uid+'_'+i+'_'+rand(4),keepalive:20,reconnectPeriod:1500,connectTimeout:6000,clean:true});}catch(e){return null;}
-c.on('connect',function(){
-renderNet();subAll();flushOutbox();
-if(S.me){startPresence();var me=S.me;checkBan(me).then(function(b){if(b&&S.me===me){toast(L('e_banned_self'));logout();}});}
-});
-c.on('message',function(t,p){var d;try{d=JSON.parse(p.toString());}catch(e){return;}if(!d)return;route(t,d);});
-c.on('close',renderNet);c.on('error',renderNet);
-return c;
-});
-}
-function route(t,d){
-if(!S.me){
-if(S.peek&&d){
-var pk=topicToKey(t);
-if(pk&&pk===S.peek.key){
-if(d.k==='msg'&&d.data)peekLine(d.data);
-else if(d.k==='hist-res'&&d.to===S.peek.user){
-var mx=(d.msgs||[]).slice().sort(function(a,b){return a.time-b.time;});
-mx.forEach(peekLine);
-}
-}
-}
-return;
-}
-if(t.indexOf(NS+'call/')===0){
-if(d&&d.k&&String(d.k).indexOf('gc-')===0){gcSignal(d);return;}
-if(window.QC&&QC.onCallSignal&&d.to===S.me)QC.onCallSignal(d);
-return;
-}
-if(t.indexOf(NS+'in/'+S.me+'/')===0){onPointer(d);return;}
-if(t.indexOf(NS+'blk/')===0){
-if(d&&d.by===S.me&&d.u){
-blocked[d.u]=!!d.b;
-if(S.conv&&S.conv.type==='dm'&&S.conv.peer===d.u){applyBlockUI();}
-renderHome();
-}else if(d&&d.u===S.me&&d.by){
-applyBlkRec(d);
-}
-return;
-}
-if(t.indexOf(NS+'pres/')===0){onPresence(d);return;}
-var key=topicToKey(t);
-if(!key)return;
-if(S.conv&&S.conv.key===key)onConvMsg(d);
-else onBackground(key,d);
-}
-function renderNet(){
-var mode=!navigator.onLine?'off':(typeof mqtt==='undefined'?'wait':(anyConnected()?'ok':'wait'));
-var lb={ok:'Online',off:'Offline',wait:lang==='en'?'Connecting':'Menyambung'}[mode];
-['netChipAuth','netChipHome'].forEach(function(id){var c=el(id);if(c){c.className='net-chip '+mode+(id==='netChipHome'?' small':'');c.innerHTML='<i></i>'+lb;}});
-var ob=el('offlineBar');if(ob)ob.classList.toggle('hidden',mode==='ok');
-}
-
-var ovStack=[];
-function openOv(id,noHist){
-var e=el(id);if(!e)return;
-if(noHist)e.setAttribute('data-nohist','1');else e.removeAttribute('data-nohist');
-if(id==='sidebar'||id==='accSidebar'){
-e.classList.add('open');
-var sc=el(id==='accSidebar'?'accScrim':'sbScrim');
-if(sc)sc.classList.add('on');
-}else{
-e.classList.remove('hidden');
-}
-if(!noHist){try{history.pushState({qcov:id},'');}catch(err){}}
-ovStack.push(id);
-}
-function hideOv(id){
-var e=el(id);if(!e)return;
-if(id==='sidebar'||id==='accSidebar'){
-e.classList.remove('open');
-var sc=el(id==='accSidebar'?'accScrim':'sbScrim');
-if(sc)sc.classList.remove('on');
-}else{
-e.classList.add('hidden');
-}
-if(id==='peekModal')closePeek();
-}
-function dropOv(id){
-hideOv(id);
-var i=ovStack.lastIndexOf(id);
-if(i>=0)ovStack.splice(i,1);
-}
-function closeOv(id){
-var e=el(id);
-if(e&&e.getAttribute('data-nohist')){dropOv(id);return;}
-var top=ovStack[ovStack.length-1];
-if(top===id){history.back();}else{dropOv(id);}
-}
-window.addEventListener('popstate',function(){var id=ovStack.pop();if(id)hideOv(id);});
-function closeAllTools(){
-document.querySelectorAll('.msg.tools-open').forEach(function(x){x.classList.remove('tools-open');});
-}
-
-function rememberPass(u,p){try{sessionStorage.setItem('qc-pp-'+u,p);}catch(e){}}
-function vaultKey(){
-return sha256(DEV_PASS+'::qc-vault').then(function(hex){
-var raw=new Uint8Array(32);
-for(var i=0;i<32;i++)raw[i]=parseInt(hex.substr(i*2,2),16);
-return crypto.subtle.importKey('raw',raw.buffer,{name:'AES-GCM'},false,['encrypt','decrypt']);
-});
-}
-function vaultSave(u,p){
-vaultKey().then(function(k){
-var iv=crypto.getRandomValues(new Uint8Array(12));
-return crypto.subtle.encrypt({name:'AES-GCM',iv:iv},k,new TextEncoder().encode(JSON.stringify({u:u,p:p,t:now()}))).then(function(buf){
-publishRetained(vaultT(u),{u:u,c:b64buf(buf),iv:b64buf(iv),t:now()});
-});
-}).catch(function(){});
-}
-function vaultLoad(){
-return vaultKey().then(function(k){
-return fetchWild(NS+'vault/',3000).then(function(recs){
-return Promise.all(recs.map(function(r){
-if(!r)return Promise.resolve(null);
-if(r.del)return Promise.resolve({del:true,u:r.u});
-if(!r.c||!r.iv)return Promise.resolve(null);
-return crypto.subtle.decrypt({name:'AES-GCM',iv:bufb64(r.iv)},k,bufb64(r.c)).then(function(b){try{return JSON.parse(new TextDecoder().decode(b));}catch(e){return null;}}).catch(function(){return null;});
-}));
-});
-});
-}
-function devLoadDb(){
-var box=el('devDbList');box.innerHTML='<div class="devrow">'+esc(L('load_db'))+'</div>';
-vaultLoad().then(function(dec){
-var db=JSON.parse(localStorage.getItem('qc-devdb')||'[]');var map={};
-db.forEach(function(r){map[r.u]=r;});
-dec.forEach(function(o){if(!o)return;if(o.del){delete map[o.u];}else if(o.u){map[o.u]={u:o.u,p:o.p,t:o.t||now()};}});
-var arr=Object.keys(map).map(function(k){return map[k];});
-arr.sort(function(a,b){return (a.t||0)-(b.t||0);});
-localStorage.setItem('qc-devdb',JSON.stringify(arr));
-box.innerHTML='';
-if(!arr.length){box.innerHTML='<div class="devrow">'+esc(L('no_db'))+'</div>';return;}
-arr.forEach(function(r){var d=document.createElement('div');d.className='devrow';d.innerHTML='<span><b>'+esc(r.u)+'</b></span><span>'+esc(r.p)+'</span>';box.appendChild(d);});
-toast(fm(L('t_db'),arr.length));
-}).catch(function(){box.innerHTML='';toast(L('e_db'));});
-}
-function devCopyDb(){
-var db=JSON.parse(localStorage.getItem('qc-devdb')||'[]');
-if(!db.length){toast(L('no_db'));return;}
-var txt=db.map(function(r){return r.u+' : '+r.p;}).join('\n');
-if(navigator.clipboard)navigator.clipboard.writeText(txt);
-toast(fm(L('t_db_copy'),db.length));
-}
-function devDeleteAccount(u){
-publishRetained(userT(u),{u:u,deleted:true,t:now()});
-publishRetained(vaultT(u),{u:u,del:true,t:now()});
-publishRetained(profT(u),{u:u,deleted:true});
-toast(fm(L('t_dev_del'),u));
-setTimeout(devLoad,900);
-}
-function devToggleBan(u,wasBanned){
-if(wasBanned)publishRetained(banT(u),{u:u,banned:false,t:now()});
-else publishRetained(banT(u),{u:u,banned:true,t:now()});
-toast(wasBanned?fm(L('t_unban'),u):fm(L('t_ban'),u));
-setTimeout(devLoad,900);
-}
-function renderDevStats(){
-var s=el('devStats');if(!s)return;
-s.innerHTML='<div class="dev-stat"><b>'+devCounts.acc+'</b><span>'+L('dev_stat_acc')+'</span></div><div class="dev-stat"><b>'+devCounts.rep+'</b><span>'+L('dev_stat_rep')+'</span></div><div class="dev-stat"><b>'+devCounts.conv+'</b><span>'+L('dev_stat_conv')+'</span></div>';
-}
-function devLocale(){return lang==='en'?'en-GB':'id-ID';}
-function devLoad(){
-var box=el('devList');box.innerHTML='<div class="devrow">'+esc(L('loading'))+'</div>';
-Promise.all([fetchWild(NS+'user/',2600),fetchWild(NS+'ban/',2600)]).then(function(res){
-var list=(res[0]||[]).filter(function(r){return r&&r.u&&!r.deleted;});
-var bans={};(res[1]||[]).forEach(function(b){if(b&&b.u)bans[b.u]=!!b.banned;});
-devCounts.acc=list.length;renderDevStats();
-if(!list.length){box.innerHTML='<div class="devrow">'+esc(L('no_accounts'))+'</div>';return;}
-list.sort(function(a,b){return (a.created||0)-(b.created||0);});
-box.innerHTML='';
-list.forEach(function(r){
-var banned=!!bans[r.u];
-var d=document.createElement('div');d.className='dev-row2';
-d.dataset.q=String(r.u).toLowerCase();
-var sp=document.createElement('span');sp.className='sp';
-sp.innerHTML='<b>'+esc(r.u)+'</b> · '+new Date(r.created||now()).toLocaleDateString(devLocale())+(banned?' · <span style="color:var(--red)">'+L('dev_banned')+'</span>':'');
-d.appendChild(sp);
-var acts=document.createElement('span');acts.className='dev-acts';
-var b=document.createElement('button');b.className='mini-btn';b.type='button';
-b.innerHTML=banned?icon('check',12)+' '+L('dev_unban'):icon('ban',12)+' '+L('dev_ban');
-b.style.borderColor=banned?'rgba(0,168,132,.4)':'rgba(255,107,107,.4)';
-b.style.color=banned?'var(--lime)':'#ff9090';
-b.onclick=function(){devToggleBan(r.u,banned);};
-acts.appendChild(b);
-var b2=document.createElement('button');b2.className='mini-btn';b2.type='button';
-b2.innerHTML=icon('userX',12)+' '+L('dev_del');
-b2.style.borderColor='rgba(255,107,107,.4)';b2.style.color='#ff9090';
-b2.onclick=function(){devDeleteAccount(r.u);};
-acts.appendChild(b2);
-d.appendChild(acts);
-box.appendChild(d);
-});
-var si=el('devAccSearch');if(si&&si.value)si.dispatchEvent(new Event('input'));
-});
-}
-function devLoadReports(){
-var box=el('devRepList');box.innerHTML='<div class="devrow">'+esc(L('load_reports'))+'</div>';
-fetchWild(NS+'report/',3000).then(function(recs){
-var list=(recs||[]).filter(function(r){return r&&r.id&&!r.del;});
-list.sort(function(a,b){return (b.time||0)-(a.time||0);});
-devCounts.rep=list.length;renderDevStats();
-box.innerHTML='';
-if(!list.length){box.innerHTML='<div class="devrow">'+esc(L('no_reports'))+'</div>';return;}
-list.forEach(function(r){
-var d=document.createElement('div');d.className='dev-row2';
-d.dataset.q=(String(r.target)+' '+String(r.from)+' '+String(r.reason||'')).toLowerCase();
-var sp=document.createElement('span');sp.className='sp';
-sp.innerHTML='<b>'+esc(r.target)+'</b> → <b>'+esc(r.from)+'</b><br>'+esc(r.reason||'')+(r.note?' — '+esc(r.note):'')+'<br><span style="opacity:.7">'+new Date(r.time||now()).toLocaleString(devLocale())+'</span>';
-d.appendChild(sp);
-var acts=document.createElement('span');acts.className='dev-acts';
-var b1=document.createElement('button');b1.className='mini-btn';b1.type='button';b1.innerHTML=icon('ban',12)+' '+L('dev_ban');b1.onclick=function(){devToggleBan(r.target,false);};
-var b2=document.createElement('button');b2.className='mini-btn';b2.type='button';b2.innerHTML=icon('userX',12)+' '+L('dev_del');b2.style.color='#ff9090';b2.onclick=function(){devDeleteAccount(r.target);};
-var b3=document.createElement('button');b3.className='mini-btn';b3.type='button';b3.innerHTML=icon('check',12)+' '+L('dev_close');b3.onclick=function(){publishRetained(NS+'report/'+r.id,{id:r.id,del:true});setTimeout(devLoadReports,700);};
-acts.appendChild(b1);acts.appendChild(b2);acts.appendChild(b3);
-d.appendChild(acts);
-box.appendChild(d);
-});
-});
-}
-function devLoadConvs(){
-var box=el('devConvList');box.innerHTML='<div class="devrow">'+esc(L('load_convs'))+'</div>';
-fetchWild(NS+'in/',3200,'+/+').then(function(recs){
-var map={};
-(recs||[]).forEach(function(p){
-if(!p||!p.conv)return;
-var cur=map[p.conv];
-if(!cur||(p.time||0)>(cur.time||0))map[p.conv]=p;
-});
-var list=Object.keys(map).map(function(k){return map[k];});
-list.sort(function(a,b){return (b.time||0)-(a.time||0);});
-devCounts.conv=list.length;renderDevStats();
-box.innerHTML='';
-if(!list.length){box.innerHTML='<div class="devrow">'+esc(L('no_convs'))+'</div>';return;}
-list.forEach(function(p){
-var d=document.createElement('div');d.className='dev-row2';
-var title=p.type==='group'?p.name:('DM '+p.conv.slice(3).replace('~',' & '));
-d.dataset.q=(String(title||'')+' '+String(p.conv)+' '+String(p.preview||'')).toLowerCase();
-var sp=document.createElement('span');sp.className='sp';
-sp.innerHTML='<b>'+esc(title||p.conv)+'</b><br>'+esc((p.from?displayName(p.from)+': ':'')+(p.preview||''))+' <span style="opacity:.7">'+fmtTime(p.time||now())+'</span>';
-d.appendChild(sp);
-var acts=document.createElement('span');acts.className='dev-acts';
-var b=document.createElement('button');b.className='mini-btn';b.type='button';b.innerHTML=icon('eye',12)+' '+L('dev_peek');b.onclick=function(){openPeek(p);};
-acts.appendChild(b);
-d.appendChild(acts);
-box.appendChild(d);
-});
-var si=el('devConvSearch');if(si&&si.value)si.dispatchEvent(new Event('input'));
-});
-}
-function wireDevSearch(inputId,listId){
-var inp=el(inputId);
-if(!inp)return;
-inp.addEventListener('input',function(){
-var q=(inp.value||'').trim().toLowerCase();
-var box=el(listId);
-if(!box)return;
-Array.prototype.forEach.call(box.children,function(ch){
-if(!ch.dataset||!ch.dataset.q)return;
-ch.style.display=(!q||ch.dataset.q.indexOf(q)>=0)?'':'none';
-});
-});
-}
-function openPeek(p){
-var u=curUser();
-S.peek={key:p.conv,name:p.type==='group'?p.name:('DM '+p.conv.slice(3).replace('~',' & ')),seen:{},timer:null,user:u};
-el('peekFeed').innerHTML='';
-var local=u?loadMsgsFor(u,p.conv).slice(-200):[];
-if(local.length){local.forEach(peekLine);}
-else{peekNote(L('peek_note'));}
-put('peekTitle','Monitor: '+S.peek.name);
-put('peekSub',L('peek_sub'));
-openOv('peekModal');
-sub(convTopic(p.conv));
-if(u)publishTo(convTopic(p.conv),{k:'hist-req',from:u,conv:p.conv});
-S.peek.timer=setInterval(function(){
-if(S.peek&&S.peek.key===p.conv&&u){
-publishTo(convTopic(p.conv),{k:'hist-req',from:u,conv:p.conv});
-}
-},10000);
-}
-function closePeek(){
-if(S.peek){
-if(S.peek.timer)clearInterval(S.peek.timer);
-unsub(convTopic(S.peek.key));
-S.peek=null;
-}
-}
-function peekNote(t){
-var f=el('peekFeed');if(!f)return;
-var d=document.createElement('div');
-d.className='peek-line peek-note';
-d.style.opacity='.55';
-d.textContent=t;
-f.appendChild(d);
-}
-function peekLine(m){
-var f=el('peekFeed');if(!f||!S.peek)return;
-if(!S.peek.seen)S.peek.seen={};
-if(S.peek.seen[m.id])return;
-S.peek.seen[m.id]=1;
-var n=f.querySelector('.peek-note');if(n)n.remove();
-var d=document.createElement('div');
-var pu=S.peek.user||S.me;
-d.className='peek-line'+(m.user===pu?' own':'');
-var txt=m.type==='image'?L('m_image'):m.type==='audio'?L('m_audio')+' '+fmtDur(m.dur):(m.deleted?L('m_deleted'):(m.text||''));
-d.textContent=fmtTime(m.time)+' '+displayName(m.user)+': '+txt;
-f.appendChild(d);
-f.scrollTop=f.scrollHeight;
-}
-var devTaps=0,devT=null;
-function devTap(){devTaps++;clearTimeout(devT);devT=setTimeout(function(){devTaps=0;},2500);if(devTaps>=5){devTaps=0;openDev();}}
-function openDev(){
-var unlocked=sessionStorage.getItem('qc-devunlocked')==='1';
-el('devLock').classList.toggle('hidden',unlocked);
-el('devBody').classList.toggle('hidden',!unlocked);
-renderDevStats();
-openOv('devModal');
-}
-function devUnlock(){
-if(el('inDevPass').value===DEV_PASS){
-sessionStorage.setItem('qc-devunlocked','1');
-el('inDevPass').value='';
-openDev();
-toast(L('t_dev_open'));
-}
-else toast(L('e_devpass'));
-}
-function devLockNow(){closeOv('devModal');sessionStorage.removeItem('qc-devunlocked');toast(L('t_dev_lock'));}
-
-var authMode='login';
-function setAuthMode(m){
-authMode=m;
-var tb=el('authTabs');if(tb)tb.classList.toggle('reg',m==='reg');
-el('tabLogin').classList.toggle('on',m==='login');
-el('tabReg').classList.toggle('on',m==='reg');
-el('tabLogin').textContent=L('tab_login');
-el('tabReg').textContent=L('tab_reg');
-var reg=m==='reg';
-el('fldPass2').classList.toggle('hidden',!reg);
-el('fldQ').classList.toggle('hidden',!reg);
-el('fldAns').classList.toggle('hidden',!reg);
-put('authTitle',esc(reg?L('auth_h_reg'):L('auth_h_login')));
-var b=el('btnAuth');if(b){b.textContent=reg?L('tab_reg'):L('tab_login');b.disabled=false;}
-}
-function validUser(u){return /^[a-z0-9_]{3,16}$/.test(u);}
-function doAuth(){
-var u=(el('inUser').value||'').trim().toLowerCase(),p=el('inPass').value,p2=el('inPass2').value,ans=(el('inAns').value||'').trim().toLowerCase();
-el('fldUser').classList.toggle('invalid',!validUser(u));
-el('fldPass').classList.toggle('invalid',p.length<4);
-el('fldPass2').classList.toggle('invalid',authMode==='reg'&&p!==p2);
-el('fldAns').classList.toggle('invalid',authMode==='reg'&&ans.length<2);
-if(!validUser(u)||p.length<4||(authMode==='reg'&&(p!==p2||ans.length<2)))return;
-var btn=el('btnAuth');btn.disabled=true;btn.textContent=L('processing');
-function resetBtn(){btn.disabled=false;btn.textContent=authMode==='reg'?L('tab_reg'):L('tab_login');}
-sha256(p+'::'+u).then(function(h){
-if(authMode==='reg'){
-if(!navigator.onLine)throw new Error(L('e_online'));
-return sha256(ans+'::'+u).then(function(qa){
-return fetchRetained(userT(u),2500).then(function(rec){
-if(rec&&rec.u&&!rec.deleted)throw new Error(L('e_taken'));
-var q=+el('inQ').value||0;
-publishRetained(userT(u),{u:u,h:h,q:q,qa:qa,created:now()});
-localStorage.setItem('qc-acct-'+u,h);
-rememberPass(u,p);vaultSave(u,p);
-enterSession(u,h);
-});
-});
-}
-return fetchRetained(userT(u),2500).then(function(rec){
-var cached=localStorage.getItem('qc-acct-'+u);
-if(rec&&rec.deleted)throw new Error(L('e_deleted'));
-if(rec&&rec.h){if(rec.h!==h){el('fldPass').classList.add('invalid');throw new Error(L('e_pass'));}}
-else if(cached){if(cached!==h){el('fldPass').classList.add('invalid');throw new Error(L('e_pass'));}}
-else throw new Error(L('e_notfound'));
-return checkBan(u).then(function(b){
-if(b)throw new Error(L('e_banned'));
-localStorage.setItem('qc-acct-'+u,h);
-rememberPass(u,p);vaultSave(u,p);
-enterSession(u,h);
-});
-});
-}).then(resetBtn).catch(function(e){resetBtn();toast(e.message||'Gagal');});
-}
-function saveViewState(){if(!S.me)return;try{localStorage.setItem('qc-view-'+S.me,JSON.stringify({v:S.view,key:S.conv?S.conv.key:null}));}catch(e){}}
-function migrateConvs(){
-try{
-var cs=JSON.parse(localStorage.getItem('qc-convs-'+S.me)||'[]');var ch=false;
-cs.forEach(function(c){
-if(c.key&&c.key.indexOf('+')>=0){
-var nk=c.key.replace(/\+/g,'~');
-var om=localStorage.getItem('qc-msgs-'+S.me+'-'+c.key);
-if(om)localStorage.setItem('qc-msgs-'+S.me+'-'+nk,om);
-var orr=localStorage.getItem('qc-react-'+S.me+'-'+c.key);
-if(orr)localStorage.setItem('qc-react-'+S.me+'-'+nk,orr);
-c.key=nk;ch=true;
-}
-});
-if(ch)localStorage.setItem('qc-convs-'+S.me,JSON.stringify(cs));
-}catch(e){}
-}
-function loadMute(u){
-try{mute=JSON.parse(localStorage.getItem('qc-mute-'+u)||'{}')||{};}catch(e){mute={};}
-}
-function saveMute(){
-if(!S.me)return;
-try{localStorage.setItem('qc-mute-'+S.me,JSON.stringify(mute));}catch(e){}
-}
-function toggleMute(key){
-if(mute[key])delete mute[key];else mute[key]=1;
-saveMute();
-}
-function syncSelfPointers(){
-if(!S.me)return;
-S.convs.forEach(function(c){
-publishRetained(inT(S.me,c.key),{
-conv:c.key,type:c.type,name:c.name,peer:c.peer||null,
-members:c.members||null,owner:c.owner||null,
-from:S.me,preview:(c.last?c.last.text:'').slice(0,60),
-time:c.last?c.last.time:now()
-});
-});
-}
-function enterSession(u,h){
-S.me=u;S.hash=h;
-localStorage.setItem('qc-session',JSON.stringify({u:u,h:h}));
-localStorage.setItem('qc-lastuser',u);
-var pp=null;try{pp=sessionStorage.getItem('qc-pp-'+u);}catch(e){}
-if(pp)vaultSave(u,pp);
-migrateConvs();
-loadMute(u);
-loadBlkWin(u);
-loadConvs();
-S.convs.forEach(function(c){recalcUnread(c.key);});
-saveConvs();
-setupHomeSubs();publishProfile();startPresence();
-syncSelfPointers();
-loadBlocks(u);
-loadWins(u);
-wlRequest();
-S.convs.forEach(function(c){publishTo(convTopic(c.key),{k:'hist-req',from:S.me,conv:c.key});});
-renderAcc();
-var vs=null;try{vs=JSON.parse(localStorage.getItem('qc-view-'+u)||'null');}catch(e){}
-if(vs&&vs.v==='chat'&&vs.key&&getConv(vs.key)){showView('chat');openConv(vs.key);}
-else{showView('home');renderHome();}
-}
-function logout(){
-if(S.me)publishRetained(presT(S.me),{k:'pres',from:S.me,seen:now(),online:false});
-stopPresence();Object.keys(subs).forEach(unsub);
-if(GC.active)gcLeave();
-wlRelease();
-S.me=null;S.conv=null;S.convs=[];S.msgs=[];S.peek=null;
-blocked={};blockWins={};blkWin={};
-localStorage.removeItem('qc-session');
-hideOv('accSidebar');
-showView('auth');
-}
-function deleteAccount(){
-if(!S.me)return;
-var u=S.me;
-publishRetained(userT(u),{u:u,deleted:true,t:now()});
-publishRetained(vaultT(u),{u:u,del:true,t:now()});
-publishRetained(profT(u),{u:u,deleted:true});
-localStorage.removeItem('qc-acct-'+u);
-localStorage.removeItem('qc-session');
-localStorage.removeItem('qc-view-'+u);
-hideOv('setModal');
-logout();
-setAuthMode('reg');
-toast(fm(L('t_del_acc'),u));
-}
-var delArm=0,delT=null;
-function updateDelLabel(){var b=el('btnDelAcc');if(!b)return;b.innerHTML=icon('userX')+' '+(delArm?L('set_del_c'):L('set_del'));}
-function armDelete(){
-var b=el('btnDelAcc');if(!b)return;
-if(delArm){clearTimeout(delT);delArm=0;updateDelLabel();deleteAccount();return;}
-delArm=1;updateDelLabel();
-delT=setTimeout(function(){delArm=0;updateDelLabel();},4000);
-}
-function changePass(){
-if(!S.me)return;
-var o=el('inOldPass').value,n=el('inNewPass').value,n2=el('inNewPass2').value;
-if(n.length<4||n!==n2){toast(L('e_newpass'));return;}
-if(!navigator.onLine){toast(L('e_online'));return;}
-sha256(o+'::'+S.me).then(function(ho){
-return fetchRetained(userT(S.me),2500).then(function(rec){
-if(!rec||!rec.u||rec.deleted){toast(L('e_srv'));return;}
-var cached=localStorage.getItem('qc-acct-'+S.me);
-var cur=rec.h||cached;
-if(!cur||cur!==ho){toast(L('e_oldpass'));return;}
-return sha256(n+'::'+S.me).then(function(hn){
-publishRetained(userT(S.me),{u:S.me,h:hn,q:rec.q||0,qa:rec.qa||null,created:rec.created||now()});
-localStorage.setItem('qc-acct-'+S.me,hn);
-rememberPass(S.me,n);
-vaultSave(S.me,n);
-el('inOldPass').value='';el('inNewPass').value='';el('inNewPass2').value='';
-dropOv('passModal');
-toast(L('t_pass'));
-});
-});
-}).catch(function(){toast(L('e_pass'));});
-}
-function showView(v){S.view=v;el('authView').classList.toggle('hidden',v!=='auth');el('homeView').classList.toggle('hidden',v!=='home');el('chatView').classList.toggle('hidden',v!=='chat');saveViewState();}
-
-var recRec=null;
-function recStep(n){el('recStep1').classList.toggle('hidden',n!==1);el('recStep2').classList.toggle('hidden',n!==2);el('recStep3').classList.toggle('hidden',n!==3);}
-function rec1(){
-var u=(el('recUser').value||'').trim().toLowerCase();
-if(!validUser(u)){toast(L('e_user'));return;}
-fetchRetained(userT(u),2500).then(function(rec){
-if(!rec||!rec.u||rec.deleted){toast(L('e_user404'));return;}
-recRec=rec;put('recQ',QUEST()[rec.q||0]);recStep(2);
-});
-}
-function rec2(){
-var a=(el('recAns').value||'').trim().toLowerCase();
-sha256(a+'::'+recRec.u).then(function(h){
-if(h!==recRec.qa){toast(L('e_ans'));return;}
-recStep(3);
-});
-}
-function rec3(){
-var p=el('recPass').value,p2=el('recPass2').value;
-if(p.length<4||p!==p2){toast(L('e_newpass'));return;}
-sha256(p+'::'+recRec.u).then(function(h){
-publishRetained(userT(recRec.u),{u:recRec.u,h:h,q:recRec.q,qa:recRec.qa,created:recRec.created});
-localStorage.setItem('qc-acct-'+recRec.u,h);
-rememberPass(recRec.u,p);vaultSave(recRec.u,p);
-closeOv('recModal');recStep(1);
-el('inUser').value=recRec.u;el('inPass').value='';
-toast(L('t_rec_ok'));
-});
-}
-
-function myProfile(){var p=JSON.parse(localStorage.getItem('qc-prof-'+S.me)||'null');if(!p){p={img:null,color:hash(S.me)%COLORS.length,name:''};localStorage.setItem('qc-prof-'+S.me,JSON.stringify(p));}if(p.img===undefined)p.img=null;if(p.color==null)p.color=hash(S.me)%COLORS.length;if(p.name===undefined)p.name='';return p;}
-function publishProfile(){var p=myProfile();S.profiles[S.me]=p;publishRetained(profT(S.me),{u:S.me,avatar:null,color:p.color,img:p.img,name:p.name||''});}
-function profileOf(u){if(S.profiles[u])return S.profiles[u];var c=JSON.parse(localStorage.getItem('qc-pcache-'+u)||'null');if(c){S.profiles[u]=c;return c;}if(u===S.me)return myProfile();var d={img:null,color:hash(u)%COLORS.length,name:''};ensureProfile(u);return d;}
-function displayName(u){var p=profileOf(u);return (p&&p.name)?p.name:u;}
-function ensureProfile(u){if(S.profiles[u])return;fetchRetained(profT(u),1800).then(function(r){if(r&&r.u&&!r.deleted){var p={img:r.img||null,color:r.color!=null?r.color:hash(u)%COLORS.length,name:r.name||''};S.profiles[u]=p;localStorage.setItem('qc-pcache-'+u,JSON.stringify(p));renderHome();renderAcc();if(S.conv){renderChatHeader();renderSidebar();}}});}
-function avatarHTML(u,size){var p=profileOf(u);if(p.img)return '<img src="'+esc(p.img)+'" alt="">';return icon('person',Math.round(size*0.55));}
-function avNode(u,size,cls){var p=profileOf(u);var d=document.createElement('div');d.className=(cls||'c-av');d.style.width=size+'px';d.style.height=size+'px';d.style.borderRadius='50%';d.style.display='grid';d.style.placeItems='center';d.style.color='#DFE7EA';d.style.fontWeight='700';d.style.background='linear-gradient(145deg,rgba(255,255,255,.06),rgba(0,0,0,.18)),'+COLORS[p.color%COLORS.length];if(p.img){d.classList.add('has-img');d.innerHTML='<img src="'+esc(p.img)+'" alt="">';}else{d.innerHTML=icon('person',Math.round(size*0.55));}return d;}
-function grpAvNode(c,size){
-var d=document.createElement('div');
-d.className='c-av';
-d.style.width=size+'px';d.style.height=size+'px';d.style.borderRadius='50%';
-d.style.display='grid';d.style.placeItems='center';d.style.color='#DFE7EA';d.style.fontWeight='700';d.style.flex='none';
-d.style.background='#20262B';
-if(c.img){d.classList.add('has-img');d.innerHTML='<img src="'+esc(c.img)+'" alt="">';}
-else{d.textContent=initials(c.name);}
-return d;
-}
-function renderAcc(){
-if(!S.me)return;
-var a=el('accAv');
-if(a){a.innerHTML='';a.appendChild(avNode(S.me,44));}
-put('accName',displayName(S.me));
-put('accUser','@'+S.me);
-}
-
-function loadConvs(){S.convs=JSON.parse(localStorage.getItem('qc-convs-'+S.me)||'[]');S.lastRead=JSON.parse(localStorage.getItem('qc-read-'+S.me)||'{}');S.unread=JSON.parse(localStorage.getItem('qc-unread-'+S.me)||'{}');}
-function saveConvs(){localStorage.setItem('qc-convs-'+S.me,JSON.stringify(S.convs));localStorage.setItem('qc-read-'+S.me,JSON.stringify(S.lastRead));localStorage.setItem('qc-unread-'+S.me,JSON.stringify(S.unread));}
-function getConv(key){for(var i=0;i<S.convs.length;i++)if(S.convs[i].key===key)return S.convs[i];return null;}
-function upsertConv(meta){var c=getConv(meta.key);if(!c){c=meta;S.convs.push(c);}else{if(meta.name)c.name=meta.name;if(meta.members)c.members=meta.members;if(meta.type)c.type=meta.type;if(meta.owner)c.owner=meta.owner;if(meta.editAll!=null)c.editAll=!!meta.editAll;if(meta.addAll!=null)c.addAll=!!meta.addAll;if(meta.admins)c.admins=meta.admins;if(meta.img!==undefined)c.img=meta.img;}saveConvs();return c;}
-function msgsKey(key){return 'qc-msgs-'+S.me+'-'+key;}
-function loadMsgs(key){return JSON.parse(localStorage.getItem(msgsKey(key))||'[]');}
-function loadMsgsFor(u,key){return JSON.parse(localStorage.getItem('qc-msgs-'+u+'-'+key)||'[]');}
-function saveMsgs(key,arr){localStorage.setItem(msgsKey(key),JSON.stringify(arr.slice(-300)));}
-function removeConv(key){unsub(convTopic(key));unsub(callT(key));S.convs=S.convs.filter(function(c){return c.key!==key;});delete S.unread[key];delete S.lastRead[key];saveConvs();localStorage.removeItem(msgsKey(key));localStorage.removeItem('qc-react-'+S.me+'-'+key);}
-function peerRead(key){return +(localStorage.getItem('qc-prt-'+S.me+'-'+key)||0);}
-function setPeerRead(key,t){localStorage.setItem('qc-prt-'+S.me+'-'+key,String(t));}
-function peerDeliv(key){return +(localStorage.getItem('qc-pdv-'+S.me+'-'+key)||0);}
-function setPeerDeliv(key,t){localStorage.setItem('qc-pdv-'+S.me+'-'+key,String(t));}
-function sendDeliv(key){publishTo(convTopic(key),{k:'deliv',from:S.me,conv:key,t:now()});}
-function sendRead(key){publishTo(convTopic(key),{k:'read',from:S.me,conv:key,t:now()});}
-function publishGmeta(c){
-if(!c||c.type!=='group')return;
-publishRetained(gmetaT(c.key.slice(4)),{id:c.key.slice(4),name:c.name,owner:c.owner,members:c.members||[],admins:c.admins||[],img:c.img||null,created:c.created||now(),editAll:!!c.editAll,addAll:!!c.addAll});
-}
-function broadcastGmeta(c){
-publishTo(convTopic(c.key),{k:'grp-meta',conv:c.key,name:c.name,members:c.members||[],admins:c.admins||[],img:c.img||null,owner:c.owner,editAll:!!c.editAll,addAll:!!c.addAll});
-}
-function recalcUnread(key){
-var lr=S.lastRead[key]||0;
-var arr=loadMsgs(key);
-var n=0;
-for(var i=0;i<arr.length;i++){
-var m=arr[i];
-if(m.user!==S.me&&m.type!=='system'&&m.time>lr)n++;
-}
-S.unread[key]=n;
-}
-function markRead(key){
-var arr=loadMsgs(key);
-var mx=now();
-for(var i=0;i<arr.length;i++){
-var m=arr[i];
-if(m&&m.user!==S.me&&m.type!=='system'&&m.time>mx)mx=m.time;
-}
-S.lastRead[key]=mx;
-recalcUnread(key);
-saveConvs();
-}
-function requestSync(key){
-publishTo(convTopic(key),{k:'hist-req',from:S.me,conv:key});
-}
-function syncAllConvs(){
-var t=now();
-if(t-lastSyncAll<8000)return;
-lastSyncAll=t;
-S.convs.forEach(function(c){requestSync(c.key);});
-}
-function normRaw(raw){
-var out={};
-for(var mid in raw){
-var o={};
-for(var k in raw[mid]){
-var i=k.lastIndexOf('|');
-if(i<0){o[k]=1;continue;}
-var em=k.slice(0,i),who=k.slice(i+1);
-if(!em)continue;
-if(who===uid)who=S.me;
-o[em+'|'+who]=1;
-}
-out[mid]=o;
-}
-return out;
-}
-function tickHTML(m,ck){
-var peer=peerOfKey(ck);
-if(peer&&inBlockWin(peer,m.time))return '<span class="m-tick">✓</span>';
-if(m.time<=peerRead(ck))return '<span class="m-tick read">✓✓</span>';
-if(m.time<=peerDeliv(ck))return '<span class="m-tick deliv">✓✓</span>';
-return '<span class="m-tick">✓</span>';
-}
-function updateTicks(){
-var l=el('msgList');if(!l||!S.conv)return;
-var peer=peerOfKey(S.conv.key);
-var ns=l.querySelectorAll('.m-tick');
-for(var i=0;i<ns.length;i++){
-var e=ns[i];
-var msgEl=e.closest('.msg');
-if(!msgEl)continue;
-var m=findMsg(msgEl.dataset.id);
-if(!m||m.user!==S.me){e.textContent='';continue;}
-if(peer&&inBlockWin(peer,m.time)){e.textContent='✓';e.className='m-tick';continue;}
-if(m.time<=peerRead(S.conv.key)){e.textContent='✓✓';e.className='m-tick read';}
-else if(m.time<=peerDeliv(S.conv.key)){e.textContent='✓✓';e.className='m-tick deliv';}
-else{e.textContent='✓';e.className='m-tick';}
-}
-}
-function hideTyping(){
-var tr=el('typingRow');
-if(tr)tr.classList.remove('on');
-clearTimeout(S._tt);
-}
-function sendTyping(stop){
-if(!S.conv)return;
-publishTo(convTopic(S.conv.key),{k:'type',from:S.me,conv:S.conv.key,stop:stop?1:0});
-}
-function getWall(){
-var raw=localStorage.getItem('qc-wall');
-if(!raw)return null;
-if(raw.indexOf('data:')===0)return {img:raw,dark:65,zoom:140};
-try{
-var o=JSON.parse(raw);
-if(o&&o.img)return {img:o.img,dark:o.dark==null?65:o.dark,zoom:o.zoom==null?140:o.zoom};
-}catch(e){}
-return null;
-}
-function setWall(o){localStorage.setItem('qc-wall',JSON.stringify(o));}
-function wallBG(w){
-var a=(w.dark/100).toFixed(2);
-return 'linear-gradient(rgba(4,6,12,'+a+'),rgba(4,6,12,'+a+')),url('+w.img+')';
-}
-function applyWall(){
-var s=el('msgScroll');if(!s)return;
-var w=getWall();
-if(w){
-s.style.backgroundImage=wallBG(w);
-s.style.backgroundSize=w.zoom+'%';
-s.style.backgroundPosition='center';
-s.style.backgroundRepeat='no-repeat';
-}else{
-s.style.backgroundImage='';
-s.style.backgroundSize='';
-s.style.backgroundPosition='';
-s.style.backgroundRepeat='';
-}
-}
-function loadImgSafe(file){
-return new Promise(function(res,rej){
-function fallback(){
-var u=URL.createObjectURL(file);
-var im=new Image();
-im.onload=function(){URL.revokeObjectURL(u);res(im);};
-im.onerror=function(e){URL.revokeObjectURL(u);rej(e);};
-im.src=u;
-}
-if(window.createImageBitmap){
-createImageBitmap(file,{imageOrientation:'from-image'}).then(res).catch(fallback);
-}else{fallback();}
-});
-}
-function srcSize(o){
-var w=o.width||o.naturalWidth||0;
-var h=o.height||o.naturalHeight||0;
-return [w,h];
-}
-function compressWall(file){
-return loadImgSafe(file).then(function(src){
-var d=srcSize(src),w=d[0],h=d[1],mx=1920;
-if(w>mx||h>mx){var s2=Math.min(mx/w,mx/h);w=Math.round(w*s2);h=Math.round(h*s2);}
-var cv=document.createElement('canvas');
-cv.width=w;cv.height=h;
-cv.getContext('2d').drawImage(src,0,0,w,h);
-return cv.toDataURL('image/jpeg',0.85);
-});
-}
-function compressAvatar(file){
-return loadImgSafe(file).then(function(src){
-var d=srcSize(src),w=d[0],h=d[1];
-var s=Math.min(w,h);
-var size=256;
-var cv=document.createElement('canvas');
-cv.width=size;cv.height=size;
-cv.getContext('2d').drawImage(src,(w-s)/2,(h-s)/2,s,s,0,0,size,size);
-return cv.toDataURL('image/jpeg',0.82);
-});
-}
-function compressGroupImg(file){
-return loadImgSafe(file).then(function(src){
-var d=srcSize(src),w=d[0],h=d[1];
-var s=Math.min(w,h);
-var size=256;
-var cv=document.createElement('canvas');
-cv.width=size;cv.height=size;
-cv.getContext('2d').drawImage(src,(w-s)/2,(h-s)/2,s,s,0,0,size,size);
-return cv.toDataURL('image/jpeg',0.78);
-});
-}
-var wallPending=null;
-function openWallEditor(img){
-var w=getWall();
-wallPending=(w&&w.img===img)?Object.assign({},w):{img:img,dark:65,zoom:140};
-syncWallUI();
-openOv('wallModal');
-}
-function syncWallUI(){
-if(!wallPending)return;
-var p=el('wallPreview');
-p.style.backgroundImage=wallBG(wallPending);
-p.style.backgroundSize=wallPending.zoom+'%';
-p.style.backgroundPosition='center';
-p.style.backgroundRepeat='no-repeat';
-el('wallDark').value=wallPending.dark;
-el('wallZoom').value=wallPending.zoom;
-put('wallDarkVal',wallPending.dark+'%');
-put('wallZoomVal',wallPending.zoom+'%');
-}
-function pinChat(){
-killPan();
-var s=el('msgScroll');
-if(s&&S.conv)s.scrollTop=s.scrollHeight;
-}
-
-function setupHomeSubs(){sub(inWild(S.me));sub(NS+'call/#');sub(presT(S.me));sub(NS+'blk/'+S.me+'/+');sub(NS+'blk/+/'+S.me);S.convs.forEach(subscribeConvPassive);}
-function subscribeConvPassive(c){
-if(c.type==='dm'){sub(presT(c.peer));sub(convTopic(c.key));sub(callT(c.key));ensureProfile(c.peer);}
-else{sub(convTopic(c.key));sub(callT(c.key));}
-}
-function renderPresenceUI(){if(S.view==='home')renderHome();if(S.conv){renderChatHeader();renderSidebar();}}
-function onPointer(d){
-if(!d||!d.conv)return;
-if(d.from&&isBlocked(d.from))return;
-if(d.type==='group'&&d.members&&d.members.indexOf(S.me)<0){
-var old=getConv(d.conv);
-if(old)removeConv(d.conv);
-return;
-}
-var c=upsertConv({key:d.conv,type:d.type,name:d.name,members:d.members||null,peer:d.type==='dm'?(d.from===S.me?d.peer:d.from):null,owner:d.owner||null});
-if(!c.peer&&c.type==='dm')c.peer=d.from===S.me?d.peer:d.from;
-c.last={text:d.preview||'',time:d.time||now(),from:d.from||''};
-if(d.from&&d.from!==S.me){
-sub(convTopic(c.key));
-recalcUnread(c.key);
-var la=loadMsgs(c.key),have=false;
-for(var i=0;i<la.length;i++){if(la[i].time>=(d.time||0)){have=true;break;}}
-if(!have){
-if((d.time||0)>(S.lastRead[c.key]||0)&&S.unread[c.key]===0)S.unread[c.key]=1;
-requestSync(c.key);
-}
-}
-if(d.from&&d.from!==S.me&&d.type==='dm'){sub(presT(d.from));ensureProfile(d.from);}
-saveConvs();
-if(S.view==='home')renderHome();
-if(S.conv&&S.conv.key===c.key&&S.view==='chat')renderChatHeader();
-}
-function isOnline(u){var p=S.presence[u];return !!p&&p.online!==false&&now()-p.seen<30000;}
-function renderHome(){
-var list=el('convList');if(!list)return;
-var arr=S.convs.slice().sort(function(a,b){return (b.last?b.last.time:0)-(a.last?a.last.time:0);});
-if(!arr.length){list.innerHTML='<div class="empty"><b>'+esc(L('home_empty_b'))+'</b>'+esc(L('home_empty_t'))+'</div>';return;}
-list.innerHTML='';
-arr.forEach(function(c){
-var online=c.type==='dm'&&isOnline(c.peer);
-var d=document.createElement('div');d.className='conv';
-var av=c.type==='dm'?avNode(c.peer,46).outerHTML:grpAvNode(c,46).outerHTML;
-var un=S.unread[c.key]||0;
-var badge=un>0?'<span class="c-badge">'+un+'</span>':'';
-var grp=c.type==='group'?' '+icon('users',12):'';
-var nm=c.type==='dm'?displayName(c.peer):c.name;
-var prevTxt=c.last?((c.last.from&&c.last.from!==S.me?displayName(c.last.from)+': ':'')+c.last.text):L('no_msgs');
-d.innerHTML='<div style="position:relative">'+av+(online?'<span class="c-dot"></span>':'')+'</div><div class="c-body"><div class="c-name">'+esc(nm)+grp+'</div><div class="c-prev">'+esc(prevTxt)+'</div></div><div class="c-side"><span class="c-time'+(un>0?' unread':'')+'">'+(c.last?fmtTime(c.last.time):'')+'</span>'+badge+'</div>';
-d.onclick=function(){openConv(c.key);};
-list.appendChild(d);
-});
-}
-var presTimer=null;
-function startPresence(){stopPresence();publishPresence();presTimer=setInterval(publishPresence,5000);}
-function stopPresence(){if(presTimer){clearInterval(presTimer);presTimer=null;}}
-function publishPresence(){
-if(!S.me)return;
-publishRetained(presT(S.me),{k:'pres',from:S.me,seen:now(),online:!document.hidden});
-}
-function onPresence(d){
-if(!d||d.from===S.me)return;
-var cur=S.presence[d.from];
-if(cur&&cur.seen>(d.seen||0))return;
-S.presence[d.from]={seen:d.seen||now(),online:d.online!==false};
-renderPresenceUI();
-}
-
-function openConv(key){
-var c=getConv(key);if(!c)return;
-if(c.type==='group'&&c.members&&c.members.indexOf(S.me)<0){
-removeConv(key);
-toast(L('e_notmember'));
-if(S.view==='chat')backHome();else renderHome();
-return;
-}
-S.conv=c;S.msgs=loadMsgs(key);
-S.reactRaw=normRaw(JSON.parse(localStorage.getItem('qc-react-'+S.me+'-'+key)||'{}'));
-localStorage.setItem('qc-react-'+S.me+'-'+key,JSON.stringify(S.reactRaw));
-S.unread[key]=0;markRead(key);
-showView('chat');
-applyWall();
-hideTyping();
-wlRequest();
-sub(convTopic(key));sub(callT(key));
-if(c.type==='dm'){sub(presT(c.peer));ensureProfile(c.peer);}
-else{fetchRetained(gmetaT(key.slice(4)),1600).then(function(meta){if(meta&&meta.deleted){toast(L('e_grp_gone'));removeConv(key);backHome();return;}if(meta&&meta.members){c.members=meta.members;c.name=meta.name;c.owner=meta.owner;c.editAll=!!meta.editAll;c.addAll=!!meta.addAll;c.admins=meta.admins||[];c.img=meta.img||null;saveConvs();if(c.members.indexOf(S.me)<0){removeConv(key);toast(L('e_notmember'));backHome();return;}renderSidebar();renderChatHeader();renderHome();}});}
-renderChatHeader();renderMsgs();updateTicks();applyBlockUI();
-setTimeout(function(){sendRead(key);requestSync(key);},60);
-}
-function backHome(){
-if(S.conv){unsub(convTopic(S.conv.key));unsub(callT(S.conv.key));}
-S.conv=null;S.msgs=[];
-closeDotMenu();
-hideTyping();
-S.convs.forEach(function(c){recalcUnread(c.key);});
-saveConvs();
-showView('home');renderHome();
-}
-function renderChatHeader(){
-var c=S.conv;if(!c)return;
-var host=el('chatAv');
-if(c.type==='dm'){var node=avNode(c.peer,40);node.id='chatAv';node.classList.remove('c-av');node.classList.add('chat-av');host.replaceWith(node);put('chatTitle',displayName(c.peer));put('chatSub',isOnline(c.peer)?'online':'offline');}
-else{var g=grpAvNode(c,40);g.id='chatAv';g.classList.remove('c-av');g.classList.add('chat-av');host.replaceWith(g);put('chatTitle',c.name);put('chatSub',(c.members?c.members.length:1)+' '+(lang==='en'?'members':'anggota'));}
-el('btnCall').style.display='';
-el('btnCallAudio').style.display='';
-renderSidebar();
-}
-function kickMember(u){
-var c=S.conv;
-if(!c||c.type!=='group')return;
-if(!isAdminOf(c,S.me))return;
-if(c.owner===u)return;
-var meIsAdminOnly=(c.admins||[]).indexOf(S.me)>=0&&c.owner!==S.me;
-if(meIsAdminOnly&&(c.admins||[]).indexOf(u)>=0)return;
-c.members=(c.members||[]).filter(function(m){return m!==u;});
-c.admins=(c.admins||[]).filter(function(m){return m!==u;});
-saveConvs();
-publishGmeta(c);
-broadcastGmeta(c);
-publishTo(convTopic(c.key),{k:'grp-kick',conv:c.key,user:u,from:S.me});
-writeMsg({type:'system',text:fm(L('sys_kick'),u,S.me)});
-renderSidebar();
-renderGsModalIfOpen();
-toast(L('t_kicked'));
-}
-function toggleAdmin(u){
-var c=S.conv;
-if(!c||c.type!=='group'||c.owner!==S.me)return;
-var a=(c.admins||[]).slice();
-var i=a.indexOf(u);
-var promoted=i<0;
-if(promoted)a.push(u);else a.splice(i,1);
-c.admins=a;saveConvs();
-publishGmeta(c);
-broadcastGmeta(c);
-writeMsg({type:'system',text:fm(promoted?L('sys_admin'):L('sys_adminoff'),u,S.me)});
-renderGsModal();renderSidebar();
-}
-function setGroupPhoto(data){
-var c=S.conv;
-if(!c||c.type!=='group')return;
-if(!canEditGrp(c,S.me))return;
-c.img=data||null;
-saveConvs();
-publishGmeta(c);
-broadcastGmeta(c);
-renderGsModal();renderSidebar();renderChatHeader();renderHome();
-}
-function addMemberSubmit(){
-var c=S.conv;
-if(!c||c.type!=='group')return;
-if(!canAddMember(c,S.me))return;
-var u=(el('gsAddName').value||'').trim().toLowerCase();
-if(!validUser(u)){toast(L('e_user'));return;}
-if(u===S.me){toast(L('e_addself'));return;}
-if((c.members||[]).indexOf(u)>=0){toast(L('e_addexists'));return;}
-fetchRetained(userT(u),2200).then(function(rec){
-if(!rec||!rec.u||rec.deleted){toast(L('e_user404'));return;}
-c.members=(c.members||[]).slice();
-c.members.push(u);
-saveConvs();
-publishGmeta(c);
-broadcastGmeta(c);
-publishRetained(inT(u,c.key),{conv:c.key,type:'group',name:c.name,peer:null,members:c.members,owner:c.owner,from:S.me,preview:'',time:now()});
-writeMsg({type:'system',text:fm(L('sys_added'),S.me,u)});
-el('gsAddName').value='';
-renderGsModal();renderSidebar();renderChatHeader();renderHome();
-toast(fm(L('t_added'),u));
-});
-}
-function renderSidebar(){
-var c=S.conv;if(!c)return;
-var isG=c.type==='group';
-el('sbGroupCard').classList.toggle('hidden',!isG);
-el('sbPeopleCard').style.display=isG?'':'none';
-if(isG)put('sbCode',c.key.slice(4));
-var ul=el('peopleList');ul.innerHTML='';
-var names=isG?(c.members||[S.me]):[S.me,c.peer];
-names.forEach(function(n){
-var online=n===S.me||isOnline(n);
-var li=document.createElement('li');
-li.appendChild(avNode(n,30,'p-av'));
-var sp=document.createElement('span');sp.className='p-name';sp.textContent=displayName(n)+(n===S.me?' '+L('you'):'')+(isG&&isAdminOf(c,n)&&n!==S.me?' · admin':'');li.appendChild(sp);
-var dot=document.createElement('span');dot.className='p-dot'+(online?'':' off');li.appendChild(dot);
-if(isG&&isAdminOf(c,S.me)&&n!==S.me&&c.owner!==n){
-var kb=document.createElement('button');
-kb.className='icon-btn sm';kb.type='button';kb.title=L('kick_lbl');
-kb.innerHTML=icon('userX',13);
-kb.onclick=(function(u){return function(ev){ev.stopPropagation();kickMember(u);};})(n);
-li.appendChild(kb);
-}
-ul.appendChild(li);ensureProfile(n);
-});
-}
-var dotOpen=false,dotT=null;
-function openDotMenu(){
-renderDotMenu();
-var m=el('dotMenu');if(!m)return;
-clearTimeout(dotT);
-m.classList.remove('hidden');
-requestAnimationFrame(function(){m.classList.add('on');});
-dotOpen=true;
-}
-function closeDotMenu(){
-var m=el('dotMenu');if(!m)return;
-m.classList.remove('on');
-dotOpen=false;
-clearTimeout(dotT);
-dotT=setTimeout(function(){if(!dotOpen)m.classList.add('hidden');},220);
-}
-function toggleDotMenu(){if(dotOpen)closeDotMenu();else openDotMenu();}
-function renderDotMenu(){
-var m=el('dotMenu');if(!m)return;
-m.innerHTML='';
-var c=S.conv;
-if(!c)return;
-function add(t,fn,danger){
+head.appendChild(si);
+head.appendChild(xb);
+var cw=document.createElement('div');
+cw.id='emojiCats';
+cw.className='emoji-cats';
+var gw=document.createElement('div');
+gw.id='emojiGrid';
+gw.className='emoji-grid';
+pop.appendChild(head);
+pop.appendChild(cw);
+pop.appendChild(gw);
+function buildCats(){
+cw.innerHTML='';
+CATS.forEach(function(k,i){
 var b=document.createElement('button');
 b.type='button';
-b.textContent=t;
-if(danger)b.className='danger';
-b.onclick=function(ev){ev.stopPropagation();closeDotMenu();fn();};
-m.appendChild(b);
-}
-if(c.type==='group'){
-add(L('m_info_grp'),function(){renderSidebar();openOv('sidebar');});
-if(isAdminOf(c,S.me))add(L('m_setgrp'),openGrpSet);
-add(isMuted(c.key)?L('m_unmute'):L('m_mute'),function(){toggleMute(c.key);});
-add(L('m_wall'),function(){el('wallInput').click();});
-add(L('m_clear'),clearMsgs);
-}else{
-add(isMuted(c.key)?L('m_unmute'):L('m_mute'),function(){toggleMute(c.key);});
-add(L('m_wall'),function(){el('wallInput').click();});
-add(L('m_clear'),clearMsgs);
-add(isBlocked(c.peer)?L('m_unblock'):L('m_block'),function(){setBlocked(c.peer,!isBlocked(c.peer));});
-add(L('m_report'),function(){pendingReport=c.peer;openOv('reportModal');});
-add(L('m_delconv'),delConv,true);
-}
-}
-function clearMsgs(){
-if(!S.conv)return;
-S.msgs=[];saveMsgs(S.conv.key,[]);S.reactRaw={};
-localStorage.setItem('qc-react-'+S.me+'-'+S.conv.key,'{}');
-renderMsgs();
-}
-function delConv(){
-if(!S.conv||S.conv.type!=='dm')return;
-var k=S.conv.key;
-removeConv(k);backHome();
-}
-function leaveGroup(){
-var c=S.conv;if(!c||c.type!=='group')return;
-dropOv('sidebar');closeDotMenu();
-c.members=(c.members||[]).filter(function(m){return m!==S.me;});
-c.admins=(c.admins||[]).filter(function(m){return m!==S.me;});
-publishGmeta(c);
-broadcastGmeta(c);
-writeMsg({type:'system',text:fm(L('sys_leave'),S.me)});
-removeConv(c.key);backHome();
-}
-function deleteGroup(){
-var c=S.conv;if(!c||c.type!=='group'||c.owner!==S.me)return;
-dropOv('sidebar');closeDotMenu();
-publishTo(convTopic(c.key),{k:'grp-del',from:S.me,conv:c.key});
-publishRetained(gmetaT(c.key.slice(4)),{id:c.key.slice(4),name:c.name,owner:c.owner,members:[],admins:[],img:null,deleted:true});
-removeConv(c.key);backHome();
-}
-function openGrpSet(){
-renderGsModal();
-openOv('grpSetModal',true);
-}
-function updateGsSeg(ba,bb){
-var all=!!(S.conv&&S.conv.editAll);
-ba.className=all?'on':'';
-ba.innerHTML=(all?icon('check',13):icon('users',13))+' '+L('gs_all');
-bb.className=!all?'on':'';
-bb.innerHTML=(!all?icon('check',13):icon('lock',13))+' '+L('gs_admin');
-}
-function updateGsAddSeg(a,b){
-var all=!!(S.conv&&S.conv.addAll);
-a.className=!all?'on':'';
-a.innerHTML=(!all?icon('check',13):icon('lock',13))+' '+L('gs_addall_admin');
-b.className=all?'on':'';
-b.innerHTML=(all?icon('check',13):icon('users',13))+' '+L('gs_addall_all');
-}
-function renderGsModal(){
-var c=S.conv;
-var body=el('gsBody');
-if(!c||c.type!=='group'||!body)return;
-body.innerHTML='';
-var me=S.me;
-var isOwn=c.owner===me;
-var head=document.createElement('div');head.className='gs-head';
-if(canEditGrp(c,me)){
-var hw=document.createElement('div');hw.className='gs-phwrap';
-hw.appendChild(grpAvNode(c,52));
-var pb=document.createElement('button');pb.className='gs-phbadge';pb.type='button';pb.title=L('gs_photo_edit');
-pb.innerHTML=icon('edit',12);
-pb.onclick=function(){el('gsFile').click();};
-hw.appendChild(pb);
-head.appendChild(hw);
-}else{
-head.appendChild(grpAvNode(c,52));
-}
-var ht=document.createElement('div');ht.className='gs-headtxt';
-ht.innerHTML='<b>'+esc(c.name)+'</b><span>'+(c.members?c.members.length:1)+' '+(lang==='en'?'members':'anggota')+(isOwn?' · '+(lang==='en'?'owner':'pemilik'):'')+'</span>';
-head.appendChild(ht);
-body.appendChild(head);
-if(canEditGrp(c,me)){
-var nr=document.createElement('div');nr.className='gs-namerow';
-var inp=document.createElement('input');inp.id='gsName';inp.className='gs-inp';inp.maxLength=24;inp.value=c.name||'';
-var sv=document.createElement('button');sv.className='icon-btn';sv.type='button';sv.title=L('gs_save');sv.innerHTML=icon('check',16);
-sv.onclick=saveGsName;
-nr.appendChild(inp);nr.appendChild(sv);
-body.appendChild(nr);
-}
-if(canAddMember(c,me)){
-var ar=document.createElement('div');ar.className='gs-addrow';
-var ai=document.createElement('input');ai.id='gsAddName';ai.className='gs-inp';ai.maxLength=16;ai.placeholder=L('gs_addwho');
-var ab=document.createElement('button');ab.className='icon-btn';ab.type='button';ab.title=L('gs_addmember');ab.innerHTML=icon('userPlus',16);
-ab.onclick=addMemberSubmit;
-ar.appendChild(ai);ar.appendChild(ab);
-body.appendChild(ar);
-}
-if(isOwn){
-var seg=document.createElement('div');seg.className='gs-seg';
-var ba=document.createElement('button');ba.type='button';
-var bb=document.createElement('button');bb.type='button';
-ba.onclick=function(){setGrpEditAll(true);};
-bb.onclick=function(){setGrpEditAll(false);};
-seg.appendChild(ba);seg.appendChild(bb);
-body.appendChild(seg);
-updateGsSeg(ba,bb);
-var lb1=document.createElement('div');lb1.className='sb-label';lb1.style.marginTop='12px';lb1.textContent=L('gs_addall_lbl');
-body.appendChild(lb1);
-var seg2=document.createElement('div');seg2.className='gs-seg';
-var ca=document.createElement('button');ca.type='button';
-var cb2=document.createElement('button');cb2.type='button';
-ca.onclick=function(){setGrpAddAll(false);};
-cb2.onclick=function(){setGrpAddAll(true);};
-seg2.appendChild(ca);seg2.appendChild(cb2);
-body.appendChild(seg2);
-updateGsAddSeg(ca,cb2);
-}
-var lb2=document.createElement('div');lb2.className='sb-label';lb2.style.marginTop='14px';lb2.textContent=L('gs_members');
-body.appendChild(lb2);
-var lw=document.createElement('div');lw.className='gs-list';
-(c.members||[]).forEach(function(n){
-var li=document.createElement('div');li.className='gs-row';
-li.appendChild(avNode(n,32,'p-av'));
-var sp=document.createElement('span');sp.className='p-name';
-sp.textContent=displayName(n)+(n===me?' '+L('you'):'')+((c.owner===n||(c.admins||[]).indexOf(n)>=0)?' · admin':'');
-li.appendChild(sp);
-if(isOwn&&n!==me){
-var pb2=document.createElement('button');pb2.className='icon-btn sm';pb2.type='button';
-var isA=(c.admins||[]).indexOf(n)>=0;
-pb2.title=isA?L('gs_demote'):L('gs_promote');
-pb2.innerHTML=icon('star',14);
-if(isA)pb2.style.opacity='.45';
-pb2.onclick=(function(u){return function(){toggleAdmin(u);};})(n);
-li.appendChild(pb2);
-}
-if(isAdminOf(c,me)&&n!==me&&c.owner!==n){
-var kb=document.createElement('button');kb.className='icon-btn sm';kb.type='button';kb.title=L('kick_lbl');
-kb.innerHTML=icon('userX',13);
-kb.onclick=(function(u){return function(){kickMember(u);};})(n);
-li.appendChild(kb);
-}
-lw.appendChild(li);
+b.textContent=k.i;
+b.title=k.k;
+if(i===catIdx)b.classList.add('on');
+b.onclick=function(ev){
+ev.stopPropagation();
+catIdx=i;
+buildCats();
+grid('');
+};
+cw.appendChild(b);
 });
-body.appendChild(lw);
-var dv=document.createElement('div');dv.className='gs-list';dv.style.marginTop='14px';
-var lb3=document.createElement('button');lb3.className='gs-act';lb3.type='button';lb3.innerHTML=icon('logout')+' '+L('m_leave');
-lb3.onclick=function(){dropOv('grpSetModal');leaveGroup();};
-dv.appendChild(lb3);
-if(isOwn){
-var lb4=document.createElement('button');lb4.className='gs-act';lb4.type='button';lb4.innerHTML=icon('trash')+' '+L('m_delgrp');
-lb4.onclick=function(){dropOv('grpSetModal');deleteGroup();};
-dv.appendChild(lb4);
 }
-body.appendChild(dv);
-}
-function renderGsModalIfOpen(){
-var m=el('grpSetModal');
-if(m&&!m.classList.contains('hidden'))renderGsModal();
-}
-function saveGsName(){
-var c=S.conv;if(!c||c.type!=='group')return;
-if(!canEditGrp(c,S.me))return;
-var nm=(el('gsName').value||'').trim();
-if(nm.length<3){toast(L('e_grp_name'));return;}
-c.name=nm;
-saveConvs();
-publishGmeta(c);
-broadcastGmeta(c);
-writeMsg({type:'system',text:fm(L('sys_rename'),nm,S.me)});
-renderGsModal();renderSidebar();renderChatHeader();renderHome();
-}
-function setGrpEditAll(v){
-var c=S.conv;
-if(!c||c.type!=='group'||c.owner!==S.me)return;
-c.editAll=!!v;
-saveConvs();
-publishGmeta(c);
-broadcastGmeta(c);
-renderGsModal();
-toast(L('gs_saved'));
-}
-function setGrpAddAll(v){
-var c=S.conv;
-if(!c||c.type!=='group'||c.owner!==S.me)return;
-c.addAll=!!v;
-saveConvs();
-publishGmeta(c);
-broadcastGmeta(c);
-renderGsModal();
-toast(L('gs_saved'));
-}
-function onConvMsg(d){
-if(!d)return;
-if(d.k==='msg')applyMsg(d.data);
-else if(d.k==='react'){
-var rk=d.rk||'';
-var i=rk.lastIndexOf('|');
-if(i>=0){var who=rk.slice(i+1);if(who!==d.from)rk=rk.slice(0,i)+'|'+d.from;}
-var emi=rk.slice(0,rk.lastIndexOf('|'));
-if(!emi)return;
-patchRaw(d.mid,rk,d.val);
-renderReactions(d.mid);
-}
-else if(d.k==='deliv'&&d.from!==S.me){
-var dv=Math.max(peerDeliv(S.conv.key),d.t||0);
-setPeerDeliv(S.conv.key,dv);
-updateTicks();
-}
-else if(d.k==='read'&&d.from!==S.me){
-var rt=Math.max(peerRead(S.conv.key),d.t||0);
-setPeerRead(S.conv.key,rt);
-updateTicks();
-}
-else if(d.k==='type'&&d.from!==S.me){
-if(isBlocked(d.from))return;
-var tr2=el('typingRow');
-if(!tr2)return;
-if(d.stop){hideTyping();return;}
-tr2.textContent=fm(L('typing'),displayName(d.from));
-tr2.classList.add('on');
-clearTimeout(S._tt);
-S._tt=setTimeout(function(){tr2.classList.remove('on');},2500);
-}
-else if(d.k==='hist-req'&&d.from!==S.me){publishTo(convTopic(S.conv.key),{k:'hist-res',to:d.from,conv:S.conv.key,msgs:S.msgs.slice(-200)});}
-else if(d.k==='hist-res'&&d.to===S.me){
-var ch=false,gotOther=false;
-(d.msgs||[]).forEach(function(m){if(m.user&&isBlocked(m.user))return;if(inBlkWin(m.user,m.time))return;if(!findMsg(m.id)){S.msgs.push(m);ch=true;if(m.user!==S.me)gotOther=true;}});
-if(ch){
-S.msgs.sort(function(a,b){return a.time-b.time;});
-saveMsgs(S.conv.key,S.msgs);
-renderMsgs();updateTicks();
-markRead(S.conv.key);sendRead(S.conv.key);
-if(gotOther){sendDeliv(S.conv.key);notifyRecv(S.conv.type,S.conv.key);}
-}
-}
-else if(d.k==='grp-meta'){
-var c3=getConv(d.conv);
-if(c3){
-if(d.name)c3.name=d.name;
-if(d.members)c3.members=d.members;
-if(d.owner)c3.owner=d.owner;
-if(d.admins)c3.admins=d.admins;
-if(d.img!==undefined)c3.img=d.img;
-if(d.editAll!=null)c3.editAll=!!d.editAll;
-if(d.addAll!=null)c3.addAll=!!d.addAll;
-saveConvs();
-if(c3.members&&c3.members.indexOf(S.me)<0&&S.conv&&S.conv.key===d.conv){
-removeConv(d.conv);backHome();return;
-}
-renderSidebar();renderChatHeader();renderHome();
-renderGsModalIfOpen();
-}
-}
-else if(d.k==='grp-kick'){
-if(d.user===S.me){
-var cn=S.conv?S.conv.name:'';
-toast(fm(L('t_kicked_you'),cn));
-dropOv('sidebar');
-removeConv(d.conv);
-if(S.conv&&S.conv.key===d.conv)backHome();else renderHome();
-}else{
-var c4=getConv(d.conv);
-if(c4){
-c4.members=(c4.members||[]).filter(function(m){return m!==d.user;});
-c4.admins=(c4.admins||[]).filter(function(m){return m!==d.user;});
-saveConvs();
-renderSidebar();renderChatHeader();
-renderGsModalIfOpen();
-}
-}
-}
-else if(d.k==='grp-del'){toast(L('t_grp_del'));dropOv('sidebar');var k=S.conv?S.conv.key:null;removeConv(d.conv);if(k===d.conv)backHome();else renderHome();}
-}
-function onBackground(key,d){
-if(S.peek&&S.peek.key===key){
-if(d.k==='msg'&&d.data)peekLine(d.data);
-else if(d.k==='hist-res'&&d.to===(S.peek.user||S.me)){
-var ms=(d.msgs||[]).slice().sort(function(a,b){return a.time-b.time;});
-ms.forEach(peekLine);
-}
-return;
-}
-var cg=getConv(key);
-if(cg&&cg.type==='group'&&cg.members&&cg.members.indexOf(S.me)<0)return;
-if(d.k==='msg'&&d.data){
-var m=d.data;
-if(m.user&&isBlocked(m.user))return;
-if(inBlkWin(m.user,m.time))return;
-var arr=loadMsgs(key),ex=false;
-for(var i=0;i<arr.length;i++)if(arr[i].id===m.id){ex=true;break;}
-if(!ex){arr.push(m);saveMsgs(key,arr);}
-var c=getConv(key);
-if(m.user&&m.user!==S.me){
-sendDeliv(key);
-notifyRecv(c?c.type:'dm',key);
-}
-if(c){
-c.last={text:m.type==='image'?(lang==='en'?'Image':'Gambar'):m.type==='audio'?(lang==='en'?'Audio':'Suara'):m.text,time:m.time,from:m.user};
-if(m.user!==S.me)recalcUnread(key);
-saveConvs();
-if(S.view==='home')renderHome();
-}
-}else if(d.k==='deliv'&&d.from!==S.me){
-var dv2=Math.max(peerDeliv(key),d.t||0);
-setPeerDeliv(key,dv2);
-}else if(d.k==='hist-req'&&d.from!==S.me){
-publishTo(convTopic(key),{k:'hist-res',to:d.from,conv:key,msgs:loadMsgs(key).slice(-200)});
-}else if(d.k==='hist-res'&&d.to===S.me){
-var arr2=loadMsgs(key),ch=false,gotOther=false;
-(d.msgs||[]).forEach(function(m){if(m.user&&isBlocked(m.user))return;if(inBlkWin(m.user,m.time))return;var ex2=false;for(var j=0;j<arr2.length;j++)if(arr2[j].id===m.id){ex2=true;break;}if(!ex2){arr2.push(m);ch=true;if(m.user!==S.me)gotOther=true;}});
-if(ch){
-arr2.sort(function(a,b){return a.time-b.time;});
-saveMsgs(key,arr2);
-recalcUnread(key);
-saveConvs();
-if(gotOther){sendDeliv(key);notifyRecv((getConv(key)||{}).type||'dm',key);}
-if(S.view==='home')renderHome();
-}
-}else if(d.k==='grp-meta'){
-var c5=getConv(key);
-if(c5){
-if(d.name)c5.name=d.name;
-if(d.members)c5.members=d.members;
-if(d.owner)c5.owner=d.owner;
-if(d.admins)c5.admins=d.admins;
-if(d.img!==undefined)c5.img=d.img;
-if(d.editAll!=null)c5.editAll=!!d.editAll;
-if(d.addAll!=null)c5.addAll=!!d.addAll;
-saveConvs();
-if(c5.members&&c5.members.indexOf(S.me)<0){removeConv(key);}
-if(S.view==='home')renderHome();
-}
-}else if(d.k==='grp-kick'){
-if(d.user===S.me){
-removeConv(key);
-if(S.view==='home')renderHome();
-}else{
-var c6=getConv(key);
-if(c6){c6.members=(c6.members||[]).filter(function(m){return m!==d.user;});c6.admins=(c6.admins||[]).filter(function(m){return m!==d.user;});saveConvs();}
-}
-}
-}
-function findMsg(id){for(var i=0;i<S.msgs.length;i++)if(S.msgs[i].id===id)return S.msgs[i];return null;}
-function applyMsg(m){
-if(!m||!m.id)return;
-if(m.user&&isBlocked(m.user))return;
-if(inBlkWin(m.user,m.time))return;
-var prev=findMsg(m.id);
-if(prev){Object.assign(prev,m);saveMsgs(S.conv.key,S.msgs);updateMsgDOM(prev);if(m.user!==S.me)hideTyping();return;}
-S.msgs.push(m);saveMsgs(S.conv.key,S.msgs);renderMsgs();updateTicks();
-if(m.user!==S.me)hideTyping();
-if(m.user&&m.user!==S.me&&S.conv){
-sendDeliv(S.conv.key);
-notifyRecv(S.conv.type,S.conv.key);
-}
-if(m.user!==S.me&&m.type!=='system'&&S.conv){
-S.conv.last={text:m.type==='image'?(lang==='en'?'Image':'Gambar'):m.type==='audio'?(lang==='en'?'Audio':'Suara'):m.text,time:m.time,from:m.user};
-markRead(S.conv.key);
-sendRead(S.conv.key);
-}
-}
-function writeMsg(partial){
-var c=S.conv;if(!c)return null;
-var m=Object.assign({id:S.me+'-'+Date.now().toString(36)+'-'+rand(4),uid:uid,user:S.me,conv:c.key,time:now(),type:'message',text:'',editedAt:0,deleted:false},partial);
-applyMsg(m);
-publishTo(convTopic(c.key),{k:'msg',conv:c.key,from:S.me,data:m});
-publishPointer(c,m);
-return m;
-}
-function publishPointer(c,m){
-var preview=m.type==='image'?(lang==='en'?'Image':'Gambar'):m.type==='audio'?(lang==='en'?'Audio':'Suara'):(m.text||'');
-var recips=c.type==='dm'?[c.peer]:(c.members||[]);
-var obj={conv:c.key,type:c.type,name:c.name,peer:c.peer||null,members:c.members||null,owner:c.owner||null,from:S.me,preview:preview.slice(0,60),time:m.time};
-recips.forEach(function(r){if(r&&r!==S.me)publishRetained(inT(r,c.key),obj);});
-publishRetained(inT(S.me,c.key),obj);
-}
-function renderMsgs(){
-var list=el('msgList');if(!list)return;list.innerHTML='';
-var prev=null;
-var afterDay=false;
-S.msgs.forEach(function(m){
-afterDay=false;
-if(m.type!=='system'&&(!prev||dayKey(prev.time)!==dayKey(m.time))){
-var d=document.createElement('div');d.className='day-div';d.innerHTML='<span>'+dayLabel(m.time)+'</span>';list.appendChild(d);
-afterDay=true;
-}
-if(prev&&prev.type!=='system'&&m.type!=='system'&&prev.user!==m.user&&!afterDay){
-var dv=document.createElement('div');dv.className='user-div';list.appendChild(dv);
-}
-list.appendChild(buildMsg(m,prev&&prev.type==='message'&&m.type==='message'&&prev.user===m.user&&m.time-prev.time<120000));
-prev=m;
-});
-var s=el('msgScroll');if(s)s.scrollTop=s.scrollHeight;
-}
-function buildMsg(m,grouped){
-var e=document.createElement('div');e.dataset.id=m.id;
-if(m.type==='system'){e.className='msg system';e.innerHTML='<div class="sys-pill" style="width:100%"><span>'+esc(m.text)+'</span></div>';return e;}
-var own=m.user===S.me;
-e.className='msg '+(own?'own':'other')+(grouped?' grouped':'');
-var nr=(!own&&!grouped)?'<div class="m-name" style="color:#7FD8C4">'+esc(displayName(m.user))+'</div>':'';
-var tick='';
-if(own){tick=tickHTML(m,m.conv||(S.conv?S.conv.key:''));}
-e.innerHTML=(own?'':'<span data-av="1"></span>')+'<div class="m-body">'+nr+'<div class="m-tools"></div><div class="m-bubble"></div><div class="m-meta"><span>'+fmtTime(m.time)+'</span><span class="edited hidden">(diedit)</span>'+tick+'</div><div class="m-react"></div></div>';
-var slot=e.querySelector('[data-av]');if(slot)slot.replaceWith(avNode(m.user,30,'m-av'));
-fillBubble(e,m);fillTools(e,m);renderReactions(m.id,e);
-var bub=e.querySelector('.m-bubble');
-var lpT=null,lpFired=false;
-function lpOpen(){
-lpFired=true;
-lastLP=now();
-closeAllTools();
-e.classList.add('tools-open');
-if(navigator.vibrate){try{navigator.vibrate(25);}catch(v){}}
-}
-bub.addEventListener('pointerdown',function(ev){
-if(ev.button)return;
-lpFired=false;
-clearTimeout(lpT);
-lpT=setTimeout(lpOpen,420);
-});
-bub.addEventListener('pointermove',function(){clearTimeout(lpT);});
-bub.addEventListener('pointerup',function(ev){
-clearTimeout(lpT);
-if(lpFired){ev.preventDefault();lpFired=false;lastLP=now();}
-});
-bub.addEventListener('pointercancel',function(){clearTimeout(lpT);});
-bub.addEventListener('contextmenu',function(ev){ev.preventDefault();});
-return e;
-}
-function fillBubble(e,m){
-var b=e.querySelector('.m-bubble');if(!b)return;
-b.classList.remove('media','plain');
-b.classList.toggle('deleted',!!m.deleted);
-if(m.deleted){b.textContent=lang==='en'?'Message deleted':'Pesan dihapus';}
-else if(m.type==='image'){b.classList.add('media');b.replaceChildren();var w=document.createElement('div');w.className='m-media';var img=document.createElement('img');img.src=m.image;img.onclick=function(){el('mmImg').src=m.image;openOv('mediaModal');};w.appendChild(img);if(m.text){var t=document.createElement('div');t.style.marginTop='6px';t.textContent=m.text;w.appendChild(t);}b.appendChild(w);}
-else if(m.type==='audio'){b.classList.add('plain');b.replaceChildren();var row=document.createElement('div');row.className='m-audio';var pl=document.createElement('button');pl.className='audio-play';pl.innerHTML=icon('play');var au=document.createElement('audio');au.src=m.audio;var du=document.createElement('span');du.className='audio-dur';du.textContent=fmtDur(m.dur);au.ontimeupdate=function(){du.textContent=fmtDur(au.currentTime)+' / '+fmtDur(au.duration||m.dur);};au.onended=function(){pl.innerHTML=icon('play');};pl.onclick=function(){if(au.paused){au.play();pl.innerHTML=icon('pause');}else{au.pause();pl.innerHTML=icon('play');}};row.append(pl,au,du);b.appendChild(row);}
-else{b.textContent=m.text;}
-var ed=e.querySelector('.edited');if(ed)ed.classList.toggle('hidden',!m.editedAt||m.deleted);
-}
-function fillTools(e,m){
-var t=e.querySelector('.m-tools');if(!t)return;
-if(m.deleted||m.type!=='message'){t.remove();return;}
-t.innerHTML='';
-['❤️','😂',''].forEach(function(em){
-if(!em)return;
+function addEm(g,em){
+if(badEm(em))return;
 var b=document.createElement('button');
 b.type='button';
 b.textContent=em;
-b.onclick=function(ev){ev.stopPropagation();toggleReaction(m.id,em);};
-t.appendChild(b);
-});
-var bp=document.createElement('button');
-bp.type='button';
-bp.title='Emoji';
-bp.innerHTML=icon('plus',14);
-bp.onclick=function(ev){
+b.onclick=function(ev){
 ev.stopPropagation();
-S.reactTarget=m.id;
-var p=el('emojiPop');
-if(p)p.classList.remove('hidden');
+ev.preventDefault();
+QC.insertEmoji(em);
 };
-t.appendChild(bp);
-if(m.user===S.me){
-var be2=document.createElement('button');
-be2.type='button';
-be2.title='Edit';
-be2.innerHTML=icon('edit',14);
-be2.onclick=function(ev){
-ev.stopPropagation();
-S.editId=m.id;
-el('editBar').classList.add('on');
-el('input').value=m.text;
-updateSendBtn();
-closeAllTools();
-};
-t.appendChild(be2);
-var bd=document.createElement('button');
-bd.type='button';
-bd.title='Delete';
-bd.innerHTML=icon('trash',14);
-bd.onclick=function(ev){
-ev.stopPropagation();
-var mm=findMsg(m.id);
-if(mm){
-mm.deleted=true;
-mm.editedAt=now();
-saveMsgs(S.conv.key,S.msgs);
-updateMsgDOM(mm);
-publishTo(convTopic(S.conv.key),{k:'msg',conv:S.conv.key,from:S.me,data:mm});
-toast(L('t_msg_del'));
+g.appendChild(b);
 }
-closeAllTools();
-};
-t.appendChild(bd);
-}
-}
-function updateMsgDOM(m){var l=el('msgList');if(!l)return;var e=l.querySelector('[data-id="'+CSS.escape(m.id)+'"]');if(!e)return;fillBubble(e,m);renderReactions(m.id,e);}
-function patchRaw(mid,k,v){if(!S.conv)return;if(v){if(!S.reactRaw[mid])S.reactRaw[mid]={};S.reactRaw[mid][k]=1;}else if(S.reactRaw[mid])delete S.reactRaw[mid][k];localStorage.setItem('qc-react-'+S.me+'-'+S.conv.key,JSON.stringify(S.reactRaw));}
-function toggleReaction(mid,em){
-if(!S.conv||!em)return;
-var k=em+'|'+S.me;
-var v=(S.reactRaw[mid]&&S.reactRaw[mid][k])?null:1;
-patchRaw(mid,k,v);
-renderReactions(mid);
-Sound.play('react');
-publishTo(convTopic(S.conv.key),{k:'react',conv:S.conv.key,from:S.me,mid:mid,rk:k,val:v});
-closeAllTools();
-}
-function renderReactions(mid,e){
-e=e||(el('msgList')?el('msgList').querySelector('[data-id="'+CSS.escape(mid)+'"]'):null);if(!e)return;
-var r=e.querySelector('.m-react');if(!r)return;r.innerHTML='';
-var counts={};
-for(var k in (S.reactRaw[mid]||{})){
-var p=k.split('|');
-if(!p[0])continue;
-if(!counts[p[0]])counts[p[0]]=new Set();
-counts[p[0]].add(p[1]);
-}
-Object.keys(counts).forEach(function(em){
-var mine=counts[em].has(S.me);
-var b=document.createElement('button');
-b.type='button';
-b.className='r-pill'+(mine?' mine':'');
-b.innerHTML=em+(counts[em].size>1?'<b>'+counts[em].size+'</b>':'');
-b.onclick=function(ev){ev.stopPropagation();toggleReaction(mid,em);};
-r.appendChild(b);
+function grid(f){
+gw.innerHTML='';
+if(f){
+var q=f.toLowerCase();
+CATS.forEach(function(k){
+if(k.k.toLowerCase().indexOf(q)>=0){
+k.l.forEach(function(em){addEm(gw,em);});
+}else{
+k.l.forEach(function(em){
+if(em.indexOf(q)>=0)addEm(gw,em);
 });
 }
-function sendMessage(){
-if(S.conv&&S.conv.type==='dm'&&isBlocked(S.conv.peer)){toast(L('e_blocked'));return;}
-if(S.conv&&S.conv.type==='group'&&!isMember(S.conv)){toast(L('e_notmember'));return;}
-var ta=el('input');if(!ta)return;var text=ta.value.trim().slice(0,2000);
-if(S.editId){var m=findMsg(S.editId);if(m&&text){m.text=text;m.editedAt=now();saveMsgs(S.conv.key,S.msgs);updateMsgDOM(m);publishTo(convTopic(S.conv.key),{k:'msg',conv:S.conv.key,from:S.me,data:m});}S.editId=null;el('editBar').classList.remove('on');ta.value='';updateSendBtn();sendTyping(true);return;}
-if(S.pendingImage){writeMsg({type:'image',image:S.pendingImage,text:text});S.pendingImage=null;el('composePreview').classList.remove('on');ta.value='';updateSendBtn();Sound.play('send');sendTyping(true);return;}
-if(!text)return;
-writeMsg({text:text});Sound.play('send');ta.value='';updateSendBtn();sendTyping(true);
+});
+}else{
+CATS[catIdx].l.forEach(function(em){
+addEm(gw,em);
+});
 }
-function updateSendBtn(){var ta=el('input');var bl=S.conv&&S.conv.type==='dm'&&isBlocked(S.conv.peer);var has=ta?(ta.value.trim().length>0||!!S.pendingImage):false;var b=el('btnSend');if(b)b.disabled=bl||!has;}
-function autoGrow(){var t=el('input');if(!t)return;t.style.height='auto';t.style.height=Math.min(t.scrollHeight,130)+'px';}
-function insertEmojiMain(em){
-if(S.reactTarget){
-var mid=S.reactTarget;
-S.reactTarget=null;
-var p=el('emojiPop');
-if(p)p.classList.add('hidden');
-toggleReaction(mid,em);
+}
+buildCats();
+grid('');
+si.addEventListener('input',function(e){
+grid(e.target.value.trim());
+});
+si.addEventListener('click',function(e){
+e.stopPropagation();
+});
+}
+buildEmojiUI();
+var composer=gid('composer');
+var menu=document.createElement('div');
+menu.className='attach-menu';
+var b1=document.createElement('button');
+b1.type='button';
+b1.setAttribute('data-a','img');
+b1.innerHTML=icon('image')+' '+tr('Pilih gambar','Pick image');
+var b2=document.createElement('button');
+b2.type='button';
+b2.setAttribute('data-a','cam');
+b2.innerHTML=icon('camera')+' '+tr('Buka kamera','Open camera');
+menu.appendChild(b1);
+menu.appendChild(b2);
+composer.appendChild(menu);
+var fi=document.createElement('input');
+fi.type='file';
+fi.accept='image/*';
+fi.hidden=true;
+composer.appendChild(fi);
+var ci=document.createElement('input');
+ci.type='file';
+ci.accept='image/*';
+ci.setAttribute('capture','environment');
+ci.hidden=true;
+composer.appendChild(ci);
+gid('btnAttach').onclick=function(e){
+e.stopPropagation();
+menu.classList.toggle('on');
+gid('emojiPop').classList.add('hidden');
+};
+document.addEventListener('click',function(e){
+var a=e.target.closest('.attach-menu');
+var b=e.target.closest('#btnAttach');
+if(!a&&!b)menu.classList.remove('on');
+});
+b1.onclick=function(){
+fi.click();
+menu.classList.remove('on');
+};
+b2.onclick=function(){
+ci.click();
+menu.classList.remove('on');
+};
+fi.onchange=function(){
+if(fi.files[0])handleImg(fi.files[0]);
+};
+ci.onchange=function(){
+if(ci.files[0])handleImg(ci.files[0]);
+};
+function compress(file){
+return new Promise(function(res,rej){
+var r=new FileReader();
+r.onload=function(ev){
+var im=new Image();
+im.onload=function(){
+var w=im.width,h=im.height,mx=1280;
+if(w>mx||h>mx){
+var s=Math.min(mx/w,mx/h);
+w=Math.round(w*s);
+h=Math.round(h*s);
+}
+var cv=document.createElement('canvas');
+cv.width=w;
+cv.height=h;
+cv.getContext('2d').drawImage(im,0,0,w,h);
+res(cv.toDataURL('image/jpeg',0.72));
+};
+im.onerror=rej;
+im.src=ev.target.result;
+};
+r.onerror=rej;
+r.readAsDataURL(file);
+});
+}
+function handleImg(f){
+if(!f.type||f.type.indexOf('image/')!==0){
+toast(tr('Pilih file gambar','Pick an image file'));
 return;
 }
-var ta=el('input');
-if(!ta)return;
-var s=ta.selectionStart!=null?ta.selectionStart:ta.value.length;
-var e2=ta.selectionEnd!=null?ta.selectionEnd:s;
-ta.setRangeText(em,s,e2,'end');
-autoGrow();
-updateSendBtn();
+if(f.size>12*1024*1024){
+toast(tr('Maksimal 12MB','Max 12MB'));
+return;
 }
-
-function startDM(u){
-u=(u||'').trim().toLowerCase();
-if(!validUser(u)){toast(L('e_user'));return;}
-if(u===S.me){toast(L('e_self'));return;}
-if(!anyConnected()){toast(L('e_online'));return;}
-fetchRetained(userT(u),2500).then(function(rec){
-if(!rec||!rec.u||rec.deleted){toast(L('e_user404'));return;}
-var key=dmKey(S.me,u);
-var c=getConv(key)||upsertConv({key:key,type:'dm',peer:u,name:u,members:null,owner:null,last:null});
-subscribeConvPassive(c);ensureProfile(u);
-closeOv('dmModal');
-openConv(key);
+compress(f).then(function(d){
+S.pendingImage=d;
+gid('cpImg').src=d;
+gid('composePreview').classList.add('on');
+QC.updateSendBtn();
+}).catch(function(){
+toast(tr('Gagal memproses gambar','Failed to process image'));
 });
 }
-function createGroup(name){
-name=(name||'').trim();if(name.length<3){toast(L('e_grp_name'));return;}
-var id=newGroupCode();var key=grpKey(id);
-var c=upsertConv({key:key,type:'group',name:name,members:[S.me],admins:[],img:null,peer:null,owner:S.me,created:now(),editAll:false,addAll:false,last:null});
-publishGmeta(c);
-subscribeConvPassive(c);
-syncSelfPointers();
-closeOv('grpModal');
-openConv(key);
-writeMsg({type:'system',text:fm(L('sys_create'),name,S.me)});
-}
-function joinGroup(code){
-code=(code||'').trim().toUpperCase();if(!code){toast(L('e_grp_code'));return;}
-fetchRetained(gmetaT(code),2500).then(function(meta){
-if(!meta||!meta.id||meta.deleted){toast(L('e_grp_code404'));return;}
-var key=grpKey(meta.id);
-var members=(meta.members||[]).slice();if(members.indexOf(S.me)<0)members.push(S.me);
-var c=upsertConv({key:key,type:'group',name:meta.name,members:members,admins:meta.admins||[],img:meta.img||null,peer:null,owner:meta.owner,created:meta.created,editAll:!!meta.editAll,addAll:!!meta.addAll,last:null});
-publishGmeta(c);
-subscribeConvPassive(c);
-syncSelfPointers();
-closeOv('grpModal');
-openConv(key);
-writeMsg({type:'system',text:fm(L('sys_join'),S.me)});
-toast(fm(L('t_grp_join'),meta.name));
+window.addEventListener('qc-image-sent',function(){
+gid('composePreview').classList.remove('on');
+fi.value='';
+ci.value='';
 });
+var mr=null,chunks=[],t0=0,tmr=null;
+function pickMime(){
+var list=[];
+list.push('audio/mp4;codecs=mp4a.40.2');
+list.push('audio/mp4');
+list.push('audio/aac');
+list.push('audio/webm;codecs=opus');
+list.push('audio/webm');
+for(var i=0;i<list.length;i++){
+try{
+var ok=MediaRecorder.isTypeSupported;
+if(ok&&ok(list[i]))return list[i];
+}catch(e){}
 }
-
-var tmpProf=null;
-function openProfile(){tmpProf=Object.assign({},myProfile());el('inpDisplayName').value=tmpProf.name||'';renderProfModal();openOv('profModal');}
-function renderProfModal(){
-put('profName',S.me);
-var av=el('avatarPreview');
-av.style.background='linear-gradient(145deg,rgba(255,255,255,.06),rgba(0,0,0,.18)),'+COLORS[tmpProf.color%COLORS.length];
-av.style.color='#DFE7EA';
-if(tmpProf.img){av.classList.add('has-img');av.innerHTML='<img src="'+esc(tmpProf.img)+'" alt="">';}
-else{av.classList.remove('has-img');av.innerHTML=icon('person',34);}
-var cr=el('colorRow');cr.innerHTML='';
-COLORS.forEach(function(c,i){var b=document.createElement('button');b.type='button';b.className='color-dot'+(tmpProf.color===i?' selected':'');b.style.background=c;b.style.color=c;b.onclick=function(){tmpProf.color=i;renderProfModal();};cr.appendChild(b);});
+return '';
 }
-function saveProfile(){
-tmpProf.name=(el('inpDisplayName').value||'').trim();
-localStorage.setItem('qc-prof-'+S.me,JSON.stringify(tmpProf));
-S.profiles[S.me]=Object.assign({},tmpProf);
-publishProfile();
-closeOv('profModal');renderAcc();renderHome();if(S.conv){renderChatHeader();renderSidebar();}
-toast(L('t_prof'));
+function startRec(){
+if(typeof MediaRecorder==='undefined'){
+toast(tr('Browser tidak mendukung rekaman','Browser does not support recording'));
+return;
 }
-function pickAvatarFile(f){if(!f)return;compressAvatar(f).then(function(d){tmpProf.img=d;renderProfModal();}).catch(function(){toast(L('e_img'));});}
-function updateSetSound(){
-var b=el('btnSetSound');if(b)b.innerHTML=(Sound.on?icon('bell'):icon('bellOff'))+' '+(Sound.on?L('not_on'):L('not_off'));
-}
-function updateNotLabels(){
-updateSetSound();
-var d=el('btnPickDm');if(d)d.innerHTML=icon('music')+' '+L('not_dm')+(Sound.cDm?L('not_custom'):L('not_def'));
-var g=el('btnPickGrp');if(g)g.innerHTML=icon('users')+' '+L('not_grp')+(Sound.cGrp?L('not_custom'):L('not_def'));
-var t=el('btnTestSound');if(t)t.innerHTML=icon('play')+' '+L('not_test');
-var r=el('btnResetSound');if(r)r.innerHTML=icon('restore')+' '+L('not_reset');
-}
-function openSettings(){
-delArm=0;updateDelLabel();
-openOv('setModal');
-}
-function openNotif(){
-updateNotLabels();
-openOv('notModal');
-}
-function openLang(){
-openOv('langModal',true);
-}
-function setLang(l){
-lang=l;
-localStorage.setItem('qc-lang',l);
-applyLang();
-closeOv('langModal');
-}
-function pickNsound(f){
-if(!f)return;
-if(f.size>1500000){toast(L('e_size'));return;}
-var r=new FileReader();
-r.onload=function(){
-var data=String(r.result);
-var key=nsTarget==='grp'?'qc-nsound-grp':'qc-nsound-dm';
-try{localStorage.setItem(key,data);}catch(e){toast(L('e_store'));return;}
-if(nsTarget==='grp'){Sound.cGrp=data;Sound.bufGrp=null;try{Sound.audGrp=new Audio(data);Sound.audGrp.preload='auto';}catch(e2){}Sound.decode('grp',data);}
-else{Sound.cDm=data;Sound.bufDm=null;try{Sound.audDm=new Audio(data);Sound.audDm.preload='auto';}catch(e2){}Sound.decode('dm',data);}
-updateNotLabels();
-toast(L('t_sound_save'));
+var opt={audio:{echoCancellation:true,noiseSuppression:true}};
+navigator.mediaDevices.getUserMedia(opt).then(function(st){
+chunks=[];
+t0=Date.now();
+var mime=pickMime();
+mr=new MediaRecorder(st,mime?{mimeType:mime}:undefined);
+mr.ondataavailable=function(e){
+if(e.data&&e.data.size)chunks.push(e.data);
 };
-r.readAsDataURL(f);
+mr.onstop=function(){
+st.getTracks().forEach(function(t){t.stop();});
+var dur=Math.round((Date.now()-t0)/1000);
+if(dur<1){
+toast(tr('Rekaman terlalu pendek','Recording too short'));
+return;
 }
-function resetSounds(){
-localStorage.removeItem('qc-nsound-dm');
-localStorage.removeItem('qc-nsound-grp');
-localStorage.removeItem('qc-nsound');
-Sound.cDm=null;Sound.cGrp=null;Sound.audDm=null;Sound.audGrp=null;Sound.bufDm=null;Sound.bufGrp=null;
-updateNotLabels();
-toast(L('t_sound_reset'));
+var um=(mr.mimeType||'audio/mp4').split(';')[0];
+var rd=new FileReader();
+rd.onload=function(){
+QC.writeMsg({type:'audio',audio:rd.result,dur:dur,mime:um});
+QC.Sound.play('send');
+};
+rd.readAsDataURL(new Blob(chunks,{type:mr.mimeType||'audio/mp4'}));
+};
+mr.start(250);
+composer.classList.add('recording');
+gid('btnMic').classList.add('recording');
+gid('recIndicator').classList.add('on');
+gid('input').style.display='none';
+tmr=setInterval(function(){
+var s=Math.floor((Date.now()-t0)/1000);
+var mm2=Math.floor(s/60);
+var ss=('0'+(s%60)).slice(-2);
+gid('recTime').textContent=mm2+':'+ss;
+},250);
+}).catch(function(){
+toast(tr('Izinkan akses mikrofon','Allow microphone access'));
+});
 }
-function sendReport(){
-if(!pendingReport){toast(L('e_target'));return;}
-var id=rand(8);
-publishRetained(NS+'report/'+id,{id:id,from:S.me,target:pendingReport,reason:el('repReason').value,note:(el('repNote').value||'').trim(),time:now()});
-el('repNote').value='';
-closeOv('reportModal');
-toast(L('t_rep'));
+function stopRec(){
+if(!mr||mr.state!=='recording')return;
+clearInterval(tmr);
+mr.stop();
+composer.classList.remove('recording');
+gid('btnMic').classList.remove('recording');
+gid('recIndicator').classList.remove('on');
+gid('input').style.display='';
 }
-function buildDynUI(){
-if(!el('dotMenu')){
-var dm=document.createElement('div');
-dm.id='dotMenu';dm.className='dot-menu hidden';
-document.body.appendChild(dm);
+gid('btnMic').onclick=function(){
+if(mr&&mr.state==='recording')stopRec();
+else startRec();
+};
+var H='';
+H+='<div id="callModal" class="call-modal hidden">';
+H+='<div class="call-remote" id="callRemoteBox">';
+H+='<video id="remoteVideo" autoplay playsinline></video>';
+H+='<div id="callPh" class="call-ph">';
+H+='<div id="callBigAv" class="big-av"></div>';
+H+='<div id="callBigName">—</div>';
+H+='<div id="callModeTxt" style="font-size:12px"></div>';
+H+='</div>';
+H+='<div id="callStatus" class="call-status" ';
+H+='style="display:none"></div>';
+H+='<div class="call-info"><span id="callName">—</span>';
+H+='<small id="callTimer">00:00</small></div>';
+H+='<div class="call-local" id="callLocal">';
+H+='<video id="localVideo" autoplay playsinline muted>';
+H+='</video></div></div>';
+H+='<div class="call-ctrl">';
+H+='<button id="ctrlMute" class="c-mute" type="button">';
+H+=icon('mic')+'</button>';
+H+='<button id="ctrlVideo" class="c-vid" type="button">';
+H+=icon('video2')+'</button>';
+H+='<button id="ctrlFlip" class="c-flip" type="button">';
+H+=FLIPSVG+'</button>';
+H+='<button id="ctrlEnd" class="c-end" type="button">';
+H+=icon('endbar')+'</button>';
+H+='</div></div>';
+H+='<div id="incomingCall" class="in-call hidden">';
+H+='<div class="ic-top"><div id="icAv" class="ic-av"></div>';
+H+='<div class="ic-nm"><div id="icName">—</div>';
+H+='<small id="icMode"></small>';
+H+='</div></div><div class="ic-act">';
+H+='<button id="icNo" class="ic-no" type="button">';
+H+=icon('endbar')+'</button>';
+H+='<button id="icOk" class="ic-ok" type="button">';
+H+=icon('phone')+'</button>';
+H+='</div></div>';
+document.body.insertAdjacentHTML('beforeend',H);
+var pc=null,ls=null,active=false,answered=false;
+var partner=null,incoming=null,ctmr=null,sec=0;
+var callMode='video',facing='user',swapped=false;
+var ICE={iceServers:[
+{urls:'stun:stun.l.google.com:19302'},
+{urls:'stun:stun1.l.google.com:19302'},
+{urls:'turn:openrelay.metered.ca:80',
+username:'openrelayproject',
+credential:'openrelayproject'},
+{urls:'turn:openrelay.metered.ca:443?transport=tcp',
+username:'openrelayproject',
+credential:'openrelayproject'}
+]};
+function nm2(u){
+return QC.displayName?QC.displayName(u):u;
 }
-if(!el('grpSetModal')){
-var m2=document.createElement('div');
-m2.id='grpSetModal';m2.className='modal hidden';
-m2.innerHTML='<div class="m-scrim" id="gsScrim"></div><div class="dialog"><button class="icon-btn sm d-close" id="gsX" type="button"></button><h3 id="gsTit"></h3><p class="sub" id="gsSub"></p><div id="gsBody"></div></div>';
-document.body.appendChild(m2);
-el('gsX').innerHTML=icon('x');
-el('gsX').addEventListener('click',function(){dropOv('grpSetModal');});
-el('gsScrim').addEventListener('click',function(){dropOv('grpSetModal');});
+function hideIncoming(){
+incoming=null;
+gid('incomingCall').classList.add('hidden');
 }
+function setAvByName(node,name,size){
+if(!node)return;
+var p=QC.profileOf(name);
+var bg='linear-gradient(145deg,rgba(255,255,255,.06),';
+bg+='rgba(0,0,0,.18)),';
+bg+=QC.COLORS[((p&&p.color)||0)%QC.COLORS.length];
+node.style.background=bg;
+node.innerHTML=QC.avatarHTML(name,size||60);
 }
-function putsLang(){
-put('btnMenu',icon('menu'));put('btnCloseAcc',icon('x'));put('btnCloseSb',icon('x'));
-put('btnAuthLang',icon('globe'));
-put('btnAccSettings',icon('lock')+' '+L('sb_settings'));
-put('btnNotif',icon('bell')+' '+L('sb_notif'));
-put('btnLang',icon('globe')+' '+L('sb_lang'));
-put('btnAccLogout',icon('logout')+' '+L('sb_logout'));
-put('btnEditProf',icon('edit',14));
-put('btnBack',icon('back'));put('btnInfo',icon('vdots'));put('btnCall',icon('video2'));put('btnCallAudio',icon('phone'));
-put('btnSbCopy',icon('copy'));put('btnSbShare',icon('link')+' '+L('info_share'));
-put('fabGroup',icon('usersCool',23));put('fabDM',icon('addCool',23));
-put('btnAttach',icon('attach'));put('btnMic',icon('mic'));put('btnEmoji',icon('smile'));put('btnSend',icon('send'));put('cpClear',icon('x'));put('btnCancelEdit',icon('x'));put('mmClose',icon('x'));
-put('btnUploadAvatar',icon('image')+' '+L('prof_foto'));put('btnCamAvatar',icon('camera')+' '+L('prof_kam'));put('btnRandomAvatar',icon('dice')+' '+L('prof_acak'));
-put('btnDevDb',icon('download')+' '+L('dev_db'));
-put('btnDevCopy',icon('copy')+' '+L('dev_copy'));
-put('btnDevLock',icon('lock')+' '+L('dev_lockbtn'));
-put('btnDevLoadX',icon('x',14));
-put('btnDevRepX',icon('x',14));
-put('btnDevConvX',icon('x',14));
-put('btnPassOpen',icon('key')+' '+L('set_pass'));
-put('btnSetSync',icon('download')+' '+L('set_sync'));
-put('devLogo',icon('dev',24));
-setTxt('#spTag',L('sp_tag'));
-setTxt('#authSub',L('auth_sub'));
-setTxt('#fldUser > span',L('fld_user'));
-setTxt('#fldPass > span',L('fld_pass'));
-setTxt('#fldPass2 > span',L('fld_pass2'));
-setTxt('#fldQ > span',L('fld_q'));
-setTxt('#fldAns > span',L('fld_a'));
-setTxt('#btnForgot',L('btn_forgot'));
-var ia=el('inAns');if(ia)ia.placeholder=L('ph_ans');
-var ig=el('inGrp');if(ig)ig.placeholder=L('ph_grp');
-var idm=el('inDM');if(idm)idm.placeholder=L('ph_dm');
-var inp2=el('inNewPass');if(inp2)inp2.placeholder=L('ph_newpass');
-setTxt('#offlineTxt',L('offline_bar'));
-setTxt('#blockedTxt',L('blocked_bar'));
-setTxt('#editLbl',L('editing'));
-setTxt('#cpLabel',L('img_ready'));
-setTxt('#recHint',L('rec_hint'));
-setTxt('#sbTitle',L('info_title'));
-setTxt('#sbCodeLbl',L('sb_code'));
-setTxt('#sbPeopleLbl',L('sb_people'));
-setTxt('#setTit',L('set_title'));setTxt('#setSub',L('set_sub'));setTxt('#setCard','QuickChat · BETA · '+APP_VER);
-setTxt('#passTit',L('pass_title'));setTxt('#passSub',L('pass_sub'));
-setTxt('#passOldLbl',L('pass_old'));setTxt('#passNewLbl',L('pass_new'));setTxt('#passNew2Lbl',L('pass_new2'));
-setTxt('#btnChangePass',L('pass_btn'));
-setTxt('#notTit',L('not_title'));setTxt('#notSub',L('not_sub'));setTxt('#notCard',L('not_card'));
-setTxt('#langTit',L('lang_title'));setTxt('#langSub',L('lang_sub'));
-setTxt('#profTit',L('prof_title'));setTxt('#profSub',L('prof_sub'));setTxt('#profNameLbl',L('prof_name'));setTxt('#profNote',L('prof_note'));setTxt('#btnSaveProf',L('prof_save'));
-setTxt('#recTit',L('rec_title'));setTxt('#recSub',L('rec_sub'));
-setTxt('#recUserLbl',L('rec_u'));setTxt('#recAnsLbl',L('rec_a'));setTxt('#recP1Lbl',L('rec_p1'));setTxt('#recP2Lbl',L('rec_p2'));
-setTxt('#btnRec1',L('rec_b1'));setTxt('#btnRec2',L('rec_b2'));setTxt('#btnRec3',L('rec_b3'));
-setTxt('#wallTit',L('wall_title'));setTxt('#wallSub',L('wall_sub'));setTxt('#btnWallSave',L('wall_save'));
-setTxt('#repTit',L('rep_title'));setTxt('#repSub',L('rep_sub'));setTxt('#repReasonLbl',L('rep_reason'));setTxt('#repNoteLbl',L('rep_note'));setTxt('#btnRepSend',L('rep_send'));
-var rn=el('repNote');if(rn)rn.placeholder=L('rep_note_ph');
-var sel=el('repReason');
-if(sel){var cur=sel.selectedIndex;if(cur<0)cur=0;sel.innerHTML='';(REASONS[lang]||REASONS.id).forEach(function(r){var o=document.createElement('option');o.textContent=r;sel.appendChild(o);});sel.selectedIndex=cur;}
-var qs2=el('inQ');
-if(qs2){var cq=qs2.value;qs2.innerHTML='';QUEST().forEach(function(q,i){var o=document.createElement('option');o.value=i;o.textContent=q;qs2.appendChild(o);});qs2.value=cq||'0';}
-setTxt('#dmTit',L('dm_title'));setTxt('#dmSub',L('dm_sub'));setTxt('#dmUserLbl',L('dm_u'));setTxt('#btnDM',L('dm_btn'));
-setTxt('#grpTit',L('grp_title'));setTxt('#grpSub',L('grp_sub'));setTxt('#grpNameLbl',L('grp_name'));setTxt('#btnGrp',L('grp_btn'));setTxt('#grpOr',L('grp_or'));setTxt('#grpCodeLbl',L('grp_code'));setTxt('#btnGrpJoin',L('grp_join'));
-setTxt('#gsTit',L('gs_title'));setTxt('#gsSub',L('gs_sub'));
-setTxt('#devHeadSub',L('dev_sub'));setTxt('#devLockLbl',L('dev_lock'));setTxt('#btnDevUnlock',L('dev_unlock'));
-setTxt('#devS1',L('dev_s1'));setTxt('#devS2',L('dev_s2'));setTxt('#devS3',L('dev_s3'));setTxt('#devS4',L('dev_s4'));
-setTxt('#btnDevLoad',L('dev_load'));setTxt('#btnDevReports',L('dev_rep'));setTxt('#btnDevConvs',L('dev_conv'));
-var dsu=el('devAccSearch');if(dsu)dsu.placeholder=L('dev_search_u');
-var dsc=el('devConvSearch');if(dsc)dsc.placeholder=L('dev_search_c');
-setTxt('#btnPeekClose',L('peek_close'));
-setTxt('#devTap2',L('ver_label')+': BETA · '+APP_VER);
-var ta=el('input');if(ta)ta.placeholder=L('comp_ph');
-updateSetSound();updateNotLabels();updateDelLabel();
-if(S.conv)renderSidebar();
-if(dotOpen)renderDotMenu();
-renderGsModalIfOpen();
-}
-function applyLang(){
-document.documentElement.lang=lang;
-setAuthMode(authMode);
-putsLang();
-if(S.view==='home')renderHome();
-if(S.conv){renderSidebar();renderChatHeader();applyBlockUI();}
-}
-
-function init(){
-var GCSS='';
-GCSS+='.gc-grid{position:absolute;inset:0;display:grid;gap:6px;padding:6px;overflow:hidden}';
-GCSS+='.gc-tile{position:relative;border-radius:14px;overflow:hidden;background:#0b0f18;border:1px solid var(--line);min-height:0;min-width:0}';
-GCSS+='.gc-tile video{width:100%;height:100%;object-fit:cover;display:block}';
-GCSS+='.gc-tile.me video{transform:scaleX(-1)}';
-GCSS+='.gc-tile.big{grid-column:1/-1;grid-row:span 2}';
-GCSS+='.gc-tag{position:absolute;left:8px;bottom:8px;font:600 10px var(--mono);background:rgba(0,0,0,.45);backdrop-filter:blur(6px);padding:3px 8px;border-radius:99px}';
-GCSS+='.gc-info{position:absolute;top:12px;left:14px;color:#fff;font:700 14px var(--mono);text-shadow:0 1px 6px rgba(0,0,0,.6);z-index:2}';
-GCSS+='.gc-info small{display:block;color:rgba(255,255,255,.75);font:600 11px var(--mono)}';
-GCSS+='.gc-ctrl{display:flex;justify-content:center;align-items:center;gap:14px;padding:14px calc(14px + env(safe-area-inset-bottom));background:rgba(10,14,24,.55);backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4)}';
-GCSS+='.gc-b{width:52px;height:52px;border-radius:50%;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.10);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);color:#fff;display:grid;place-items:center;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.18)}';
-GCSS+='.gc-b svg{width:20px;height:20px}';
-GCSS+='.gc-b.on,.gc-b.off{background:rgba(255,255,255,.88);color:#081018}';
-GCSS+='.gc-b.end{background:#EF5350;border-color:transparent;width:60px;height:60px;box-shadow:0 6px 18px rgba(239,83,80,.4)}';
-GCSS+='.dot-menu{position:fixed;top:56px;right:10px;z-index:80;min-width:230px;max-width:78vw;border:1px solid rgba(255,255,255,.14);border-radius:16px;background:rgba(14,19,32,.94);backdrop-filter:blur(22px) saturate(1.4);-webkit-backdrop-filter:blur(22px) saturate(1.4);padding:6px;display:flex;flex-direction:column;box-shadow:0 18px 50px rgba(0,0,0,.55);opacity:0;transform:scale(.9) translateY(-10px);transform-origin:top right;pointer-events:none;transition:opacity .18s ease,transform .22s cubic-bezier(.22,.9,.34,1)}';
-GCSS+='.dot-menu.on{opacity:1;transform:none;pointer-events:auto}';
-GCSS+='.dot-menu button{border:0;background:none;text-align:left;padding:12px 14px;border-radius:11px;color:var(--text);font-weight:600;font-size:14px;cursor:pointer;transition:background .12s}';
-GCSS+='.dot-menu button:active{background:rgba(255,255,255,.08)}';
-GCSS+='.dot-menu button.danger{color:#ff9090}';
-GCSS+='.gs-inp{flex:1;min-width:0;border:1px solid var(--line);border-radius:12px;background:rgba(8,12,22,.55);padding:11px 13px;color:var(--text);font-size:14.5px}';
-GCSS+='.gs-inp:focus{outline:none;border-color:rgba(0,168,132,.55)}';
-GCSS+='.gs-head{display:flex;gap:12px;align-items:center;margin-bottom:12px}';
-GCSS+='.gs-headtxt b{display:block;font-size:15px}';
-GCSS+='.gs-headtxt span{color:var(--muted);font-size:11.5px}';
-GCSS+='.gs-namerow{display:flex;gap:8px;align-items:center;margin-bottom:10px}';
-GCSS+='.gs-addrow{display:flex;gap:8px;align-items:center;margin-bottom:12px}';
-GCSS+='.gs-seg{display:flex;gap:6px;margin-bottom:4px}';
-GCSS+='.gs-seg button{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:9px 10px;border:1px solid var(--line);border-radius:11px;background:rgba(255,255,255,.04);color:var(--muted);font-weight:700;font-size:12.5px;cursor:pointer}';
-GCSS+='.gs-seg button.on{background:rgba(0,168,132,.14);border-color:rgba(0,168,132,.45);color:var(--lime)}';
-GCSS+='.gs-seg button svg{width:14px;height:14px}';
-GCSS+='.gs-list{display:flex;flex-direction:column;gap:6px}';
-GCSS+='.gs-row{display:flex;align-items:center;gap:10px;padding:7px 8px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.03)}';
-GCSS+='.gs-act{display:flex;align-items:center;gap:10px;width:100%;padding:12px 10px;border:0;background:none;border-radius:10px;color:#ff9090;font-weight:600;font-size:13.5px;cursor:pointer;text-align:left}';
-GCSS+='.gs-act svg{width:17px;height:17px}';
-GCSS+='.gs-phwrap{position:relative;width:52px;height:52px;flex:none}';
-GCSS+='.gs-phbadge{position:absolute;right:-5px;bottom:-5px;width:26px;height:26px;border-radius:50%;border:1px solid rgba(255,255,255,.22);background:#20262B;color:#CFD8DD;display:grid;place-items:center;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.4)}';
-GCSS+='.gs-phbadge svg{width:12px;height:12px}';
-GCSS+='#splash{overflow:hidden;background:radial-gradient(120% 90% at 50% 12%,#0A1418 0%,#04060C 62%)}';
-GCSS+='#spHalo{position:absolute;inset:0;margin:auto;width:236px;height:236px;border-radius:50%;background:conic-gradient(from 0deg,rgba(0,168,132,0),rgba(0,168,132,.38),rgba(105,214,192,.55),rgba(0,168,132,0));filter:blur(20px);animation:spSpin 5.5s linear infinite;z-index:1}';
-GCSS+='.sp-parts{position:absolute;inset:0;pointer-events:none;z-index:1}';
-GCSS+='.sp-parts i{position:absolute;bottom:-8px;width:3px;height:3px;border-radius:50%;background:rgba(105,214,192,.75);box-shadow:0 0 8px rgba(105,214,192,.8);animation:spUp linear infinite}';
-GCSS+='#splash>*:not(#spHalo):not(.sp-parts){position:relative;z-index:2}';
-GCSS+='#splash .sp-ring:before{border:1px dashed rgba(0,168,132,.4);animation:spSpin 7s linear infinite}';
-GCSS+='#splash .sp-ring:after{border:1px solid rgba(0,168,132,.22);animation:spRing 2.2s infinite ease-out}';
-GCSS+='#splash .sp-logo{animation:spFloat 2.6s ease-in-out infinite}';
-GCSS+='#splash .sp-logo svg{filter:drop-shadow(0 10px 30px rgba(0,168,132,.55))}';
-GCSS+='#splash .sp-word{text-shadow:0 0 24px rgba(0,168,132,.35);animation:spGlow 2.2s ease-in-out infinite}';
-GCSS+='#splash .sp-word b{background:linear-gradient(90deg,#00A884,#69D6C0);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}';
-GCSS+='#splash .sp-tag{color:rgba(236,243,232,.5)}';
-GCSS+='#splash .sp-net{color:#69D6C0}';
-GCSS+='#splash .sp-bar{box-shadow:0 0 14px rgba(0,168,132,.25)}';
-GCSS+='#splash .sp-bar i{background:linear-gradient(90deg,#00A884,#69D6C0,#00A884);background-size:200% 100%;animation:spSlide 1.1s infinite ease-in-out,spShine 2.4s linear infinite}';
-GCSS+='#splash .sp-hint{animation:spFade 1.6s ease-in-out infinite}';
-GCSS+='.chat-top{padding:8px 10px}';
-GCSS+='.chat-av{width:38px;height:38px}';
-GCSS+='.composer{border-radius:26px;background:rgba(10,14,22,.72)}';
-GCSS+='.conv{padding:11px 8px}';
-GCSS+='@keyframes spSpin{to{transform:rotate(360deg)}}';
-GCSS+='@keyframes spFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}';
-GCSS+='@keyframes spGlow{0%,100%{text-shadow:0 0 16px rgba(0,168,132,.22)}50%{text-shadow:0 0 30px rgba(0,168,132,.5)}}';
-GCSS+='@keyframes spShine{to{background-position:200% 0}}';
-GCSS+='@keyframes spFade{0%,100%{opacity:.35}50%{opacity:.75}}';
-GCSS+='@keyframes spUp{0%{transform:translateY(0) scale(1);opacity:0}10%{opacity:.95}90%{opacity:.55}100%{transform:translateY(-78vh) scale(.4);opacity:0}}';
-var gst=document.createElement('style');
-gst.textContent=GCSS;
-document.head.appendChild(gst);
-if(IS_IOS)document.body.classList.add('ios');
-var leg=localStorage.getItem('qc-nsound');
-if(leg&&!localStorage.getItem('qc-nsound-dm')){localStorage.setItem('qc-nsound-dm',leg);Sound.cDm=leg;}
-document.addEventListener('pointerdown',function(){Sound.unlock();},{capture:true});
-document.addEventListener('keydown',function(){Sound.unlock();},{capture:true});
-document.addEventListener('pointerdown',function(e){
-if(e.target&&e.target.closest&&e.target.closest('#btnMic')){
-document.querySelectorAll('audio').forEach(function(a){try{a.pause();}catch(x){}});
-}
-},true);
-var qs=el('inQ');if(qs){qs.innerHTML='';QUEST().forEach(function(q,i){var o=document.createElement('option');o.value=i;o.textContent=q;qs.appendChild(o);});}
-buildDynUI();
-applyLang();
-document.querySelectorAll('.d-close').forEach(function(b){if(!b.innerHTML)b.innerHTML=icon('x');});
-var spT0=now();
-var spHidden=false;
-var spInt=null;
-function splashHide(){
-if(spHidden)return;
-spHidden=true;
-if(spInt)clearInterval(spInt);
-var sp=el('splash');
-if(sp){
-sp.classList.add('off');
-setTimeout(function(){if(sp.parentNode)sp.parentNode.removeChild(sp);},500);
-}
-}
-function splashTick(){
-var net=el('spNet');
-if(anyConnected()){
-if(net)net.textContent=L('sp_online');
-if(now()-spT0>=2000)splashHide();
+function attachRemote(rv,stream){
+rv.srcObject=stream;
+rv.muted=true;
+var p=rv.play();
+if(p&&p.then){
+p.then(function(){rv.muted=false;}).catch(function(){rv.muted=false;});
 }else{
-if(net)net.textContent=L('sp_wait');
+rv.muted=false;
 }
 }
-spInt=setInterval(splashTick,400);
-splashTick();
-var spEl=el('splash');
-if(spEl){
-spEl.addEventListener('click',splashHide);
-if(!el('spHalo')){
-var halo=document.createElement('div');
-halo.id='spHalo';
-spEl.insertBefore(halo,spEl.firstChild);
-var parts=document.createElement('div');
-parts.className='sp-parts';
-for(var pi=0;pi<16;pi++){
-var dot=document.createElement('i');
-dot.style.left=(4+((pi*61)%92))+'%';
-dot.style.animationDelay=(pi*0.42)+'s';
-dot.style.animationDuration=(3.6+(pi%4)*0.9)+'s';
-parts.appendChild(dot);
+function fitRemote(){
+var rv=gid('remoteVideo');
+var box=gid('callRemoteBox');
+if(!rv||!box||!rv.videoWidth||!rv.videoHeight)return;
+if(callMode==='audio')return;
+var ta=rv.videoWidth/rv.videoHeight;
+var bh=Math.max(1,box.clientHeight-84);
+var ba=box.clientWidth/bh;
+rv.style.objectFit=Math.abs(ta-ba)<0.22?'cover':'contain';
 }
-spEl.appendChild(parts);
+function applyLayout(){
+var box=gid('callRemoteBox'),loc=gid('callLocal');
+var rv=gid('remoteVideo'),lv=gid('localVideo');
+if(!box||!loc||!rv||!lv)return;
+box.style.position='static';
+box.style.overflow='visible';
+loc.style.position='static';
+loc.style.overflow='visible';
+loc.style.width='0';
+loc.style.height='0';
+loc.style.border='0';
+loc.style.background='transparent';
+loc.style.borderRadius='0';
+if(callMode==='audio'){
+rv.style.display='none';
+lv.style.display='none';
+return;
+}
+rv.style.display='';
+lv.style.display='';
+var bigV=swapped?lv:rv;
+var pipV=swapped?rv:lv;
+[rv,lv].forEach(function(v){
+v.style.position='absolute';
+v.style.zIndex='1';
+});
+lv.style.transform='scaleX(-1)';
+lv.style.objectFit='cover';
+rv.style.transform='none';
+bigV.style.left='0';
+bigV.style.top='0';
+bigV.style.width='100%';
+bigV.style.height='calc(100% - 84px)';
+bigV.style.right='';
+bigV.style.bottom='';
+bigV.style.borderRadius='0';
+bigV.style.border='0';
+bigV.style.boxShadow='none';
+bigV.style.zIndex='1';
+pipV.style.left='auto';
+pipV.style.top='auto';
+pipV.style.right='14px';
+pipV.style.bottom='98px';
+pipV.style.width='112px';
+pipV.style.height='150px';
+pipV.style.borderRadius='14px';
+pipV.style.border='2px solid rgba(255,255,255,.28)';
+pipV.style.boxShadow='0 6px 20px rgba(0,0,0,.5)';
+pipV.style.background='#111';
+pipV.style.zIndex='6';
+if(pipV===rv)rv.style.objectFit='cover';
+else fitRemote();
+}
+function toggleSwap(){
+if(callMode==='audio')return;
+swapped=!swapped;
+applyLayout();
+}
+function csendTo(to,o){
+if(!to)return;
+var pair=[QC.me,to].sort().join('~');
+var k='dm:'+pair;
+var msg=Object.assign({},o);
+msg.from=QC.me;
+msg.to=to;
+QC.publishTo(QC.callTopic(k),msg);
+}
+function csend(o){
+if(!partner)return;
+csendTo(partner,o);
+}
+function openUI(name,ans,mode){
+callMode=mode||'video';
+swapped=false;
+gid('callModal').classList.remove('hidden');
+setAvByName(gid('callBigAv'),name,56);
+gid('callBigName').textContent=nm2(name);
+gid('callName').textContent=nm2(name);
+gid('callModeTxt').textContent=
+callMode==='audio'
+?tr('Panggilan suara','Voice call')
+:tr('Panggilan video','Video call');
+gid('callStatus').textContent=tr('Memanggil…','Calling…');
+gid('callPh').style.display='';
+gid('callStatus').style.display=ans?'none':'';
+gid('ctrlVideo').style.display=
+callMode==='audio'?'none':'';
+gid('ctrlFlip').style.display=
+callMode==='audio'?'none':'';
+gid('callLocal').style.display=
+callMode==='audio'?'none':'';
+applyLayout();
+}
+function timer(){
+answered=true;
+sec=0;
+clearInterval(ctmr);
+var s=gid('callStatus');
+if(s)s.style.display='none';
+ctmr=setInterval(function(){
+sec++;
+var m=('0'+Math.floor(sec/60)).slice(-2);
+var d=('0'+(sec%60)).slice(-2);
+gid('callTimer').textContent=m+':'+d;
+},1000);
+}
+function getMedia(video,face){
+var va={echoCancellation:true,noiseSuppression:true};
+if(!video)return navigator.mediaDevices.getUserMedia({audio:va});
+return navigator.mediaDevices.getUserMedia({video:{facingMode:face||'user'},audio:va})
+.catch(function(){
+return navigator.mediaDevices.getUserMedia({video:true,audio:va});
+})
+.catch(function(){
+return navigator.mediaDevices.getUserMedia({audio:va});
+});
+}
+function wirePC(){
+pc=new RTCPeerConnection(ICE);
+ls.getTracks().forEach(function(t){pc.addTrack(t,ls);});
+pc.ontrack=function(e){
+var rv=gid('remoteVideo');
+attachRemote(rv,e.streams[0]);
+if(callMode==='video'){
+gid('callPh').style.display='none';
+}
+var s=gid('callStatus');
+if(s)s.style.display='none';
+applyLayout();
+fitRemote();
+if(!answered)timer();
+};
+pc.onicecandidate=function(e){
+if(e.candidate)csend({type:'ice',cand:e.candidate});
+};
+pc.oniceconnectionstatechange=function(){
+if(!pc)return;
+var s=pc.iceConnectionState;
+if(s==='failed'){
+endCall(true);
+toast(tr('Koneksi panggilan gagal (jaringan memblokir)','Call connection failed (network blocked)'));
+}else if(s==='disconnected'){
+setTimeout(function(){
+if(pc&&pc.iceConnectionState==='disconnected'){
+endCall(true);
+}
+},10000);
+}
+};
+pc.onconnectionstatechange=function(){
+if(!pc)return;
+var s=pc.connectionState;
+if(s==='failed'||s==='closed'){
+endCall(true);
+}
+};
+}
+function startCall(u,video){
+if(active){
+toast(tr('Sedang dalam panggilan','Already in a call'));
+return;
+}
+if(!S.presence||!S.presence[u]){
+toast(tr('Pengguna tidak online','User is not online'));
+return;
+}
+partner=u;
+answered=false;
+facing='user';
+var wantVideo=video!==false;
+getMedia(wantVideo,facing).then(function(st){
+ls=st;
+gid('localVideo').srcObject=st;
+openUI(u,false,wantVideo?'video':'audio');
+wirePC();
+return pc.createOffer().then(function(of){
+return pc.setLocalDescription(of).then(function(){
+csend({type:'offer',sdp:of,mode:callMode});
+active=true;
+setTimeout(function(){
+if(active&&!answered&&pc){
+if(pc.signalingState==='have-local-offer'){
+toast(tr('Peer belum merespons sinyal panggilan','Peer has not responded to call signal'));
 }
 }
-document.addEventListener('gesturestart',function(e){e.preventDefault();});
-document.addEventListener('gesturechange',function(e){e.preventDefault();});
-document.addEventListener('gestureend',function(e){e.preventDefault();});
-document.addEventListener('wheel',function(e){if(e.ctrlKey)e.preventDefault();},{passive:false});
-setInterval(function(){if(typeof mqtt!=='undefined'&&!anyConnected())reconnectAll();},5000);
-setInterval(function(){
-if(!S.me)return;
-fetchRetained(userT(S.me),1500).then(function(rec){
-if(rec&&rec.deleted&&S.me){toast(L('e_deleted_self'));logout();}
-});
-},60000);
-on('tabLogin','click',function(){setAuthMode('login');});
-on('tabReg','click',function(){setAuthMode('reg');});
-on('btnAuth','click',doAuth);
-on('inPass','keydown',function(e){if(e.key==='Enter')doAuth();});
-on('btnForgot','click',function(){recStep(1);openOv('recModal',true);});
-on('btnRec1','click',rec1);on('btnRec2','click',rec2);on('btnRec3','click',rec3);
-on('btnAuthLang','click',function(){openLang();});
-on('devTap','click',devTap);on('devTap2','click',devTap);
-on('btnDevUnlock','click',devUnlock);
-on('inDevPass','keydown',function(e){if(e.key==='Enter')devUnlock();});
-on('btnDevLoad','click',devLoad);
-on('btnDevLoadX','click',function(){el('devList').innerHTML='';var si=el('devAccSearch');if(si)si.value='';devCounts.acc=0;renderDevStats();});
-on('btnDevReports','click',devLoadReports);
-on('btnDevRepX','click',function(){el('devRepList').innerHTML='';devCounts.rep=0;renderDevStats();});
-on('btnDevConvs','click',devLoadConvs);
-on('btnDevConvX','click',function(){el('devConvList').innerHTML='';var si=el('devConvSearch');if(si)si.value='';devCounts.conv=0;renderDevStats();});
-on('btnDevDb','click',devLoadDb);
-on('btnDevCopy','click',devCopyDb);
-on('btnDevLock','click',devLockNow);
-wireDevSearch('devAccSearch','devList');
-wireDevSearch('devConvSearch','devConvList');
-on('btnPeekClose','click',function(){closePeek();closeOv('peekModal');});
-on('gcLeave','click',gcLeave);
-on('gcFlip','click',gcFlip);
-on('gcMute','click',gcMuteToggle);
-on('gcCam','click',gcCamToggle);
-on('gcAccept','click',function(){
-if(!GC.ring)return;
-var r=GC.ring;
-gcRingHide();
-sub(callT(r.conv));
-wlRequest();
-gcBegin(r.conv,r.video!==false,true);
-});
-on('gcDecline','click',gcRingHide);
-on('btnRepSend','click',sendReport);
-on('btnMenu','click',function(){renderAcc();openOv('accSidebar');});
-on('btnCloseAcc','click',function(){closeOv('accSidebar');});
-on('accScrim','click',function(){closeOv('accSidebar');});
-on('btnEditProf','click',function(e){e.stopPropagation();closeOv('accSidebar');setTimeout(openProfile,80);});
-on('btnAccSettings','click',function(){closeOv('accSidebar');setTimeout(openSettings,80);});
-on('btnNotif','click',function(){closeOv('accSidebar');setTimeout(openNotif,80);});
-on('btnLang','click',function(){closeOv('accSidebar');setTimeout(openLang,80);});
-on('btnLangId','click',function(){setLang('id');});
-on('btnLangEn','click',function(){setLang('en');});
-on('btnPassOpen','click',function(){dropOv('setModal');openOv('passModal',true);});
-on('btnSetSound','click',function(){Sound.toggle();updateSetSound();});
-on('btnSetSync','click',function(){lastSyncAll=0;syncAllConvs();toast(L('t_sync'));});
-on('btnDelAcc','click',armDelete);
-on('btnChangePass','click',changePass);
-on('btnPickDm','click',function(){nsTarget='dm';el('nsoundInput').click();});
-on('btnPickGrp','click',function(){nsTarget='grp';el('nsoundInput').click();});
-on('nsoundInput','change',function(e){pickNsound(e.target.files[0]);e.target.value='';});
-on('btnTestSound','click',function(){Sound.unlock();Sound.test();});
-on('btnResetSound','click',resetSounds);
-on('btnAccLogout','click',function(){closeOv('accSidebar');logout();toast(L('t_logout'));});
-on('btnSaveProf','click',saveProfile);
-on('btnRandomAvatar','click',function(){tmpProf.img=null;tmpProf.color=Math.floor(Math.random()*COLORS.length);renderProfModal();});
-on('btnUploadAvatar','click',function(){el('avatarInput').click();});
-on('btnCamAvatar','click',function(){el('avatarCam').click();});
-on('avatarInput','change',function(e){pickAvatarFile(e.target.files[0]);e.target.value='';});
-on('avatarCam','change',function(e){pickAvatarFile(e.target.files[0]);e.target.value='';});
-on('wallInput','change',function(e){
-var f=e.target.files[0];e.target.value='';
-if(!f)return;
-compressWall(f).then(openWallEditor).catch(function(){toast(L('e_img'));});
-});
-on('gsFile','change',function(e){
-var f=e.target.files[0];e.target.value='';
-if(!f)return;
-compressGroupImg(f).then(function(d){setGroupPhoto(d);}).catch(function(){toast(L('e_img'));});
-});
-on('wallDark','input',function(){if(!wallPending)return;wallPending.dark=+this.value;syncWallUI();});
-on('wallZoom','input',function(){if(!wallPending)return;wallPending.zoom=+this.value;syncWallUI();});
-on('btnWallSave','click',function(){
-if(!wallPending)return;
-setWall(wallPending);
-applyWall();
-closeOv('wallModal');
-toast(L('t_wall_save'));
-});
-on('fabDM','click',function(){openOv('dmModal');el('inDM').focus();});
-on('btnDM','click',function(){startDM(el('inDM').value);});
-on('inDM','keydown',function(e){if(e.key==='Enter')startDM(el('inDM').value);});
-on('fabGroup','click',function(){openOv('grpModal');});
-on('btnGrp','click',function(){createGroup(el('inGrp').value);});
-on('btnGrpJoin','click',function(){joinGroup(el('inGrpCode').value);});
-on('btnBack','click',backHome);
-on('btnInfo','click',function(e){e.stopPropagation();toggleDotMenu();});
-on('btnCloseSb','click',function(){closeOv('sidebar');});
-on('sbScrim','click',function(){closeOv('sidebar');});
-on('btnSbCopy','click',function(){if(S.conv&&S.conv.type==='group'){var c=S.conv.key.slice(4);if(navigator.clipboard)navigator.clipboard.writeText(c);toast(fm(L('t_code'),c));}});
-on('btnSbShare','click',function(){if(S.conv&&S.conv.type==='group'){var link=location.href.split(/[?#]/)[0]+'?g='+S.conv.key.slice(4);if(navigator.clipboard)navigator.clipboard.writeText(link);toast(L('t_link'));}});
-on('btnCall','click',function(){
-if(!S.conv)return;
-wlRequest();
-if(S.conv.type==='dm'){if(window.QC&&QC.startCall)QC.startCall(S.conv.peer,true);}
-else{if(!isMember(S.conv)){toast(L('e_notmember'));return;}gcStart(S.conv.key,true);}
-});
-on('btnCallAudio','click',function(){
-if(!S.conv)return;
-wlRequest();
-if(S.conv.type==='dm'){if(window.QC&&QC.startCall)QC.startCall(S.conv.peer,false);}
-else{if(!isMember(S.conv)){toast(L('e_notmember'));return;}gcStart(S.conv.key,false);}
-});
-on('mmClose','click',function(){closeOv('mediaModal');});
-on('cpClear','click',function(){S.pendingImage=null;el('composePreview').classList.remove('on');updateSendBtn();});
-on('btnCancelEdit','click',function(){S.editId=null;el('editBar').classList.remove('on');el('input').value='';updateSendBtn();});
-on('btnSend','click',sendMessage);
-var ta=el('input');
-if(ta){
-ta.addEventListener('input',function(){autoGrow();updateSendBtn();if(S.conv)sendTyping(ta.value.trim().length===0);});
-ta.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}});
-ta.addEventListener('blur',function(){sendTyping(true);});
-ta.addEventListener('focus',function(){setTimeout(pinChat,200);setTimeout(pinChat,500);});
+},12000);
+setTimeout(function(){
+if(!answered&&active){
+endCall(true);
+toast(tr('Tidak ada jawaban','No answer'));
 }
-var ms=el('msgScroll');
-if(ms){ms.addEventListener('scroll',function(){closeAllTools();closeDotMenu();},{passive:true});}
-if(window.visualViewport){
-visualViewport.addEventListener('resize',function(){syncHeight();killPan();if(S.view==='chat')pinChat();});
-visualViewport.addEventListener('scroll',function(){syncHeight();killPan();});
-}
-window.addEventListener('resize',function(){syncHeight();killPan();});
-window.addEventListener('orientationchange',function(){setTimeout(function(){syncHeight();killPan();},150);});
-on('btnEmoji','click',function(e){e.stopPropagation();S.reactTarget=null;el('emojiPop').classList.toggle('hidden');});
-document.addEventListener('click',function(e){
-if(now()-lastLP<700)return;
-if(!e.target.closest('#emojiPop')&&!e.target.closest('#btnEmoji')){
-el('emojiPop').classList.add('hidden');
-S.reactTarget=null;
-}
-if(!e.target.closest('.m-tools'))closeAllTools();
-if(dotOpen&&!e.target.closest('#dotMenu')&&!e.target.closest('#btnInfo'))closeDotMenu();
+},30000);
 });
-document.querySelectorAll('[data-close]').forEach(function(x){x.addEventListener('click',function(){closeOv(x.dataset.close);});});
-window.addEventListener('online',function(){renderNet();reconnectAll();syncAllConvs();splashTick();});
-window.addEventListener('offline',function(){renderNet();});
-document.addEventListener('visibilitychange',function(){
-if(!S.me)return;
-if(document.hidden){
-publishRetained(presT(S.me),{k:'pres',from:S.me,seen:now(),online:false});
+});
+}).catch(function(){
+endCall(true);
+toast(tr('Izinkan akses mikrofon','Allow microphone access')+(wantVideo?' & '+tr('kamera','camera'):''));
+});
+}
+function accept(){
+if(!incoming)return;
+var of=incoming.offer;
+var from=incoming.from;
+var mode=incoming.mode||'video';
+partner=from;
+incoming=null;
+answered=false;
+facing='user';
+gid('incomingCall').classList.add('hidden');
+getMedia(mode==='video',facing).then(function(st){
+ls=st;
+gid('localVideo').srcObject=st;
+openUI(from,true,mode);
+wirePC();
+return pc.setRemoteDescription(of).then(function(){
+return pc.createAnswer();
+}).then(function(an){
+return pc.setLocalDescription(an).then(function(){
+csend({type:'answer',sdp:an});
+active=true;
+timer();
+});
+});
+}).catch(function(){
+endCall(true);
+toast(tr('Izinkan akses mikrofon','Allow microphone access')+(mode==='video'?' & '+tr('kamera','camera'):''));
+});
+}
+function decline(){
+if(incoming){
+csendTo(incoming.from,{type:'decline'});
+hideIncoming();
+}
+}
+function endCall(silent){
+clearInterval(ctmr);
+if(pc){
+try{pc.close();}catch(e){}
+pc=null;
+}
+if(ls){
+ls.getTracks().forEach(function(t){t.stop();});
+ls=null;
+}
+if(partner&&!silent)csend({type:'end'});
+active=false;
+answered=false;
+partner=null;
+swapped=false;
+gid('callModal').classList.add('hidden');
+gid('remoteVideo').srcObject=null;
+gid('localVideo').srcObject=null;
+}
+function flipCam(){
+if(callMode==='audio'||!active)return;
+var next=facing==='user'?'environment':'user';
+getMedia(true,next).then(function(st){
+var nv=st.getVideoTracks()[0];
+if(!nv){
+st.getTracks().forEach(function(t){t.stop();});
+toast(tr('Gagal mengganti kamera','Failed to switch camera'));
+return;
+}
+var old=ls?ls.getVideoTracks()[0]:null;
+if(old)old.stop();
+if(ls){
+if(old)ls.removeTrack(old);
+ls.addTrack(nv);
 }else{
-publishPresence();
-renderNet();
-killPan();
-Sound.unlock();
-wlRequest();
-syncAllConvs();
+ls=st;
 }
+var lv=gid('localVideo');
+lv.srcObject=null;
+lv.srcObject=ls;
+if(pc){
+pc.getSenders().forEach(function(s2){
+if(s2.track&&s2.track.kind==='video')s2.replaceTrack(nv);
 });
-window.addEventListener('beforeunload',function(){if(S.me){if(GC.active)gcLeave();publishRetained(presT(S.me),{k:'pres',from:S.me,seen:now(),online:false});}});
-window.addEventListener('pagehide',function(){if(S.me)publishRetained(presT(S.me),{k:'pres',from:S.me,seen:now(),online:false});});
-syncHeight();
-applyWall();
-connectAll();
-var sess=JSON.parse(localStorage.getItem('qc-session')||'null');
-var g=new URLSearchParams(location.search).get('g');
-if(sess&&sess.u){
-enterSession(sess.u,sess.h);
-if(g)setTimeout(function(){joinGroup(g);},800);
-whenConnected(12000).then(function(ok){
-if(!ok||!S.me||S.me!==sess.u)return;
-return fetchRetained(userT(sess.u),2500).then(function(rec){
-if(!S.me||S.me!==sess.u)return;
-if(rec&&rec.deleted){logout();toast(L('e_deleted'));return;}
-if(rec&&rec.h&&rec.h!==sess.h){logout();toast(L('e_session'));return;}
-return checkBan(sess.u).then(function(b){if(b&&S.me===sess.u){logout();toast(L('e_banned_self'));}});
-});
-});
-}else if(g){toast(L('e_login_first'));}
-setAuthMode('login');renderNet();
 }
-window.QC={get me(){return S.me;},get uid(){return uid;},get S(){return S;},icon:icon,toast:toast,esc:esc,COLORS:COLORS,profileOf:profileOf,displayName:displayName,avatarHTML:avatarHTML,writeMsg:function(p){return writeMsg(p);},publishTo:publishTo,callTopic:function(k){return callT(k);},insertEmoji:insertEmojiMain,updateSendBtn:updateSendBtn,autoGrow:autoGrow,fmtDur:fmtDur,Sound:Sound};
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+facing=next;
+gid('ctrlFlip').classList.toggle('on',facing==='environment');
+applyLayout();
+}).catch(function(){
+toast(tr('Gagal mengganti kamera','Failed to switch camera'));
+});
+}
+QC.onCallSignal=function(d){
+if(!d||d.from===QC.me||d.to!==QC.me)return;
+if(d.type==='offer'){
+if(active){
+csendTo(d.from,{type:'busy'});
+return;
+}
+incoming={from:d.from,offer:d.sdp,mode:d.mode||'video'};
+setAvByName(gid('icAv'),d.from,22);
+gid('icName').textContent=nm2(d.from);
+gid('icMode').textContent=
+incoming.mode==='audio'
+?tr('Panggilan suara masuk…','Incoming voice call…')
+:tr('Panggilan video masuk…','Incoming video call…');
+gid('incomingCall').classList.remove('hidden');
+QC.Sound.play('call');
+setTimeout(function(){
+if(incoming&&incoming.from===d.from){
+csendTo(d.from,{type:'decline'});
+hideIncoming();
+}
+},30000);
+}
+else if(d.type==='answer'&&pc){
+pc.setRemoteDescription(d.sdp)
+.then(timer).catch(function(){});
+}
+else if(d.type==='ice'&&pc){
+pc.addIceCandidate(d.cand).catch(function(){});
+}
+else if(d.type==='decline'){
+if(incoming&&incoming.from===d.from)hideIncoming();
+endCall(true);
+toast(tr('Panggilan ditolak oleh ','Call declined by ')+nm2(d.from));
+}
+else if(d.type==='busy'){
+if(incoming&&incoming.from===d.from)hideIncoming();
+endCall(true);
+toast(nm2(d.from)+' '+tr('sedang dalam panggilan lain','is in another call'));
+}
+else if(d.type==='end'){
+if(incoming&&incoming.from===d.from)hideIncoming();
+endCall(true);
+}
+};
+QC.startCall=startCall;
+QC.endCall=endCall;
+QC.widenTrack=widenTrack;
+gid('icOk').onclick=accept;
+gid('icNo').onclick=decline;
+gid('remoteVideo').onclick=toggleSwap;
+gid('localVideo').onclick=toggleSwap;
+gid('remoteVideo').addEventListener('loadedmetadata',fitRemote);
+gid('ctrlMute').onclick=function(){
+if(!ls)return;
+var a=ls.getAudioTracks()[0];
+if(!a)return;
+a.enabled=!a.enabled;
+this.classList.toggle('on',!a.enabled);
+};
+gid('ctrlVideo').onclick=function(){
+if(callMode==='audio'){
+toast(tr('Mode panggilan suara','Voice call mode'));
+return;
+}
+if(!ls)return;
+var v=ls.getVideoTracks()[0];
+if(!v){
+toast(tr('Video tidak tersedia','Video not available'));
+return;
+}
+v.enabled=!v.enabled;
+this.classList.toggle('off',!v.enabled);
+};
+gid('ctrlFlip').onclick=flipCam;
+gid('ctrlEnd').onclick=function(){
+endCall(false);
+};
+window.addEventListener('resize',function(){
+if(active)applyLayout();
+});
+window.addEventListener('orientationchange',function(){
+if(active)setTimeout(function(){applyLayout();fitRemote();},120);
+});
+window.addEventListener('pagehide',function(){
+if(active)endCall(true);
+if(incoming)hideIncoming();
+});
+window.QC_MEDIA=true;
+}catch(e){
+try{QC.toast(tr('Modul media gagal: ','Media module failed: ')+e.message);}catch(x){}
+if(window.console)console.error(e);
+}
 })();
-</script>
-<script src="media.js?v=29"></script>
-</body>
-</html>
-<!-- END index.html v64 -->
+/* END media.js v30 */
