@@ -91,7 +91,7 @@
     <button id="btnLang" class="btn ghost small full" type="button"></button>
     <button id="btnAccLogout" class="btn danger small full" type="button"></button>
   </div>
-  <div class="sb-card" style="text-align:center;color:var(--muted);font-size:11.5px"><span class="brand-dev" id="devTap2">Versi aplikasi: BETA · v65</span></div>
+  <div class="sb-card" style="text-align:center;color:var(--muted);font-size:11.5px"><span class="brand-dev" id="devTap2">Versi aplikasi: BETA · v66</span></div>
 </aside>
 <div id="accScrim" class="scrim"></div>
 
@@ -141,7 +141,7 @@
 <button id="btnSetSync" class="btn ghost small full" type="button"></button>
 <button id="btnDelAcc" class="btn danger small full" type="button"></button>
 </div>
-<div class="sb-card" style="margin-top:14px;text-align:center;color:var(--muted);font-size:11.5px" id="setCard">QuickChat · BETA · v65</div>
+<div class="sb-card" style="margin-top:14px;text-align:center;color:var(--muted);font-size:11.5px" id="setCard">QuickChat · BETA · v66</div>
 </div></div>
 <div id="passModal" class="modal hidden"><div class="m-scrim" data-close="passModal"></div><div class="dialog"><button class="icon-btn sm d-close" data-close="passModal" type="button"></button><h3 id="passTit">Ubah kata sandi</h3><p class="sub" id="passSub">Verifikasi kata sandi lama lalu setel kata sandi baru.</p>
 <label class="fld"><span id="passOldLbl">Kata sandi lama</span><input id="inOldPass" type="password" maxlength="64" placeholder="••••••"></label>
@@ -194,7 +194,7 @@
 (function(){
 'use strict';
 var DEV_PASS='ryoxd666#';
-var APP_VER='v65';
+var APP_VER='v66';
 var lang=localStorage.getItem('qc-lang')||'id';
 var REASONS={
 id:['Spam / iklan berulang','Penipuan / phishing','Konten tidak pantas','Pelecehan / ancaman','Pelanggaran lain'],
@@ -607,10 +607,68 @@ GC.active=false;GC.group=null;
 }
 function gcFlip(){
 if(!GC.active||!GC.video)return;
-GC.facing=GC.facing==='user'?'environment':'user';
+var opp=GC.facing==='user'?'environment':'user';
 var old=GC.stream?GC.stream.getVideoTracks()[0]:null;
-if(old){try{old.stop();}catch(e){}if(GC.stream)GC.stream.removeTrack(old);}
-gcMedia(true).then(function(st){
+var oldSet=(old&&old.getSettings)?old.getSettings():{};
+var oldId=oldSet.deviceId||'';
+function wait(ms){return new Promise(function(r){setTimeout(r,ms);});}
+function cams(){
+return navigator.mediaDevices.enumerateDevices().then(function(ds){
+return ds.filter(function(d){return d.kind==='videoinput';});
+});
+}
+function buildOrder(list){
+var order=[];
+list.forEach(function(d){if(d.deviceId&&d.deviceId!==oldId)order.push({deviceId:d.deviceId});});
+order.push({facingMode:{exact:opp}});
+order.push({facingMode:opp});
+order.push(true);
+return order;
+}
+function sweep(list){
+var order=buildOrder(list);
+var i=0;
+function next(){
+if(i>=order.length)return Promise.reject(new Error('noflip'));
+var cons={video:order[i],audio:true};
+i++;
+return navigator.mediaDevices.getUserMedia(cons).then(function(st){
+var nv=st.getVideoTracks()[0];
+if(!nv){st.getTracks().forEach(function(t){try{t.stop();}catch(e){}});return next();}
+var set=nv.getSettings?nv.getSettings():{};
+if(oldId&&set.deviceId&&set.deviceId===oldId){st.getTracks().forEach(function(t){try{t.stop();}catch(e){}});return next();}
+return st;
+},function(){return next();});
+}
+return next();
+}
+function adopt(st){
+var hasAudio=GC.stream&&GC.stream.getAudioTracks().length>0;
+if(hasAudio)st.getAudioTracks().forEach(function(t){try{t.stop();}catch(e){}});
+var nv=st.getVideoTracks()[0];
+if(!nv)return;
+if(old&&GC.stream){try{GC.stream.removeTrack(old);}catch(e){}}
+if(GC.stream){GC.stream.addTrack(nv);}else{GC.stream=st;}
+for(var id in GC.pcs){
+var sn=null;var ss=GC.pcs[id].getSenders();
+for(var j=0;j<ss.length;j++){if(ss[j].track&&ss[j].track.kind==='video'){sn=ss[j];break;}}
+if(sn)sn.replaceTrack(nv);
+}
+var lt=GC.tiles[S.me];
+if(lt){var lv=lt.querySelector('video');lv.srcObject=null;lv.srcObject=GC.stream;lv.muted=true;lv.play().catch(function(){});}
+if(old){try{old.stop();}catch(e){}}
+GC.facing=opp;
+}
+cams().then(sweep).then(adopt).catch(function(){
+if(old){
+try{old.stop();}catch(e){}
+if(GC.stream){try{GC.stream.removeTrack(old);}catch(e){}}
+}
+return wait(300).then(cams).then(sweep).then(adopt);
+}).catch(function(){
+return gcMedia(true).then(function(st){
+var hasAudio=GC.stream&&GC.stream.getAudioTracks().length>0;
+if(hasAudio)st.getAudioTracks().forEach(function(t){try{t.stop();}catch(e){}});
 var nv=st.getVideoTracks()[0];
 if(!nv)return;
 if(GC.stream){GC.stream.addTrack(nv);}else{GC.stream=st;}
@@ -619,8 +677,10 @@ var sn=null;var ss=GC.pcs[id].getSenders();
 for(var j=0;j<ss.length;j++){if(ss[j].track&&ss[j].track.kind==='video'){sn=ss[j];break;}}
 if(sn)sn.replaceTrack(nv);
 }
-var lt=GC.tiles[S.me];if(lt){var lv=lt.querySelector('video');lv.srcObject=null;lv.srcObject=GC.stream;lv.muted=true;lv.play().catch(function(){});}
-}).catch(function(){});
+var lt=GC.tiles[S.me];
+if(lt){var lv=lt.querySelector('video');lv.srcObject=null;lv.srcObject=GC.stream;lv.muted=true;lv.play().catch(function(){});}
+});
+});
 }
 function gcMuteToggle(){
 if(!GC.stream)return;
@@ -653,9 +713,9 @@ function fetchWild(prefix,ms,wild){
 var w2=wild||'+';
 return new Promise(function(res){whenConnected(8000).then(function(ok){if(!ok)return res([]);var out=[],seen={};var h=function(t,p){if(t.indexOf(prefix)===0&&p&&p.length&&!seen[t]){seen[t]=1;try{out.push(JSON.parse(p.toString()));}catch(e){}}};clients.forEach(function(c){if(c&&c.connected){c.on('message',h);try{c.subscribe(prefix+w2);}catch(e){}}});setTimeout(function(){clients.forEach(function(c){if(c){try{c.removeListener('message',h);}catch(e){}try{c.unsubscribe(prefix+w2);}catch(e){}}});res(out);},ms||2500);});});
 }
-/* === END PART 1 v65 — tempel BAGIAN 2 v65 tepat di bawah baris ini === */
-  function checkBan(u){return fetchRetained(banT(u),1500).then(function(b){return !!(b&&b.banned);});}
-APP_VER='v65';
+/* === END PART 1 v66 — tempel BAGIAN 2 v66 tepat di bawah baris ini === */
+function checkBan(u){return fetchRetained(banT(u),1500).then(function(b){return !!(b&&b.banned);});}
+APP_VER='v66';
 var wakeLock=null;
 function wlRequest(){
 try{
@@ -2481,10 +2541,14 @@ GCSS+='.gs-phwrap{position:relative;width:52px;height:52px;flex:none}';
 GCSS+='.gs-phbadge{position:absolute;right:-5px;bottom:-5px;width:26px;height:26px;border-radius:50%;border:1px solid rgba(255,255,255,.22);background:#20262B;color:#CFD8DD;display:grid;place-items:center;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.4)}';
 GCSS+='.gs-phbadge svg{width:12px;height:12px}';
 GCSS+='#splash{overflow:hidden;background:radial-gradient(120% 90% at 50% 12%,#0A1418 0%,#04060C 62%)}';
+GCSS+='#splash .sp-hint{display:none!important}';
 GCSS+='#spHalo{position:absolute;inset:0;margin:auto;width:236px;height:236px;border-radius:50%;background:conic-gradient(from 0deg,rgba(0,168,132,0),rgba(0,168,132,.38),rgba(105,214,192,.55),rgba(0,168,132,0));filter:blur(20px);animation:spSpin 5.5s linear infinite;z-index:1}';
+GCSS+='#spHalo2{position:absolute;inset:0;margin:auto;width:310px;height:310px;border-radius:50%;background:conic-gradient(from 180deg,rgba(0,168,132,0),rgba(105,214,192,.26),rgba(0,168,132,0));filter:blur(28px);animation:spSpin2 9s linear infinite;z-index:1}';
+GCSS+='.sp-orbit{position:absolute;inset:0;margin:auto;width:176px;height:176px;border-radius:50%;border:1px solid rgba(105,214,192,.18);z-index:1;animation:spSpin 12s linear infinite}';
+GCSS+='.sp-orbit i{position:absolute;top:-3px;left:50%;width:6px;height:6px;margin-left:-3px;border-radius:50%;background:#69D6C0;box-shadow:0 0 10px #69D6C0}';
 GCSS+='.sp-parts{position:absolute;inset:0;pointer-events:none;z-index:1}';
 GCSS+='.sp-parts i{position:absolute;bottom:-8px;width:3px;height:3px;border-radius:50%;background:rgba(105,214,192,.75);box-shadow:0 0 8px rgba(105,214,192,.8);animation:spUp linear infinite}';
-GCSS+='#splash>*:not(#spHalo):not(.sp-parts){position:relative;z-index:2}';
+GCSS+='#splash>*:not(#spHalo):not(#spHalo2):not(.sp-parts):not(.sp-orbit){position:relative;z-index:2}';
 GCSS+='#splash .sp-ring:before{border:1px dashed rgba(0,168,132,.4);animation:spSpin 7s linear infinite}';
 GCSS+='#splash .sp-ring:after{border:1px solid rgba(0,168,132,.22);animation:spRing 2.2s infinite ease-out}';
 GCSS+='#splash .sp-logo{animation:spFloat 2.6s ease-in-out infinite}';
@@ -2495,12 +2559,32 @@ GCSS+='#splash .sp-tag{color:rgba(236,243,232,.5)}';
 GCSS+='#splash .sp-net{color:#69D6C0}';
 GCSS+='#splash .sp-bar{box-shadow:0 0 14px rgba(0,168,132,.25)}';
 GCSS+='#splash .sp-bar i{background:linear-gradient(90deg,#00A884,#69D6C0,#00A884);background-size:200% 100%;animation:spSlide 1.1s infinite ease-in-out,spShine 2.4s linear infinite}';
-GCSS+='#splash .sp-hint{animation:spFade 1.6s ease-in-out infinite}';
+GCSS+='.sb-card,.acc-card,.auth-card,.dialog{border:1px solid rgba(255,255,255,.08);background:linear-gradient(160deg,rgba(20,26,40,.72),rgba(10,14,22,.55));backdrop-filter:blur(18px) saturate(1.3);-webkit-backdrop-filter:blur(18px) saturate(1.3);box-shadow:0 10px 40px rgba(0,0,0,.35)}';
+GCSS+='.btn,.icon-btn,.mini-btn{transition:transform .12s ease,box-shadow .2s ease,background .2s ease}';
+GCSS+='.btn:active,.icon-btn:active,.mini-btn:active{transform:scale(.96)}';
+GCSS+='.btn.primary{box-shadow:0 6px 24px rgba(0,168,132,.35),inset 0 1px 0 rgba(255,255,255,.25)}';
+GCSS+='.fab{box-shadow:0 10px 30px rgba(0,168,132,.45)}';
+GCSS+='.fab.alt{box-shadow:0 8px 24px rgba(0,0,0,.5)}';
+GCSS+='::-webkit-scrollbar{width:5px;height:5px}';
+GCSS+='::-webkit-scrollbar-thumb{background:rgba(105,214,192,.35);border-radius:99px}';
+GCSS+='::-webkit-scrollbar-track{background:transparent}';
+GCSS+='*{scrollbar-width:thin;scrollbar-color:rgba(105,214,192,.35) transparent}';
+GCSS+=':focus-visible{outline:2px solid rgba(0,168,132,.65);outline-offset:2px}';
+GCSS+='::selection{background:rgba(0,168,132,.35);color:#EAF6F1}';
+GCSS+='.dev-dialog{border:1px solid rgba(0,168,132,.25);background:linear-gradient(170deg,rgba(16,22,34,.92),rgba(8,11,18,.88));box-shadow:0 24px 80px rgba(0,0,0,.6),inset 0 0 0 1px rgba(0,168,132,.08)}';
+GCSS+='.dev-logo{background:linear-gradient(145deg,#00A884,#046E58);color:#04120E;box-shadow:0 8px 26px rgba(0,168,132,.45)}';
+GCSS+='.dev-stat{background:rgba(0,168,132,.08);border:1px solid rgba(0,168,132,.25);border-radius:14px;box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}';
+GCSS+='.dev-stat b{color:#69D6C0;text-shadow:0 0 14px rgba(105,214,192,.55)}';
+GCSS+='.dev-row2{border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.03);border-radius:12px;padding:9px 10px;margin-bottom:6px}';
+GCSS+='.dev-search{border:1px solid rgba(0,168,132,.3);background:rgba(8,12,22,.6);border-radius:12px;color:var(--text);padding:9px 12px;font-size:13px}';
+GCSS+='.dev-search:focus{outline:none;border-color:rgba(0,168,132,.6);box-shadow:0 0 0 3px rgba(0,168,132,.15)}';
+GCSS+='.sb-label{color:#69D6C0;letter-spacing:.14em}';
 GCSS+='.chat-top{padding:8px 10px}';
 GCSS+='.chat-av{width:38px;height:38px}';
 GCSS+='.composer{border-radius:26px;background:rgba(10,14,22,.72)}';
 GCSS+='.conv{padding:11px 8px}';
 GCSS+='@keyframes spSpin{to{transform:rotate(360deg)}}';
+GCSS+='@keyframes spSpin2{from{transform:rotate(360deg)}to{transform:rotate(0deg)}}';
 GCSS+='@keyframes spFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}';
 GCSS+='@keyframes spGlow{0%,100%{text-shadow:0 0 16px rgba(0,168,132,.22)}50%{text-shadow:0 0 30px rgba(0,168,132,.5)}}';
 GCSS+='@keyframes spShine{to{background-position:200% 0}}';
@@ -2554,6 +2638,20 @@ if(!el('spHalo')){
 var halo=document.createElement('div');
 halo.id='spHalo';
 spEl.insertBefore(halo,spEl.firstChild);
+}
+if(!el('spHalo2')){
+var halo2=document.createElement('div');
+halo2.id='spHalo2';
+spEl.insertBefore(halo2,spEl.firstChild);
+}
+if(!spEl.querySelector('.sp-orbit')){
+var orb=document.createElement('div');
+orb.className='sp-orbit';
+orb.appendChild(document.createElement('i'));
+var ring0=spEl.querySelector('.sp-ring');
+if(ring0)spEl.insertBefore(orb,ring0);else spEl.appendChild(orb);
+}
+if(!spEl.querySelector('.sp-parts')){
 var parts=document.createElement('div');
 parts.className='sp-parts';
 for(var pi=0;pi<16;pi++){
@@ -2753,7 +2851,7 @@ window.QC={get me(){return S.me;},get uid(){return uid;},get S(){return S;},icon
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
 </script>
-<script src="media.js?v=33"></script>
+<script src="media.js?v=34"></script>
 </body>
 </html>
-<!-- END index.html v65 -->
+<!-- END index.html v66 -->
