@@ -1,4 +1,4 @@
-/* media.js v29 — emoji, gambar, suara, call WA-style (blur-fill + contain, anti-zoom) */
+/* media.js v30 — emoji, gambar, suara, call WA-style (contain+blur, anti-delay) */
 (function(){
 'use strict';
 if(!window.QC)return;
@@ -63,8 +63,8 @@ C+='background:#000;overflow:visible}';
 C+='.call-remote video{background:#000}';
 C+='#remoteBlur{position:absolute;left:0;top:0;';
 C+='width:100%;height:100%;object-fit:cover;';
-C+='filter:blur(26px) brightness(.55) saturate(1.15);';
-C+='transform:scale(1.25);z-index:0;pointer-events:none}';
+C+='filter:blur(20px) brightness(.55) saturate(1.15);';
+C+='transform:scale(1.2);z-index:0;pointer-events:none}';
 C+='.call-ph{position:absolute;left:50%;top:42%;';
 C+='transform:translate(-50%,-50%);';
 C+='display:flex;flex-direction:column;';
@@ -583,6 +583,21 @@ p.then(function(){rv.muted=false;}).catch(function(){rv.muted=false;});
 rv.muted=false;
 }
 }
+function tuneSender(){
+if(!pc)return;
+try{
+pc.getSenders().forEach(function(snd){
+if(!snd.track||snd.track.kind!=='video')return;
+if(!snd.setParameters)return;
+var p=snd.getParameters()||{};
+if(!p.encodings||!p.encodings.length)p.encodings=[{}];
+p.encodings[0].maxBitrate=1200000;
+p.encodings[0].maxFramerate=30;
+p.degradationPreference='maintain-framerate';
+snd.setParameters(p).catch(function(){});
+});
+}catch(e){}
+}
 function applyLayout(){
 var box=gid('callRemoteBox'),loc=gid('callLocal');
 var rv=gid('remoteVideo'),lv=gid('localVideo');
@@ -698,7 +713,10 @@ gid('callTimer').textContent=m+':'+d;
 function getMedia(video,face){
 var va={echoCancellation:true,noiseSuppression:true};
 if(!video)return navigator.mediaDevices.getUserMedia({audio:va});
-return navigator.mediaDevices.getUserMedia({video:{facingMode:face||'user'},audio:va})
+return navigator.mediaDevices.getUserMedia({video:{facingMode:face||'user',width:{max:1280},height:{max:1280},frameRate:{max:30}},audio:va})
+.catch(function(){
+return navigator.mediaDevices.getUserMedia({video:{facingMode:face||'user'},audio:va});
+})
 .catch(function(){
 return navigator.mediaDevices.getUserMedia({video:true,audio:va});
 })
@@ -709,6 +727,7 @@ return navigator.mediaDevices.getUserMedia({audio:va});
 function wirePC(){
 pc=new RTCPeerConnection(ICE);
 ls.getTracks().forEach(function(t){pc.addTrack(t,ls);});
+tuneSender();
 pc.ontrack=function(e){
 var rv=gid('remoteVideo');
 attachRemote(rv,e.streams[0]);
@@ -868,6 +887,7 @@ if(pc){
 pc.getSenders().forEach(function(s2){
 if(s2.track&&s2.track.kind==='video')s2.replaceTrack(nv);
 });
+tuneSender();
 }
 facing=next;
 gid('ctrlFlip').classList.toggle('on',facing==='environment');
@@ -968,4 +988,4 @@ try{QC.toast(tr('Modul media gagal: ','Media module failed: ')+e.message);}catch
 if(window.console)console.error(e);
 }
 })();
-/* END media.js v29 */
+/* END media.js v30 */
