@@ -1,4 +1,4 @@
-/* media.js v27 — emoji, gambar, suara, call WA-style (layout inline, swap tap, flip iOS-safe) */
+/* media.js v28 — emoji, gambar, suara, call WA-style (fit adaptif anti-zoom) */
 (function(){
 'use strict';
 if(!window.QC)return;
@@ -59,7 +59,8 @@ C+='color:var(--lime,#00A884)}';
 C+='.call-modal{position:fixed;inset:0;z-index:300;';
 C+='background:#000;display:flex;flex-direction:column}';
 C+='.call-remote{flex:1;position:relative;';
-C+='background:#0a0a0a;overflow:visible}';
+C+='background:#000;overflow:visible}';
+C+='.call-remote video{background:#000}';
 C+='.call-ph{position:absolute;left:50%;top:42%;';
 C+='transform:translate(-50%,-50%);';
 C+='display:flex;flex-direction:column;';
@@ -577,6 +578,16 @@ p.then(function(){rv.muted=false;}).catch(function(){rv.muted=false;});
 rv.muted=false;
 }
 }
+function fitRemote(){
+var rv=gid('remoteVideo');
+var box=gid('callRemoteBox');
+if(!rv||!box||!rv.videoWidth||!rv.videoHeight)return;
+if(callMode==='audio')return;
+var ta=rv.videoWidth/rv.videoHeight;
+var bh=Math.max(1,box.clientHeight-84);
+var ba=box.clientWidth/bh;
+rv.style.objectFit=Math.abs(ta-ba)<0.22?'cover':'contain';
+}
 function applyLayout(){
 var box=gid('callRemoteBox'),loc=gid('callLocal');
 var rv=gid('remoteVideo'),lv=gid('localVideo');
@@ -601,10 +612,10 @@ var bigV=swapped?lv:rv;
 var pipV=swapped?rv:lv;
 [rv,lv].forEach(function(v){
 v.style.position='absolute';
-v.style.objectFit='cover';
 v.style.zIndex='1';
 });
 lv.style.transform='scaleX(-1)';
+lv.style.objectFit='cover';
 rv.style.transform='none';
 bigV.style.left='0';
 bigV.style.top='0';
@@ -627,6 +638,8 @@ pipV.style.border='2px solid rgba(255,255,255,.28)';
 pipV.style.boxShadow='0 6px 20px rgba(0,0,0,.5)';
 pipV.style.background='#111';
 pipV.style.zIndex='6';
+if(pipV===rv)rv.style.objectFit='cover';
+else fitRemote();
 }
 function toggleSwap(){
 if(callMode==='audio')return;
@@ -684,10 +697,7 @@ gid('callTimer').textContent=m+':'+d;
 function getMedia(video,face){
 var va={echoCancellation:true,noiseSuppression:true};
 if(!video)return navigator.mediaDevices.getUserMedia({audio:va});
-return navigator.mediaDevices.getUserMedia({video:{facingMode:{exact:face||'user'}},audio:va})
-.catch(function(){
-return navigator.mediaDevices.getUserMedia({video:{facingMode:face||'user'},audio:va});
-})
+return navigator.mediaDevices.getUserMedia({video:{facingMode:face||'user'},audio:va})
 .catch(function(){
 return navigator.mediaDevices.getUserMedia({video:true,audio:va});
 })
@@ -707,6 +717,7 @@ gid('callPh').style.display='none';
 var s=gid('callStatus');
 if(s)s.style.display='none';
 applyLayout();
+fitRemote();
 if(!answered)timer();
 };
 pc.onicecandidate=function(e){
@@ -914,6 +925,7 @@ gid('icOk').onclick=accept;
 gid('icNo').onclick=decline;
 gid('remoteVideo').onclick=toggleSwap;
 gid('localVideo').onclick=toggleSwap;
+gid('remoteVideo').addEventListener('loadedmetadata',fitRemote);
 gid('ctrlMute').onclick=function(){
 if(!ls)return;
 var a=ls.getAudioTracks()[0];
@@ -940,10 +952,10 @@ gid('ctrlEnd').onclick=function(){
 endCall(false);
 };
 window.addEventListener('resize',function(){
-if(active)applyLayout();
+if(active){applyLayout();fitRemote();}
 });
 window.addEventListener('orientationchange',function(){
-if(active)setTimeout(applyLayout,120);
+if(active)setTimeout(function(){applyLayout();fitRemote();},120);
 });
 window.addEventListener('pagehide',function(){
 if(active)endCall(true);
@@ -955,4 +967,4 @@ try{QC.toast(tr('Modul media gagal: ','Media module failed: ')+e.message);}catch
 if(window.console)console.error(e);
 }
 })();
-/* END media.js v27 */
+/* END media.js v28 */
