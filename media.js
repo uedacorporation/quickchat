@@ -1,4 +1,4 @@
-/* media.js v32 — emoji, gambar, suara, call WA-style (flip deviceId + reset mute) */
+/* media.js v33 — emoji, gambar, suara, call WA-style (flip android fix + bebas kebocoran kamera) */
 (function(){
 'use strict';
 if(!window.QC)return;
@@ -6,6 +6,7 @@ var QC=window.QC,S=QC.S;
 var icon=QC.icon,toast=QC.toast;
 function gid(i){return document.getElementById(i);}
 function tr(a,b){return document.documentElement.lang==='en'?b:a;}
+function delay(ms){return new Promise(function(r){setTimeout(r,ms);});}
 function badEm(em){
 if(!em)return true;
 if(em==='\uFE0F'||em==='\u200D')return true;
@@ -594,7 +595,7 @@ document.body.insertAdjacentHTML('beforeend',H);
 var pc=null,ls=null,active=false,answered=false;
 var partner=null,incoming=null,ctmr=null,sec=0;
 var callMode='video',facing='user',swapped=false;
-var camList=[],camIdx=-1;
+var callStreams=[];
 var ICE={iceServers:[
 {urls:'stun:stun.l.google.com:19302'},
 {urls:'stun:stun1.l.google.com:19302'},
@@ -764,14 +765,14 @@ return navigator.mediaDevices.getUserMedia({video:true,audio:va});
 return navigator.mediaDevices.getUserMedia({audio:va});
 });
 }
-function syncCamIdx(track){
-if(!track)return;
-navigator.mediaDevices.enumerateDevices().then(function(ds){
-camList=ds.filter(function(d){return d.kind==='videoinput';});
-for(var i=0;i<camList.length;i++){
-if(camList[i].label&&track.label&&camList[i].label===track.label){camIdx=i;return;}
+function getMediaVideoOnly(face){
+return navigator.mediaDevices.getUserMedia({video:{facingMode:face}})
+.catch(function(){
+return navigator.mediaDevices.getUserMedia({video:true});
+});
 }
-}).catch(function(){});
+function killAudioOf(st){
+st.getAudioTracks().forEach(function(t){try{t.stop();}catch(e){}});
 }
 function wirePC(){
 pc=new RTCPeerConnection(ICE);
@@ -840,9 +841,9 @@ facing='user';
 var wantVideo=video!==false;
 getMedia(wantVideo,facing).then(function(st){
 ls=st;
+callStreams.push(st);
 gid('localVideo').srcObject=st;
 gid('localVideo').play().catch(function(){});
-syncCamIdx(st.getVideoTracks()[0]);
 openUI(u,false,wantVideo?'video':'audio');
 wirePC();
 return pc.createOffer().then(function(of){
@@ -881,9 +882,9 @@ facing='user';
 gid('incomingCall').classList.add('hidden');
 getMedia(mode==='video',facing).then(function(st){
 ls=st;
+callStreams.push(st);
 gid('localVideo').srcObject=st;
 gid('localVideo').play().catch(function(){});
-syncCamIdx(st.getVideoTracks()[0]);
 openUI(from,true,mode);
 wirePC();
 return pc.setRemoteDescription(of).then(function(){
@@ -912,6 +913,10 @@ if(pc){
 try{pc.close();}catch(e){}
 pc=null;
 }
+callStreams.forEach(function(s){
+try{s.getTracks().forEach(function(t){t.stop();});}catch(e){}
+});
+callStreams=[];
 if(ls){
 ls.getTracks().forEach(function(t){t.stop();});
 ls=null;
@@ -929,41 +934,48 @@ gid('localVideo').srcObject=null;
 function flipCam(){
 if(callMode==='audio'||!active)return;
 var old=ls?ls.getVideoTracks()[0]:null;
+var oldLabel=old?old.label:'';
 if(old){
 try{old.stop();}catch(e){}
 if(ls)ls.removeTrack(old);
 }
-var va={echoCancellation:true,noiseSuppression:true};
-navigator.mediaDevices.enumerateDevices().then(function(ds){
-camList=ds.filter(function(d){return d.kind==='videoinput';});
-var cons=null;
-if(camList.length>1){
-camIdx=(camIdx+1)%camList.length;
-cons={video:{deviceId:{exact:camList[camIdx].deviceId}},audio:va};
-}else{
-facing=facing==='user'?'environment':'user';
-cons={video:{facingMode:facing},audio:va};
-}
-return navigator.mediaDevices.getUserMedia(cons).catch(function(){
-facing=facing==='user'?'environment':'user';
-return getMedia(true,facing);
-});
+var target=facing==='user'?'environment':'user';
+var tries=0;
+function attempt(){
+tries++;
+return delay(tries===1?250:400).then(function(){
+return getMediaVideoOnly(target);
 }).then(function(st){
-if(!st)throw new Error('nocam');
+killAudioOf(st);
 var nv=st.getVideoTracks()[0];
 if(!nv){
-st.getTracks().forEach(function(t){t.stop();});
-throw new Error('nocam');
+st.getTracks().forEach(function(t){try{t.stop();}catch(e){}});
+throw new Error('novideo');
 }
+if(nv.label&&oldLabel&&nv.label===oldLabel&&tries<2){
+st.getTracks().forEach(function(t){try{t.stop();}catch(e){}});
+throw new Error('samecam');
+}
+callStreams.push(st);
 attachNewVideo(nv);
-syncCamIdx(nv);
-gid('ctrlFlip').classList.toggle('on');
+facing=target;
+gid('ctrlFlip').classList.toggle('on',facing==='environment');
 applyLayout();
+});
+}
+attempt().catch(function(){
+return attempt();
 }).catch(function(){
-toast(tr('Gagal mengganti kamera, coba lagi','Failed to switch camera, try again'));
-getMedia(true,facing).then(function(st2){
+toast(tr('Gagal mengganti kamera','Failed to switch camera'));
+return delay(250).then(function(){
+return getMediaVideoOnly(facing);
+}).then(function(st2){
+killAudioOf(st2);
 var nv2=st2.getVideoTracks()[0];
-if(nv2)attachNewVideo(nv2);
+if(nv2){
+callStreams.push(st2);
+attachNewVideo(nv2);
+}
 }).catch(function(){});
 });
 }
@@ -1061,4 +1073,4 @@ try{QC.toast(tr('Modul media gagal: ','Media module failed: ')+e.message);}catch
 if(window.console)console.error(e);
 }
 })();
-/* END media.js v32 */
+/* END media.js v33 */
