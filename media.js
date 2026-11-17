@@ -1,4 +1,4 @@
-/* media.js v30 — emoji, gambar, suara, call WA-style (contain+blur, anti-delay) */
+/* media.js v31 — emoji, gambar, suara, call WA-style (fullscreen cover, potret, anti-delay) */
 (function(){
 'use strict';
 if(!window.QC)return;
@@ -61,10 +61,6 @@ C+='background:#000;display:flex;flex-direction:column}';
 C+='.call-remote{flex:1;position:relative;';
 C+='background:#000;overflow:visible}';
 C+='.call-remote video{background:#000}';
-C+='#remoteBlur{position:absolute;left:0;top:0;';
-C+='width:100%;height:100%;object-fit:cover;';
-C+='filter:blur(20px) brightness(.55) saturate(1.15);';
-C+='transform:scale(1.2);z-index:0;pointer-events:none}';
 C+='.call-ph{position:absolute;left:50%;top:42%;';
 C+='transform:translate(-50%,-50%);';
 C+='display:flex;flex-direction:column;';
@@ -509,7 +505,6 @@ else startRec();
 var H='';
 H+='<div id="callModal" class="call-modal hidden">';
 H+='<div class="call-remote" id="callRemoteBox">';
-H+='<video id="remoteBlur" autoplay playsinline muted></video>';
 H+='<video id="remoteVideo" autoplay playsinline></video>';
 H+='<div id="callPh" class="call-ph">';
 H+='<div id="callBigAv" class="big-av"></div>';
@@ -598,10 +593,26 @@ snd.setParameters(p).catch(function(){});
 });
 }catch(e){}
 }
+function orientBig(v,box){
+if(!v||!box||!v.videoWidth)return false;
+var trackLand=v.videoWidth>v.videoHeight;
+var boxLand=box.clientWidth>box.clientHeight;
+if(trackLand&&!boxLand){
+var bw=box.clientWidth;
+var bh=Math.max(1,box.clientHeight-84);
+v.style.width=bh+'px';
+v.style.height=bw+'px';
+v.style.left='50%';
+v.style.top='calc(50% - 42px)';
+v.style.transform='translate(-50%,-50%) rotate(90deg)';
+v.style.objectFit='cover';
+return true;
+}
+return false;
+}
 function applyLayout(){
 var box=gid('callRemoteBox'),loc=gid('callLocal');
 var rv=gid('remoteVideo'),lv=gid('localVideo');
-var bv=gid('remoteBlur');
 if(!box||!loc||!rv||!lv)return;
 box.style.position='static';
 box.style.overflow='visible';
@@ -615,26 +626,19 @@ loc.style.borderRadius='0';
 if(callMode==='audio'){
 rv.style.display='none';
 lv.style.display='none';
-if(bv)bv.style.display='none';
 return;
 }
 rv.style.display='';
 lv.style.display='';
-if(bv)bv.style.display='';
 var bigV=swapped?lv:rv;
 var pipV=swapped?rv:lv;
 [rv,lv].forEach(function(v){
 v.style.position='absolute';
 v.style.zIndex='1';
+v.style.objectFit='cover';
 });
 lv.style.transform='scaleX(-1)';
 rv.style.transform='none';
-bigV.style.objectFit='contain';
-pipV.style.objectFit='cover';
-if(bv){
-bv.srcObject=bigV.srcObject||null;
-bv.style.objectFit='cover';
-}
 bigV.style.left='0';
 bigV.style.top='0';
 bigV.style.width='100%';
@@ -645,6 +649,12 @@ bigV.style.borderRadius='0';
 bigV.style.border='0';
 bigV.style.boxShadow='none';
 bigV.style.zIndex='1';
+if(bigV===rv){
+orientBig(rv,box);
+}else{
+rv.style.width='';
+rv.style.height='';
+}
 pipV.style.left='auto';
 pipV.style.top='auto';
 pipV.style.right='14px';
@@ -713,7 +723,10 @@ gid('callTimer').textContent=m+':'+d;
 function getMedia(video,face){
 var va={echoCancellation:true,noiseSuppression:true};
 if(!video)return navigator.mediaDevices.getUserMedia({audio:va});
-return navigator.mediaDevices.getUserMedia({video:{facingMode:face||'user',width:{max:1280},height:{max:1280},frameRate:{max:30}},audio:va})
+return navigator.mediaDevices.getUserMedia({video:{facingMode:face||'user',aspectRatio:{ideal:0.5625},width:{max:1280},frameRate:{max:30}},audio:va})
+.catch(function(){
+return navigator.mediaDevices.getUserMedia({video:{facingMode:face||'user',width:{max:1280},frameRate:{max:30}},audio:va});
+})
 .catch(function(){
 return navigator.mediaDevices.getUserMedia({video:{facingMode:face||'user'},audio:va});
 })
@@ -859,8 +872,6 @@ swapped=false;
 gid('callModal').classList.add('hidden');
 gid('remoteVideo').srcObject=null;
 gid('localVideo').srcObject=null;
-var bv=gid('remoteBlur');
-if(bv)bv.srcObject=null;
 }
 function flipCam(){
 if(callMode==='audio'||!active)return;
@@ -947,6 +958,9 @@ gid('icOk').onclick=accept;
 gid('icNo').onclick=decline;
 gid('remoteVideo').onclick=toggleSwap;
 gid('localVideo').onclick=toggleSwap;
+gid('remoteVideo').addEventListener('loadedmetadata',function(){
+applyLayout();
+});
 gid('ctrlMute').onclick=function(){
 if(!ls)return;
 var a=ls.getAudioTracks()[0];
@@ -988,4 +1002,4 @@ try{QC.toast(tr('Modul media gagal: ','Media module failed: ')+e.message);}catch
 if(window.console)console.error(e);
 }
 })();
-/* END media.js v30 */
+/* END media.js v31 */
