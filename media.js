@@ -1,4 +1,4 @@
-/* media.js v31 — emoji, gambar, suara, call WA-style (flip depan/belakang fix) */
+/* media.js v32 — emoji, gambar, suara, call WA-style (flip deviceId + reset mute) */
 (function(){
 'use strict';
 if(!window.QC)return;
@@ -594,6 +594,7 @@ document.body.insertAdjacentHTML('beforeend',H);
 var pc=null,ls=null,active=false,answered=false;
 var partner=null,incoming=null,ctmr=null,sec=0;
 var callMode='video',facing='user',swapped=false;
+var camList=[],camIdx=-1;
 var ICE={iceServers:[
 {urls:'stun:stun.l.google.com:19302'},
 {urls:'stun:stun1.l.google.com:19302'},
@@ -711,9 +712,15 @@ function csend(o){
 if(!partner)return;
 csendTo(partner,o);
 }
+function resetCallButtons(){
+gid('ctrlMute').classList.remove('on');
+gid('ctrlVideo').classList.remove('off');
+gid('ctrlFlip').classList.remove('on');
+}
 function openUI(name,ans,mode){
 callMode=mode||'video';
 swapped=false;
+resetCallButtons();
 gid('callModal').classList.remove('hidden');
 setAvByName(gid('callBigAv'),name,56);
 gid('callBigName').textContent=nm2(name);
@@ -756,6 +763,15 @@ return navigator.mediaDevices.getUserMedia({video:true,audio:va});
 .catch(function(){
 return navigator.mediaDevices.getUserMedia({audio:va});
 });
+}
+function syncCamIdx(track){
+if(!track)return;
+navigator.mediaDevices.enumerateDevices().then(function(ds){
+camList=ds.filter(function(d){return d.kind==='videoinput';});
+for(var i=0;i<camList.length;i++){
+if(camList[i].label&&track.label&&camList[i].label===track.label){camIdx=i;return;}
+}
+}).catch(function(){});
 }
 function wirePC(){
 pc=new RTCPeerConnection(ICE);
@@ -802,6 +818,7 @@ if(ls){ls.addTrack(nv);}else{ls=new MediaStream([nv]);}
 var lv=gid('localVideo');
 lv.srcObject=null;
 lv.srcObject=ls;
+lv.play().catch(function(){});
 if(pc){
 pc.getSenders().forEach(function(s2){
 if(s2.track&&s2.track.kind==='video')s2.replaceTrack(nv);
@@ -824,6 +841,8 @@ var wantVideo=video!==false;
 getMedia(wantVideo,facing).then(function(st){
 ls=st;
 gid('localVideo').srcObject=st;
+gid('localVideo').play().catch(function(){});
+syncCamIdx(st.getVideoTracks()[0]);
 openUI(u,false,wantVideo?'video':'audio');
 wirePC();
 return pc.createOffer().then(function(of){
@@ -863,6 +882,8 @@ gid('incomingCall').classList.add('hidden');
 getMedia(mode==='video',facing).then(function(st){
 ls=st;
 gid('localVideo').srcObject=st;
+gid('localVideo').play().catch(function(){});
+syncCamIdx(st.getVideoTracks()[0]);
 openUI(from,true,mode);
 wirePC();
 return pc.setRemoteDescription(of).then(function(){
@@ -900,29 +921,43 @@ active=false;
 answered=false;
 partner=null;
 swapped=false;
+resetCallButtons();
 gid('callModal').classList.add('hidden');
 gid('remoteVideo').srcObject=null;
 gid('localVideo').srcObject=null;
 }
 function flipCam(){
 if(callMode==='audio'||!active)return;
-var next=facing==='user'?'environment':'user';
 var old=ls?ls.getVideoTracks()[0]:null;
 if(old){
 try{old.stop();}catch(e){}
 if(ls)ls.removeTrack(old);
 }
-getMedia(true,next).then(function(st){
+var va={echoCancellation:true,noiseSuppression:true};
+navigator.mediaDevices.enumerateDevices().then(function(ds){
+camList=ds.filter(function(d){return d.kind==='videoinput';});
+var cons=null;
+if(camList.length>1){
+camIdx=(camIdx+1)%camList.length;
+cons={video:{deviceId:{exact:camList[camIdx].deviceId}},audio:va};
+}else{
+facing=facing==='user'?'environment':'user';
+cons={video:{facingMode:facing},audio:va};
+}
+return navigator.mediaDevices.getUserMedia(cons).catch(function(){
+facing=facing==='user'?'environment':'user';
+return getMedia(true,facing);
+});
+}).then(function(st){
+if(!st)throw new Error('nocam');
 var nv=st.getVideoTracks()[0];
-var na=st.getAudioTracks()[0];
-if(na&&ls&&ls.getAudioTracks().length===0)ls.addTrack(na);
 if(!nv){
-toast(tr('Gagal mengganti kamera','Failed to switch camera'));
-return;
+st.getTracks().forEach(function(t){t.stop();});
+throw new Error('nocam');
 }
 attachNewVideo(nv);
-facing=next;
-gid('ctrlFlip').classList.toggle('on',facing==='environment');
+syncCamIdx(nv);
+gid('ctrlFlip').classList.toggle('on');
 applyLayout();
 }).catch(function(){
 toast(tr('Gagal mengganti kamera, coba lagi','Failed to switch camera, try again'));
@@ -1026,4 +1061,4 @@ try{QC.toast(tr('Modul media gagal: ','Media module failed: ')+e.message);}catch
 if(window.console)console.error(e);
 }
 })();
-/* END media.js v31 */
+/* END media.js v32 */
