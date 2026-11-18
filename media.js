@@ -1,4 +1,4 @@
-/* media.js v40 — emoji, gambar, suara, call gaya WhatsApp (flip = putar kamera, cepat) */
+/* media.js v41 — emoji, gambar, suara, call gaya WhatsApp (tembus MIUI Redmi Note 9) */
 (function(){
 'use strict';
 if(!window.QC)return;
@@ -866,6 +866,54 @@ guardAudio();
 }).catch(function(){});
 });
 }
+function colorCheck(nv){
+return new Promise(function(res){
+var v=document.createElement('video');
+v.muted=true;
+v.playsInline=true;
+v.setAttribute('playsinline','');
+v.srcObject=new MediaStream([nv]);
+var done=false,tries=0;
+function fin(x){
+if(done)return;
+done=true;
+clearTimeout(to);
+try{v.srcObject=null;}catch(e){}
+res(x);
+}
+var to=setTimeout(function(){fin(-1);},2200);
+function measure(){
+tries++;
+try{
+if(v.readyState<2){
+if(tries<7){setTimeout(measure,200);return;}
+fin(-1);
+return;
+}
+var w=32,h=24;
+var cv=document.createElement('canvas');
+cv.width=w;cv.height=h;
+var cx=cv.getContext('2d',{willReadFrequently:true});
+cx.drawImage(v,0,0,w,h);
+var d=cx.getImageData(0,0,w,h).data;
+var sat=0,n=0;
+for(var i=0;i<d.length;i+=4){
+var mx=Math.max(d[i],d[i+1],d[i+2]);
+var mn=Math.min(d[i],d[i+1],d[i+2]);
+sat+=(mx-mn);
+n++;
+}
+fin(n?(sat/n):-1);
+}catch(e){
+if(tries<7){setTimeout(measure,200);return;}
+fin(-1);
+}
+}
+var pr=v.play();
+if(pr&&pr.catch)pr.catch(function(){});
+setTimeout(measure,300);
+});
+}
 function wirePC(){
 pc=new RTCPeerConnection(ICE);
 var iceRestarted=false;
@@ -1050,65 +1098,74 @@ if(flipping){
 flipping=false;
 fb.classList.remove('busy');
 }
-},8000);
+},10000);
 var old=ls?ls.getVideoTracks()[0]:null;
 var oldSet=(old&&old.getSettings)?old.getSettings():{};
 var oldId=oldSet.deviceId||'';
-function finish(st){
-var nv=st.getVideoTracks()[0];
-if(!nv){
-stopAllOf(st);
-throw new Error('novideo');
-}
-killAudioOf(st);
-callStreams.push(st);
-if(old&&ls){try{ls.removeTrack(old);}catch(e){}}
-attachNewVideo(nv);
+var opp=facing==='user'?'environment':'user';
+var saved=null;
+try{saved=localStorage.getItem(opp==='environment'?'qc-cam-rear':'qc-cam-front');}catch(e){}
+var stoppedOld=false;
+var grayF=null;
+function stopOldNow(){
+if(stoppedOld)return;
+stoppedOld=true;
 if(old){try{old.stop();}catch(e){}}
-var set=nv.getSettings?nv.getSettings():{};
-if(set.facingMode)facing=set.facingMode;
-else facing=(facing==='user'?'environment':'user');
-if(set.deviceId){
-try{localStorage.setItem('qc-cam-last',set.deviceId);}catch(e){}
+if(old&&ls){try{ls.removeTrack(old);}catch(e){}}
 }
-camDbg(set.label||('kamera '+(set.deviceId||'').slice(0,6)));
+function openCons(cons){
+return navigator.mediaDevices.getUserMedia({video:cons,audio:false});
+}
+function openWithRelease(cons){
+return openCons(cons).catch(function(){
+stopOldNow();
+return delay(350).then(function(){return openCons(cons);});
+});
+}
+function variantsOf(base){
+var out=[];
+var b2={};for(var k in base)b2[k]=base[k];
+b2.width={ideal:640};b2.height={ideal:480};
+out.push(b2);
+var b3={};for(var k3 in base)b3[k3]=base[k3];
+b3.width={ideal:1280};b3.height={ideal:720};
+out.push(b3);
+var b4={};for(var k4 in base)b4[k4]=base[k4];
+b4.frameRate={ideal:15};
+out.push(b4);
+return out;
+}
+function tryVariants(base,i){
+if(i>=3)return Promise.reject(new Error('stillgray'));
+return openWithRelease(variantsOf(base)[i]).then(function(st){
+var nv=st.getVideoTracks()[0];
+if(!nv){stopAllOf(st);return tryVariants(base,i+1);}
+return colorCheck(nv).then(function(sat){
+if(sat>=0&&sat<=1.2){stopAllOf(st);return tryVariants(base,i+1);}
+return {st:st,nv:nv,gray:false};
+});
+},function(){return tryVariants(base,i+1);});
+}
+function finish(r){
+killAudioOf(r.st);
+callStreams.push(r.st);
+stopOldNow();
+attachNewVideo(r.nv);
+facing=opp;
+var set=r.nv.getSettings?r.nv.getSettings():{};
+if(set.deviceId){
+try{localStorage.setItem(opp==='environment'?'qc-cam-rear':'qc-cam-front',set.deviceId);}catch(e){}
+}
+camDbg((set.label||('kamera '+(set.deviceId||'').slice(0,6)))+(r.gray?' (mono)':''));
+if(grayF&&grayF.st!==r.st)stopAllOf(grayF.st);
 clearTimeout(safety);
 fb.classList.remove('busy');
 flipping=false;
 applyLayout();
 }
-function openNext(idx,list){
-if(!list.length)return Promise.reject(new Error('nocams'));
-var cons={deviceId:{exact:list[idx%list.length].deviceId}};
-return navigator.mediaDevices.getUserMedia({video:cons,audio:false}).catch(function(){
-if(old){try{old.stop();}catch(e){}}
-if(old&&ls){try{ls.removeTrack(old);}catch(e){}}
-return delay(350).then(function(){
-return navigator.mediaDevices.getUserMedia({video:cons,audio:false});
-});
-});
-}
-navigator.mediaDevices.enumerateDevices().then(function(ds){
-var cams=(ds||[]).filter(function(d){return d.kind==='videoinput';});
-if(!cams.length)throw new Error('nocams');
-var cur=-1;
-for(var i=0;i<cams.length;i++){
-if(cams[i].deviceId===oldId){cur=i;break;}
-}
-if(cur<0){
-var lastSaved=null;
-try{lastSaved=localStorage.getItem('qc-cam-last');}catch(e){}
-for(var j=0;j<cams.length;j++){
-if(cams[j].deviceId===lastSaved){cur=j;break;}
-}
-}
-var next=(cur+1)%cams.length;
-return openNext(next,cams).then(finish);
-}).catch(function(){
-var opp=facing==='user'?'environment':'user';
-return delay(200).then(function(){
-return getMediaVideoOnly(opp);
-}).then(finish).catch(function(){
+function failNow(){
+if(grayF){stopAllOf(grayF.st);grayF=null;}
+stopOldNow();
 clearTimeout(safety);
 fb.classList.remove('busy');
 flipping=false;
@@ -1123,8 +1180,54 @@ callStreams.push(st2);
 attachNewVideo(nv2);
 }
 }).catch(function(){});
+}
+function handle(st,base,idx,list){
+var nv=st.getVideoTracks()[0];
+if(!nv){
+stopAllOf(st);
+return walk(list,idx);
+}
+var set=nv.getSettings?nv.getSettings():{};
+if(oldId&&set.deviceId&&set.deviceId===oldId){
+stopAllOf(st);
+return walk(list,idx);
+}
+if(opp!=='environment'){
+return Promise.resolve({st:st,nv:nv,gray:false});
+}
+return colorCheck(nv).then(function(sat){
+if(!(sat>=0&&sat<=1.2))return {st:st,nv:nv,gray:false};
+if(!grayF)grayF={st:st,nv:nv,gray:true};
+else stopAllOf(st);
+return tryVariants(base,0).then(function(r){return r;},function(){return null;});
 });
+}
+function walk(list,idx){
+if(idx>=list.length){
+if(grayF)return Promise.resolve(grayF);
+return Promise.reject(new Error('noopen'));
+}
+var base=list[idx];
+return openWithRelease(base).then(function(st){
+return handle(st,base,idx+1,list);
+},function(){
+return walk(list,idx+1);
+}).then(function(r){
+if(r)return r;
+return walk(list,idx+1);
 });
+}
+navigator.mediaDevices.enumerateDevices().then(function(ds){
+var cams=(ds||[]).filter(function(d){return d.kind==='videoinput';});
+var list=[];
+if(saved&&saved!==oldId)list.push({deviceId:{exact:saved}});
+cams.forEach(function(d){
+if(d.deviceId&&d.deviceId!==oldId&&d.deviceId!==saved)list.push({deviceId:{exact:d.deviceId}});
+});
+list.push({facingMode:{exact:opp}});
+list.push({facingMode:opp});
+return walk(list,0);
+}).then(finish).catch(failNow);
 }
 QC.onCallSignal=function(d){
 if(!d||d.from===QC.me||d.to!==QC.me)return;
@@ -1228,4 +1331,4 @@ try{QC.toast(tr('Modul media gagal: ','Media module failed: ')+e.message);}catch
 if(window.console)console.error(e);
 }
 })();
-/* END media.js v40 */
+/* END media.js v41 */
