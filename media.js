@@ -1,4 +1,4 @@
-/* media.js v37 — emoji, gambar, suara, call gaya WhatsApp (uji warna kamera + ICE restart) */
+/* media.js v38 — emoji, gambar, suara, call gaya WhatsApp (color-check kuat, guard mic, sinyal accepted) */
 (function(){
 'use strict';
 if(!window.QC)return;
@@ -616,6 +616,7 @@ var partner=null,incoming=null,ctmr=null,sec=0;
 var callMode='video',facing='user',swapped=false;
 var flipping=false;
 var callStreams=[];
+var wdTimer=null,lastBytes=-1,wdStall=0;
 var ICE={iceServers:[
 {urls:'stun:stun.l.google.com:19302'},
 {urls:'stun:stun1.l.google.com:19302'},
@@ -786,6 +787,28 @@ var m=('0'+Math.floor(sec/60)).slice(-2);
 var d=('0'+(sec%60)).slice(-2);
 gid('callTimer').textContent=m+':'+d;
 },1000);
+startWatchdog();
+}
+function startWatchdog(){
+stopWatchdog();
+wdTimer=setInterval(function(){
+if(!pc||!active||!answered)return;
+pc.getStats().then(function(rep){
+var bytes=0;
+rep.forEach(function(r){
+if(r.type==='inbound-rtp')bytes+=(r.bytesReceived||0);
+});
+if(lastBytes>=0&&bytes===lastBytes)wdStall++;
+else wdStall=0;
+lastBytes=bytes;
+if(wdStall>=5)endCall(false);
+}).catch(function(){});
+},5000);
+}
+function stopWatchdog(){
+if(wdTimer){clearInterval(wdTimer);wdTimer=null;}
+lastBytes=-1;
+wdStall=0;
 }
 function getMedia(video,face){
 var va={echoCancellation:true,noiseSuppression:true};
@@ -807,27 +830,53 @@ return navigator.mediaDevices.getUserMedia({video:true});
 function killAudioOf(st){
 st.getAudioTracks().forEach(function(t){try{t.stop();}catch(e){}});
 }
+function stopAllOf(st){
+st.getTracks().forEach(function(t){try{t.stop();}catch(e){}});
+}
+function guardAudio(){
+if(!ls)return;
+var a=ls.getAudioTracks()[0];
+if(!a)return;
+a.addEventListener('ended',function(){
+if(!active)return;
+navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}}).then(function(st){
+var na=st.getAudioTracks()[0];
+if(!na)return;
+callStreams.push(st);
+if(ls)ls.addTrack(na);
+if(pc){
+pc.getSenders().forEach(function(s2){
+if(s2.track&&s2.track.kind==='audio')s2.replaceTrack(na);
+});
+}
+guardAudio();
+}).catch(function(){});
+});
+}
 function colorCheck(nv){
 return new Promise(function(res){
 var v=document.createElement('video');
 v.muted=true;
 v.playsInline=true;
 v.setAttribute('playsinline','');
-var ms=new MediaStream([nv]);
-v.srcObject=ms;
-var done=false;
-var to=setTimeout(function(){fin(true);},1600);
-function fin(ok){
+v.srcObject=new MediaStream([nv]);
+var done=false,tries=0;
+function fin(x){
 if(done)return;
 done=true;
 clearTimeout(to);
 try{v.srcObject=null;}catch(e){}
-res(ok);
+res(x);
 }
-var pr=v.play();
-if(pr&&pr.catch)pr.catch(function(){fin(true);});
-setTimeout(function(){
+var to=setTimeout(function(){fin(-1);},2200);
+function measure(){
+tries++;
 try{
+if(v.readyState<2){
+if(tries<7){setTimeout(measure,200);return;}
+fin(-1);
+return;
+}
 var w=32,h=24;
 var cv=document.createElement('canvas');
 cv.width=w;cv.height=h;
@@ -841,10 +890,15 @@ var mn=Math.min(d[i],d[i+1],d[i+2]);
 sat+=(mx-mn);
 n++;
 }
-sat=n?sat/n:0;
-fin(sat>2.5);
-}catch(e){fin(true);}
-},500);
+fin(n?(sat/n):-1);
+}catch(e){
+if(tries<7){setTimeout(measure,200);return;}
+fin(-1);
+}
+}
+var pr=v.play();
+if(pr&&pr.catch)pr.catch(function(){});
+setTimeout(measure,300);
 });
 }
 function wirePC(){
@@ -872,7 +926,7 @@ var s=pc.iceConnectionState;
 if(s==='failed'){
 if(!iceRestarted){iceRestarted=true;try{pc.restartIce();}catch(e){}}
 setTimeout(function(){
-if(pc&&pc.iceConnectionState==='failed')endCall(true);
+if(pc&&pc.iceConnectionState==='failed')endCall(false);
 },6000);
 }else if(s==='disconnected'){
 setTimeout(function(){
@@ -880,7 +934,7 @@ if(!pc)return;
 if(pc.iceConnectionState==='disconnected'){
 if(!iceRestarted){iceRestarted=true;try{pc.restartIce();}catch(e){}}
 setTimeout(function(){
-if(pc&&pc.iceConnectionState==='disconnected')endCall(true);
+if(pc&&pc.iceConnectionState==='disconnected')endCall(false);
 },8000);
 }
 },20000);
@@ -890,11 +944,11 @@ pc.onconnectionstatechange=function(){
 if(!pc)return;
 var s=pc.connectionState;
 if(s==='closed'){
-endCall(true);
+endCall(false);
 }else if(s==='failed'){
 if(!iceRestarted){iceRestarted=true;try{pc.restartIce();}catch(e){}}
 setTimeout(function(){
-if(pc&&pc.connectionState==='failed')endCall(true);
+if(pc&&pc.connectionState==='failed')endCall(false);
 },6000);
 }
 };
@@ -927,6 +981,7 @@ var wantVideo=video!==false;
 getMedia(wantVideo,facing).then(function(st){
 ls=st;
 callStreams.push(st);
+guardAudio();
 gid('localVideo').srcObject=st;
 gid('localVideo').play().catch(function(){});
 openUI(u,false,wantVideo?'video':'audio');
@@ -968,6 +1023,7 @@ gid('incomingCall').classList.add('hidden');
 getMedia(mode==='video',facing).then(function(st){
 ls=st;
 callStreams.push(st);
+guardAudio();
 gid('localVideo').srcObject=st;
 gid('localVideo').play().catch(function(){});
 openUI(from,true,mode);
@@ -977,6 +1033,7 @@ return pc.createAnswer();
 }).then(function(an){
 return pc.setLocalDescription(an).then(function(){
 csend({type:'answer',sdp:an});
+csend({type:'accepted'});
 active=true;
 timer();
 });
@@ -994,6 +1051,7 @@ hideIncoming();
 }
 function endCall(silent){
 clearInterval(ctmr);
+stopWatchdog();
 if(pc){
 try{pc.close();}catch(e){}
 pc=null;
@@ -1032,37 +1090,42 @@ var opp=facing==='user'?'environment':'user';
 function openCons(cons){
 return navigator.mediaDevices.getUserMedia({video:cons,audio:false});
 }
-function candidateOk(st){
+var fallback=null;
+function tryList(list,i){
+if(i>=list.length){
+if(fallback)return Promise.resolve(fallback);
+return Promise.reject(new Error('noflip'));
+}
+return openCons(list[i]).then(function(st){
 var nv=st.getVideoTracks()[0];
 if(!nv){
-st.getTracks().forEach(function(t){try{t.stop();}catch(e){}});
-return Promise.resolve(null);
+stopAllOf(st);
+return tryList(list,i+1);
 }
 var set=nv.getSettings?nv.getSettings():{};
 if(oldId&&set.deviceId&&set.deviceId===oldId){
-st.getTracks().forEach(function(t){try{t.stop();}catch(e){}});
-return Promise.resolve(null);
+stopAllOf(st);
+return tryList(list,i+1);
 }
-return colorCheck(nv).then(function(ok){
-if(!ok){
-st.getTracks().forEach(function(t){try{t.stop();}catch(e){}});
-return null;
+return colorCheck(nv).then(function(sat){
+if(sat>=0&&sat<=2.5){
+if(!fallback)fallback={st:st,nv:nv};
+else stopAllOf(st);
+return tryList(list,i+1);
 }
 return {st:st,nv:nv};
 });
-}
-function tryList(list,i){
-if(i>=list.length)return Promise.reject(new Error('noflip'));
-return openCons(list[i]).then(candidateOk).then(function(r){
-if(r)return r;
-return tryList(list,i+1);
 },function(){return tryList(list,i+1);});
 }
 function buildOrder(cams,full){
 var o=[];
 o.push({facingMode:{exact:opp}});
+o.push({facingMode:{exact:opp},width:{ideal:1280},height:{ideal:720}});
 cams.forEach(function(d){
-if(d.deviceId&&d.deviceId!==oldId)o.push({deviceId:{exact:d.deviceId}});
+if(d.deviceId&&d.deviceId!==oldId){
+o.push({deviceId:{exact:d.deviceId}});
+o.push({deviceId:{exact:d.deviceId},width:{ideal:1280},height:{ideal:720}});
+}
 });
 o.push({facingMode:opp});
 if(full)o.push(true);
@@ -1097,10 +1160,10 @@ navigator.mediaDevices.enumerateDevices().then(function(ds){
 var cams=(ds||[]).filter(function(d){
 return d.kind==='videoinput'&&!isAuxCam(d);
 });
-var orderA=buildOrder(cams,false).slice(0,3);
-return tryList(orderA,0).catch(function(){
+return tryList(buildOrder(cams,false).slice(0,6),0).catch(function(){
 if(old){try{old.stop();}catch(e){}}
 if(old&&ls){try{ls.removeTrack(old);}catch(e){}}
+fallback=null;
 return delay(300).then(function(){
 return tryList(buildOrder(cams,true),0);
 });
@@ -1133,6 +1196,9 @@ hideIncoming();
 else if(d.type==='answer'&&pc){
 pc.setRemoteDescription(d.sdp)
 .then(timer).catch(function(){});
+}
+else if(d.type==='accepted'){
+if(incoming&&incoming.from===d.from)hideIncoming();
 }
 else if(d.type==='ice'&&pc){
 pc.addIceCandidate(d.cand).catch(function(){});
@@ -1197,7 +1263,7 @@ window.addEventListener('orientationchange',function(){
 if(active)setTimeout(function(){applyLayout();fitRemote();},120);
 });
 window.addEventListener('pagehide',function(){
-if(active)endCall(true);
+if(active)endCall(false);
 if(incoming)hideIncoming();
 });
 window.QC_MEDIA=true;
@@ -1206,4 +1272,4 @@ try{QC.toast(tr('Modul media gagal: ','Media module failed: ')+e.message);}catch
 if(window.console)console.error(e);
 }
 })();
-/* END media.js v37 */
+/* END media.js v38 */
