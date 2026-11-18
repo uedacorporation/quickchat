@@ -1,4 +1,4 @@
-/* media.js v41 — emoji, gambar, suara, call gaya WhatsApp (tembus MIUI Redmi Note 9) */
+/* media.js v42 — emoji, gambar, suara, call gaya WhatsApp (flip fix Redmi, tanpa chip, remote cover) */
 (function(){
 'use strict';
 if(!window.QC)return;
@@ -630,19 +630,6 @@ credential:'openrelayproject'}
 function nm2(u){
 return QC.displayName?QC.displayName(u):u;
 }
-function camDbg(t){
-var d=gid('camDbg');
-if(!d){
-d=document.createElement('div');
-d.id='camDbg';
-d.style.cssText='position:fixed;left:50%;bottom:150px;transform:translateX(-50%);z-index:400;background:rgba(0,0,0,.68);color:#fff;font:600 11px monospace;padding:6px 12px;border-radius:99px;pointer-events:none;opacity:0;transition:opacity .3s;max-width:80vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis';
-document.body.appendChild(d);
-}
-d.textContent=t;
-d.style.opacity='1';
-clearTimeout(d._t);
-d._t=setTimeout(function(){d.style.opacity='0';},2500);
-}
 function hideIncoming(){
 incoming=null;
 gid('incomingCall').classList.add('hidden');
@@ -668,13 +655,9 @@ rv.muted=false;
 }
 function fitRemote(){
 var rv=gid('remoteVideo');
-var box=gid('callRemoteBox');
-if(!rv||!box||!rv.videoWidth||!rv.videoHeight)return;
+if(!rv)return;
 if(callMode==='audio')return;
-var ta=rv.videoWidth/rv.videoHeight;
-var bh=Math.max(1,box.clientHeight);
-var ba=box.clientWidth/bh;
-rv.style.objectFit=Math.abs(ta-ba)<0.22?'cover':'contain';
+rv.style.objectFit='cover';
 }
 function placePipFlip(){
 var b=gid('pipFlip');
@@ -717,6 +700,7 @@ v.style.zIndex='1';
 lv.style.transform='scaleX(-1)';
 lv.style.objectFit='cover';
 rv.style.transform='none';
+rv.style.objectFit='cover';
 bigV.style.left='0';
 bigV.style.top='0';
 bigV.style.width='100%';
@@ -738,8 +722,6 @@ pipV.style.border='1px solid rgba(255,255,255,.22)';
 pipV.style.boxShadow='0 8px 26px rgba(0,0,0,.55)';
 pipV.style.background='#111';
 pipV.style.zIndex='6';
-if(pipV===rv)rv.style.objectFit='cover';
-else fitRemote();
 }
 function toggleSwap(){
 if(callMode==='audio')return;
@@ -1102,6 +1084,7 @@ fb.classList.remove('busy');
 var old=ls?ls.getVideoTracks()[0]:null;
 var oldSet=(old&&old.getSettings)?old.getSettings():{};
 var oldId=oldSet.deviceId||'';
+var oldLabel=old?old.label:'';
 var opp=facing==='user'?'environment':'user';
 var saved=null;
 try{saved=localStorage.getItem(opp==='environment'?'qc-cam-rear':'qc-cam-front');}catch(e){}
@@ -1112,6 +1095,11 @@ if(stoppedOld)return;
 stoppedOld=true;
 if(old){try{old.stop();}catch(e){}}
 if(old&&ls){try{ls.removeTrack(old);}catch(e){}}
+}
+function isSame(nv,set){
+if(oldId&&set.deviceId&&set.deviceId===oldId)return true;
+if(oldLabel&&nv.label&&nv.label===oldLabel)return true;
+return false;
 }
 function openCons(cons){
 return navigator.mediaDevices.getUserMedia({video:cons,audio:false});
@@ -1140,6 +1128,8 @@ if(i>=3)return Promise.reject(new Error('stillgray'));
 return openWithRelease(variantsOf(base)[i]).then(function(st){
 var nv=st.getVideoTracks()[0];
 if(!nv){stopAllOf(st);return tryVariants(base,i+1);}
+var set=nv.getSettings?nv.getSettings():{};
+if(isSame(nv,set)){stopAllOf(st);return tryVariants(base,i+1);}
 return colorCheck(nv).then(function(sat){
 if(sat>=0&&sat<=1.2){stopAllOf(st);return tryVariants(base,i+1);}
 return {st:st,nv:nv,gray:false};
@@ -1156,7 +1146,6 @@ var set=r.nv.getSettings?r.nv.getSettings():{};
 if(set.deviceId){
 try{localStorage.setItem(opp==='environment'?'qc-cam-rear':'qc-cam-front',set.deviceId);}catch(e){}
 }
-camDbg((set.label||('kamera '+(set.deviceId||'').slice(0,6)))+(r.gray?' (mono)':''));
 if(grayF&&grayF.st!==r.st)stopAllOf(grayF.st);
 clearTimeout(safety);
 fb.classList.remove('busy');
@@ -1169,7 +1158,6 @@ stopOldNow();
 clearTimeout(safety);
 fb.classList.remove('busy');
 flipping=false;
-camDbg(tr('Gagal ganti kamera','Flip failed'));
 delay(200).then(function(){
 return getMediaVideoOnly(facing);
 }).then(function(st2){
@@ -1188,7 +1176,7 @@ stopAllOf(st);
 return walk(list,idx);
 }
 var set=nv.getSettings?nv.getSettings():{};
-if(oldId&&set.deviceId&&set.deviceId===oldId){
+if(isSame(nv,set)){
 stopAllOf(st);
 return walk(list,idx);
 }
@@ -1221,10 +1209,12 @@ navigator.mediaDevices.enumerateDevices().then(function(ds){
 var cams=(ds||[]).filter(function(d){return d.kind==='videoinput';});
 var list=[];
 if(saved&&saved!==oldId)list.push({deviceId:{exact:saved}});
-cams.forEach(function(d){
-if(d.deviceId&&d.deviceId!==oldId&&d.deviceId!==saved)list.push({deviceId:{exact:d.deviceId}});
-});
 list.push({facingMode:{exact:opp}});
+cams.forEach(function(d){
+if(d.deviceId&&d.deviceId!==oldId&&d.deviceId!==saved){
+if(!(oldLabel&&d.label&&d.label===oldLabel))list.push({deviceId:{exact:d.deviceId}});
+}
+});
 list.push({facingMode:opp});
 return walk(list,0);
 }).then(finish).catch(failNow);
@@ -1331,4 +1321,4 @@ try{QC.toast(tr('Modul media gagal: ','Media module failed: ')+e.message);}catch
 if(window.console)console.error(e);
 }
 })();
-/* END media.js v41 */
+/* END media.js v42 */
