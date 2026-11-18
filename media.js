@@ -1,4 +1,4 @@
-/* media.js v36 — emoji, gambar, suara, call gaya WhatsApp (flip 2 fase, filter kamera aux) */
+/* media.js v37 — emoji, gambar, suara, call gaya WhatsApp (uji warna kamera + ICE restart) */
 (function(){
 'use strict';
 if(!window.QC)return;
@@ -19,7 +19,7 @@ var FLIPSVG='<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"
 var MICSVG='<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.49 6-3.31 6-6.72h-1.7z"/></svg>';
 var MICOFFSVG='<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M19 11h-1.7c0 .74-.16 1.43-.43 2.05l1.23 1.23c.56-.98.9-2.09.9-3.28zm-4.69 4.69c-.7.49-1.5.81-2.31 1.02V20h2v-3.28c.81-.12 1.55-.4 2.24-.8l-1.93-1.23zM12 14c.93 0 1.78-.27 2.5-.73L9 7.77V5c0-1.66 1.34-3 3-3s3 1.34 3 3v6l1 1V5c0-2.21-1.79-4-4-4S8 2.79 8 5v3.23l4 4V14zM4.27 3 3 4.27 6.01 7.3c-.01.23 0 .47 0 .7v3c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c1.27-.19 2.42-.7 3.38-1.45L19.73 19 21 17.73 4.27 3z"/></svg>';
 var VIDSVG='<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M14 6H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2zm4.5 4.7 3-2.2c.3-.2.5 0 .5.3v6.4c0 .3-.2.5-.5.3l-3-2.2v-2.6z"/></svg>';
-var VIDOFFSVG='<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M21 6.5v11l-4-3.5v3a2 2 0 0 1-2 2H9.83l-2-2H15V8.83l-2.17-2.17L21 6.5zM3 3l18 18-1.27 1.27L17.46 20H19a2 2 0 0 0 2-2v-1.54l1.73 1.81L21 20.27 3 3zM6 6.83V8a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6.17l2 2H6a4 4 0 0 1-4-4v-6a4 4 0 0 1 2-3.46L6 6.83z" transform="translate(1 1) scale(.9167)"/><path d="M15 8.83V16h-1.17l4.9 4.9A2 2 0 0 0 21 19V6.5l-4 3.5V8a2 2 0 0 0-2-2H8.83l2 2H15v.83z" opacity="0"/></svg>';
+var VIDOFFSVG='<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M21 6.5v11l-4-3.5v3a2 2 0 0 1-2 2H9.83l-2-2H15V8.83l-2.17-2.17L21 6.5zM3 3l18 18-1.27 1.27L17.46 20H19a2 2 0 0 0 2-2v-1.54l1.73 1.81L21 20.27 3 3zM6 6.83V8a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6.17l2 2H6a4 4 0 0 1-4-4v-6a4 4 0 0 1 2-3.46L6 6.83z" transform="translate(1 1) scale(.9167)"/></svg>';
 function widenTrack(t){
 if(!t||t.kind!=='video')return;
 try{
@@ -758,6 +758,7 @@ function openUI(name,ans,mode){
 callMode=mode||'video';
 swapped=false;
 resetCallButtons();
+gid('callTimer').textContent='00:00';
 gid('callModal').classList.remove('hidden');
 setAvByName(gid('callBigAv'),name,56);
 gid('callBigName').textContent=nm2(name);
@@ -806,8 +807,49 @@ return navigator.mediaDevices.getUserMedia({video:true});
 function killAudioOf(st){
 st.getAudioTracks().forEach(function(t){try{t.stop();}catch(e){}});
 }
+function colorCheck(nv){
+return new Promise(function(res){
+var v=document.createElement('video');
+v.muted=true;
+v.playsInline=true;
+v.setAttribute('playsinline','');
+var ms=new MediaStream([nv]);
+v.srcObject=ms;
+var done=false;
+var to=setTimeout(function(){fin(true);},1600);
+function fin(ok){
+if(done)return;
+done=true;
+clearTimeout(to);
+try{v.srcObject=null;}catch(e){}
+res(ok);
+}
+var pr=v.play();
+if(pr&&pr.catch)pr.catch(function(){fin(true);});
+setTimeout(function(){
+try{
+var w=32,h=24;
+var cv=document.createElement('canvas');
+cv.width=w;cv.height=h;
+var cx=cv.getContext('2d',{willReadFrequently:true});
+cx.drawImage(v,0,0,w,h);
+var d=cx.getImageData(0,0,w,h).data;
+var sat=0,n=0;
+for(var i=0;i<d.length;i+=4){
+var mx=Math.max(d[i],d[i+1],d[i+2]);
+var mn=Math.min(d[i],d[i+1],d[i+2]);
+sat+=(mx-mn);
+n++;
+}
+sat=n?sat/n:0;
+fin(sat>2.5);
+}catch(e){fin(true);}
+},500);
+});
+}
 function wirePC(){
 pc=new RTCPeerConnection(ICE);
+var iceRestarted=false;
 ls.getTracks().forEach(function(t){pc.addTrack(t,ls);});
 pc.ontrack=function(e){
 var rv=gid('remoteVideo');
@@ -828,21 +870,32 @@ pc.oniceconnectionstatechange=function(){
 if(!pc)return;
 var s=pc.iceConnectionState;
 if(s==='failed'){
-endCall(true);
-toast(tr('Koneksi panggilan gagal (jaringan memblokir)','Call connection failed (network blocked)'));
+if(!iceRestarted){iceRestarted=true;try{pc.restartIce();}catch(e){}}
+setTimeout(function(){
+if(pc&&pc.iceConnectionState==='failed')endCall(true);
+},6000);
 }else if(s==='disconnected'){
 setTimeout(function(){
-if(pc&&pc.iceConnectionState==='disconnected'){
-endCall(true);
+if(!pc)return;
+if(pc.iceConnectionState==='disconnected'){
+if(!iceRestarted){iceRestarted=true;try{pc.restartIce();}catch(e){}}
+setTimeout(function(){
+if(pc&&pc.iceConnectionState==='disconnected')endCall(true);
+},8000);
 }
-},10000);
+},20000);
 }
 };
 pc.onconnectionstatechange=function(){
 if(!pc)return;
 var s=pc.connectionState;
-if(s==='failed'||s==='closed'){
+if(s==='closed'){
 endCall(true);
+}else if(s==='failed'){
+if(!iceRestarted){iceRestarted=true;try{pc.restartIce();}catch(e){}}
+setTimeout(function(){
+if(pc&&pc.connectionState==='failed')endCall(true);
+},6000);
 }
 };
 }
@@ -979,62 +1032,53 @@ var opp=facing==='user'?'environment':'user';
 function openCons(cons){
 return navigator.mediaDevices.getUserMedia({video:cons,audio:false});
 }
-function validate(st){
+function candidateOk(st){
 var nv=st.getVideoTracks()[0];
 if(!nv){
 st.getTracks().forEach(function(t){try{t.stop();}catch(e){}});
-return null;
+return Promise.resolve(null);
 }
 var set=nv.getSettings?nv.getSettings():{};
 if(oldId&&set.deviceId&&set.deviceId===oldId){
 st.getTracks().forEach(function(t){try{t.stop();}catch(e){}});
+return Promise.resolve(null);
+}
+return colorCheck(nv).then(function(ok){
+if(!ok){
+st.getTracks().forEach(function(t){try{t.stop();}catch(e){}});
 return null;
 }
-return nv;
+return {st:st,nv:nv};
+});
 }
-function finish(st,nv){
-killAudioOf(st);
-callStreams.push(st);
-attachNewVideo(nv);
+function tryList(list,i){
+if(i>=list.length)return Promise.reject(new Error('noflip'));
+return openCons(list[i]).then(candidateOk).then(function(r){
+if(r)return r;
+return tryList(list,i+1);
+},function(){return tryList(list,i+1);});
+}
+function buildOrder(cams,full){
+var o=[];
+o.push({facingMode:{exact:opp}});
+cams.forEach(function(d){
+if(d.deviceId&&d.deviceId!==oldId)o.push({deviceId:{exact:d.deviceId}});
+});
+o.push({facingMode:opp});
+if(full)o.push(true);
+return o;
+}
+function finish(r){
+killAudioOf(r.st);
+callStreams.push(r.st);
+attachNewVideo(r.nv);
 if(old){try{old.stop();}catch(e){}}
 facing=opp;
 fb.classList.remove('busy');
 flipping=false;
 applyLayout();
 }
-function tryOrder(order,i){
-if(i>=order.length)return Promise.reject(new Error('noflip'));
-return openCons(order[i]).then(function(st){
-var nv=validate(st);
-if(!nv)return tryOrder(order,i+1);
-return {st:st,nv:nv};
-},function(){return tryOrder(order,i+1);});
-}
-openCons({facingMode:{exact:opp}}).then(function(st){
-var nv=validate(st);
-if(!nv)throw new Error('same');
-finish(st,nv);
-}).catch(function(){
-if(old){try{old.stop();}catch(e){}}
-if(old&&ls){try{ls.removeTrack(old);}catch(e){}}
-return delay(300).then(function(){
-return navigator.mediaDevices.enumerateDevices();
-}).then(function(ds){
-var cams=(ds||[]).filter(function(d){
-return d.kind==='videoinput'&&!isAuxCam(d);
-});
-var order=[];
-order.push({facingMode:{exact:opp}});
-cams.forEach(function(d){
-if(d.deviceId&&d.deviceId!==oldId)order.push({deviceId:{exact:d.deviceId}});
-});
-order.push({facingMode:opp});
-order.push(true);
-return tryOrder(order,0);
-}).then(function(r){
-finish(r.st,r.nv);
-});
-}).catch(function(){
+function restore(){
 fb.classList.remove('busy');
 flipping=false;
 toast(tr('Gagal mengganti kamera','Failed to switch camera'));
@@ -1048,7 +1092,20 @@ callStreams.push(st2);
 attachNewVideo(nv2);
 }
 }).catch(function(){});
+}
+navigator.mediaDevices.enumerateDevices().then(function(ds){
+var cams=(ds||[]).filter(function(d){
+return d.kind==='videoinput'&&!isAuxCam(d);
 });
+var orderA=buildOrder(cams,false).slice(0,3);
+return tryList(orderA,0).catch(function(){
+if(old){try{old.stop();}catch(e){}}
+if(old&&ls){try{ls.removeTrack(old);}catch(e){}}
+return delay(300).then(function(){
+return tryList(buildOrder(cams,true),0);
+});
+});
+}).then(finish).catch(restore);
 }
 QC.onCallSignal=function(d){
 if(!d||d.from===QC.me||d.to!==QC.me)return;
@@ -1149,4 +1206,4 @@ try{QC.toast(tr('Modul media gagal: ','Media module failed: ')+e.message);}catch
 if(window.console)console.error(e);
 }
 })();
-/* END media.js v36 */
+/* END media.js v37 */
