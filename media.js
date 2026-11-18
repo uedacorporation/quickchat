@@ -1,4 +1,4 @@
-/* media.js v38 — emoji, gambar, suara, call gaya WhatsApp (color-check kuat, guard mic, sinyal accepted) */
+/* media.js v39 — emoji, gambar, suara, call gaya WhatsApp (flip memori kamera + backoff) */
 (function(){
 'use strict';
 if(!window.QC)return;
@@ -630,6 +630,19 @@ credential:'openrelayproject'}
 function nm2(u){
 return QC.displayName?QC.displayName(u):u;
 }
+function camDbg(t){
+var d=gid('camDbg');
+if(!d){
+d=document.createElement('div');
+d.id='camDbg';
+d.style.cssText='position:fixed;left:50%;bottom:150px;transform:translateX(-50%);z-index:400;background:rgba(0,0,0,.68);color:#fff;font:600 11px monospace;padding:6px 12px;border-radius:99px;pointer-events:none;opacity:0;transition:opacity .3s;max-width:80vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis';
+document.body.appendChild(d);
+}
+d.textContent=t;
+d.style.opacity='1';
+clearTimeout(d._t);
+d._t=setTimeout(function(){d.style.opacity='0';},2500);
+}
 function hideIncoming(){
 incoming=null;
 gid('incomingCall').classList.add('hidden');
@@ -1083,68 +1096,81 @@ if(callMode==='audio'||!active||flipping)return;
 flipping=true;
 var fb=gid('pipFlip');
 fb.classList.add('busy');
+var safety=setTimeout(function(){
+if(flipping){
+flipping=false;
+fb.classList.remove('busy');
+}
+},12000);
 var old=ls?ls.getVideoTracks()[0]:null;
 var oldSet=(old&&old.getSettings)?old.getSettings():{};
 var oldId=oldSet.deviceId||'';
 var opp=facing==='user'?'environment':'user';
-function openCons(cons){
-return navigator.mediaDevices.getUserMedia({video:cons,audio:false});
+var saved=null;
+try{saved=localStorage.getItem(opp==='environment'?'qc-cam-rear':'qc-cam-front');}catch(e){}
+function openRetry(cons,n){
+return navigator.mediaDevices.getUserMedia({video:cons,audio:false}).catch(function(err){
+if(n>0)return delay(500).then(function(){return openRetry(cons,n-1);});
+throw err;
+});
 }
-var fallback=null;
-function tryList(list,i){
-if(i>=list.length){
-if(fallback)return Promise.resolve(fallback);
-return Promise.reject(new Error('noflip'));
-}
-return openCons(list[i]).then(function(st){
+var grayFall=null;
+function evaluate(st){
 var nv=st.getVideoTracks()[0];
 if(!nv){
 stopAllOf(st);
-return tryList(list,i+1);
+return Promise.resolve(null);
 }
 var set=nv.getSettings?nv.getSettings():{};
 if(oldId&&set.deviceId&&set.deviceId===oldId){
 stopAllOf(st);
-return tryList(list,i+1);
+return Promise.resolve(null);
 }
 return colorCheck(nv).then(function(sat){
-if(sat>=0&&sat<=2.5){
-if(!fallback)fallback={st:st,nv:nv};
-else stopAllOf(st);
-return tryList(list,i+1);
-}
-return {st:st,nv:nv};
+if(sat>=0&&sat<=1.2)return {gray:st,nv:nv};
+return {ok:st,nv:nv};
 });
-},function(){return tryList(list,i+1);});
 }
-function buildOrder(cams,full){
-var o=[];
-o.push({facingMode:{exact:opp}});
-o.push({facingMode:{exact:opp},width:{ideal:1280},height:{ideal:720}});
-cams.forEach(function(d){
-if(d.deviceId&&d.deviceId!==oldId){
-o.push({deviceId:{exact:d.deviceId}});
-o.push({deviceId:{exact:d.deviceId},width:{ideal:1280},height:{ideal:720}});
+function seq(list,i){
+if(i>=list.length){
+if(grayFall)return Promise.resolve({st:grayFall.st,nv:grayFall.nv,gray:true});
+return Promise.reject(new Error('noflip'));
 }
-});
-o.push({facingMode:opp});
-if(full)o.push(true);
-return o;
+return delay(i?350:0).then(function(){
+return openRetry(list[i].v,list[i].r||0);
+}).then(evaluate).then(function(r){
+if(!r)return seq(list,i+1);
+if(r.gray){
+if(!grayFall)grayFall=r;
+else stopAllOf(r.gray);
+return seq(list,i+1);
 }
-function finish(r){
-killAudioOf(r.st);
-callStreams.push(r.st);
-attachNewVideo(r.nv);
+if(grayFall){stopAllOf(grayFall.gray);grayFall=null;}
+return {st:r.ok,nv:r.nv};
+},function(){return seq(list,i+1);});
+}
+function done(res){
+killAudioOf(res.st);
+callStreams.push(res.st);
+attachNewVideo(res.nv);
 if(old){try{old.stop();}catch(e){}}
 facing=opp;
+var set=res.nv.getSettings?res.nv.getSettings():{};
+if(set.deviceId){
+try{localStorage.setItem(opp==='environment'?'qc-cam-rear':'qc-cam-front',set.deviceId);}catch(e){}
+}
+camDbg((set.label||('cam '+(set.deviceId||'').slice(0,6)))+(res.gray?' (mono)':''));
+clearTimeout(safety);
 fb.classList.remove('busy');
 flipping=false;
 applyLayout();
 }
-function restore(){
+function fail(){
+if(grayFall){stopAllOf(grayFall.gray);grayFall=null;}
+clearTimeout(safety);
 fb.classList.remove('busy');
 flipping=false;
-toast(tr('Gagal mengganti kamera','Failed to switch camera'));
+camDbg(tr('Gagal ganti kamera','Flip failed'));
 delay(250).then(function(){
 return getMediaVideoOnly(facing);
 }).then(function(st2){
@@ -1160,15 +1186,27 @@ navigator.mediaDevices.enumerateDevices().then(function(ds){
 var cams=(ds||[]).filter(function(d){
 return d.kind==='videoinput'&&!isAuxCam(d);
 });
-return tryList(buildOrder(cams,false).slice(0,6),0).catch(function(){
+var listA=[];
+if(saved)listA.push({v:{deviceId:{exact:saved}},r:1});
+listA.push({v:{facingMode:{exact:opp}},r:1});
+return seq(listA,0).catch(function(){
 if(old){try{old.stop();}catch(e){}}
 if(old&&ls){try{ls.removeTrack(old);}catch(e){}}
-fallback=null;
-return delay(300).then(function(){
-return tryList(buildOrder(cams,true),0);
+grayFall=null;
+return delay(600).then(function(){
+var listB=[];
+if(saved)listB.push({v:{deviceId:{exact:saved}},r:2});
+listB.push({v:{facingMode:{exact:opp}},r:2});
+cams.forEach(function(d){
+if(d.deviceId&&d.deviceId!==oldId&&d.deviceId!==saved)listB.push({v:{deviceId:{exact:d.deviceId}},r:1});
+});
+listB=listB.slice(0,6);
+listB.push({v:{facingMode:opp},r:1});
+listB.push({v:true,r:1});
+return seq(listB,0);
 });
 });
-}).then(finish).catch(restore);
+}).then(done).catch(fail);
 }
 QC.onCallSignal=function(d){
 if(!d||d.from===QC.me||d.to!==QC.me)return;
@@ -1272,4 +1310,4 @@ try{QC.toast(tr('Modul media gagal: ','Media module failed: ')+e.message);}catch
 if(window.console)console.error(e);
 }
 })();
-/* END media.js v38 */
+/* END media.js v39 */
