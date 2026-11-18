@@ -1,4 +1,4 @@
-/* media.js v39 — emoji, gambar, suara, call gaya WhatsApp (flip memori kamera + backoff) */
+/* media.js v40 — emoji, gambar, suara, call gaya WhatsApp (flip = putar kamera, cepat) */
 (function(){
 'use strict';
 if(!window.QC)return;
@@ -866,54 +866,6 @@ guardAudio();
 }).catch(function(){});
 });
 }
-function colorCheck(nv){
-return new Promise(function(res){
-var v=document.createElement('video');
-v.muted=true;
-v.playsInline=true;
-v.setAttribute('playsinline','');
-v.srcObject=new MediaStream([nv]);
-var done=false,tries=0;
-function fin(x){
-if(done)return;
-done=true;
-clearTimeout(to);
-try{v.srcObject=null;}catch(e){}
-res(x);
-}
-var to=setTimeout(function(){fin(-1);},2200);
-function measure(){
-tries++;
-try{
-if(v.readyState<2){
-if(tries<7){setTimeout(measure,200);return;}
-fin(-1);
-return;
-}
-var w=32,h=24;
-var cv=document.createElement('canvas');
-cv.width=w;cv.height=h;
-var cx=cv.getContext('2d',{willReadFrequently:true});
-cx.drawImage(v,0,0,w,h);
-var d=cx.getImageData(0,0,w,h).data;
-var sat=0,n=0;
-for(var i=0;i<d.length;i+=4){
-var mx=Math.max(d[i],d[i+1],d[i+2]);
-var mn=Math.min(d[i],d[i+1],d[i+2]);
-sat+=(mx-mn);
-n++;
-}
-fin(n?(sat/n):-1);
-}catch(e){
-if(tries<7){setTimeout(measure,200);return;}
-fin(-1);
-}
-}
-var pr=v.play();
-if(pr&&pr.catch)pr.catch(function(){});
-setTimeout(measure,300);
-});
-}
 function wirePC(){
 pc=new RTCPeerConnection(ICE);
 var iceRestarted=false;
@@ -1088,9 +1040,6 @@ gid('callModal').classList.add('hidden');
 gid('remoteVideo').srcObject=null;
 gid('localVideo').srcObject=null;
 }
-function isAuxCam(dev){
-return /depth|mono|infra|ir\b|aux|bokeh/i.test(dev.label||'');
-}
 function flipCam(){
 if(callMode==='audio'||!active||flipping)return;
 flipping=true;
@@ -1101,77 +1050,70 @@ if(flipping){
 flipping=false;
 fb.classList.remove('busy');
 }
-},12000);
+},8000);
 var old=ls?ls.getVideoTracks()[0]:null;
 var oldSet=(old&&old.getSettings)?old.getSettings():{};
 var oldId=oldSet.deviceId||'';
-var opp=facing==='user'?'environment':'user';
-var saved=null;
-try{saved=localStorage.getItem(opp==='environment'?'qc-cam-rear':'qc-cam-front');}catch(e){}
-function openRetry(cons,n){
-return navigator.mediaDevices.getUserMedia({video:cons,audio:false}).catch(function(err){
-if(n>0)return delay(500).then(function(){return openRetry(cons,n-1);});
-throw err;
-});
-}
-var grayFall=null;
-function evaluate(st){
+function finish(st){
 var nv=st.getVideoTracks()[0];
 if(!nv){
 stopAllOf(st);
-return Promise.resolve(null);
+throw new Error('novideo');
 }
-var set=nv.getSettings?nv.getSettings():{};
-if(oldId&&set.deviceId&&set.deviceId===oldId){
-stopAllOf(st);
-return Promise.resolve(null);
-}
-return colorCheck(nv).then(function(sat){
-if(sat>=0&&sat<=1.2)return {gray:st,nv:nv};
-return {ok:st,nv:nv};
-});
-}
-function seq(list,i){
-if(i>=list.length){
-if(grayFall)return Promise.resolve({st:grayFall.st,nv:grayFall.nv,gray:true});
-return Promise.reject(new Error('noflip'));
-}
-return delay(i?350:0).then(function(){
-return openRetry(list[i].v,list[i].r||0);
-}).then(evaluate).then(function(r){
-if(!r)return seq(list,i+1);
-if(r.gray){
-if(!grayFall)grayFall=r;
-else stopAllOf(r.gray);
-return seq(list,i+1);
-}
-if(grayFall){stopAllOf(grayFall.gray);grayFall=null;}
-return {st:r.ok,nv:r.nv};
-},function(){return seq(list,i+1);});
-}
-function done(res){
-killAudioOf(res.st);
-callStreams.push(res.st);
-attachNewVideo(res.nv);
+killAudioOf(st);
+callStreams.push(st);
+if(old&&ls){try{ls.removeTrack(old);}catch(e){}}
+attachNewVideo(nv);
 if(old){try{old.stop();}catch(e){}}
-facing=opp;
-var set=res.nv.getSettings?res.nv.getSettings():{};
+var set=nv.getSettings?nv.getSettings():{};
+if(set.facingMode)facing=set.facingMode;
+else facing=(facing==='user'?'environment':'user');
 if(set.deviceId){
-try{localStorage.setItem(opp==='environment'?'qc-cam-rear':'qc-cam-front',set.deviceId);}catch(e){}
+try{localStorage.setItem('qc-cam-last',set.deviceId);}catch(e){}
 }
-camDbg((set.label||('cam '+(set.deviceId||'').slice(0,6)))+(res.gray?' (mono)':''));
+camDbg(set.label||('kamera '+(set.deviceId||'').slice(0,6)));
 clearTimeout(safety);
 fb.classList.remove('busy');
 flipping=false;
 applyLayout();
 }
-function fail(){
-if(grayFall){stopAllOf(grayFall.gray);grayFall=null;}
+function openNext(idx,list){
+if(!list.length)return Promise.reject(new Error('nocams'));
+var cons={deviceId:{exact:list[idx%list.length].deviceId}};
+return navigator.mediaDevices.getUserMedia({video:cons,audio:false}).catch(function(){
+if(old){try{old.stop();}catch(e){}}
+if(old&&ls){try{ls.removeTrack(old);}catch(e){}}
+return delay(350).then(function(){
+return navigator.mediaDevices.getUserMedia({video:cons,audio:false});
+});
+});
+}
+navigator.mediaDevices.enumerateDevices().then(function(ds){
+var cams=(ds||[]).filter(function(d){return d.kind==='videoinput';});
+if(!cams.length)throw new Error('nocams');
+var cur=-1;
+for(var i=0;i<cams.length;i++){
+if(cams[i].deviceId===oldId){cur=i;break;}
+}
+if(cur<0){
+var lastSaved=null;
+try{lastSaved=localStorage.getItem('qc-cam-last');}catch(e){}
+for(var j=0;j<cams.length;j++){
+if(cams[j].deviceId===lastSaved){cur=j;break;}
+}
+}
+var next=(cur+1)%cams.length;
+return openNext(next,cams).then(finish);
+}).catch(function(){
+var opp=facing==='user'?'environment':'user';
+return delay(200).then(function(){
+return getMediaVideoOnly(opp);
+}).then(finish).catch(function(){
 clearTimeout(safety);
 fb.classList.remove('busy');
 flipping=false;
 camDbg(tr('Gagal ganti kamera','Flip failed'));
-delay(250).then(function(){
+delay(200).then(function(){
 return getMediaVideoOnly(facing);
 }).then(function(st2){
 killAudioOf(st2);
@@ -1181,32 +1123,8 @@ callStreams.push(st2);
 attachNewVideo(nv2);
 }
 }).catch(function(){});
-}
-navigator.mediaDevices.enumerateDevices().then(function(ds){
-var cams=(ds||[]).filter(function(d){
-return d.kind==='videoinput'&&!isAuxCam(d);
-});
-var listA=[];
-if(saved)listA.push({v:{deviceId:{exact:saved}},r:1});
-listA.push({v:{facingMode:{exact:opp}},r:1});
-return seq(listA,0).catch(function(){
-if(old){try{old.stop();}catch(e){}}
-if(old&&ls){try{ls.removeTrack(old);}catch(e){}}
-grayFall=null;
-return delay(600).then(function(){
-var listB=[];
-if(saved)listB.push({v:{deviceId:{exact:saved}},r:2});
-listB.push({v:{facingMode:{exact:opp}},r:2});
-cams.forEach(function(d){
-if(d.deviceId&&d.deviceId!==oldId&&d.deviceId!==saved)listB.push({v:{deviceId:{exact:d.deviceId}},r:1});
-});
-listB=listB.slice(0,6);
-listB.push({v:{facingMode:opp},r:1});
-listB.push({v:true,r:1});
-return seq(listB,0);
 });
 });
-}).then(done).catch(fail);
 }
 QC.onCallSignal=function(d){
 if(!d||d.from===QC.me||d.to!==QC.me)return;
@@ -1310,4 +1228,4 @@ try{QC.toast(tr('Modul media gagal: ','Media module failed: ')+e.message);}catch
 if(window.console)console.error(e);
 }
 })();
-/* END media.js v39 */
+/* END media.js v40 */
